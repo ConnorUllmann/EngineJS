@@ -47,7 +47,7 @@ Draw.lines = function(ctx, points, strokeStyle, lineWidth=1)
 	if(points.length <= 0) return;
 	ctx.beginPath();
 	ctx.moveTo(points[0][0], points[0][1]);
-	for(var i = 1; i < points.length; i++)
+	for(let i = 1; i < points.length; i++)
 		ctx.lineTo(points[i][0], points[i][1]);
 	ctx.lineWidth = lineWidth;
 	ctx.strokeStyle = strokeStyle;

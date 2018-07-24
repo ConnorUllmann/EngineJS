@@ -12,7 +12,7 @@ Tree.prototype.depth = function()
         if(nodes[i].depth > depth)
             depth = nodes[i].depth;
     }
-    return depth;
+    return depth + 1; //0 counts as a depth, so having 3 depths = [0, 1, 2]
 };
 
 Tree.prototype.getLeafTreeNodes = function()
