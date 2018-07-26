@@ -7,7 +7,7 @@ function World()
 {
     this.canvas = null;
     this.context = null;
-    this.backgroundColor = "#eee";
+    this.backgroundColor = "#ccc";
     this.camera = new Camera(0, 0);
 }
 World.prototype.start = function(canvasId)

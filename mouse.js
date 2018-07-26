@@ -8,6 +8,7 @@ Mouse.rightReleased = false;
 Mouse.rightPressed = false;
 Mouse.leftDown = false;
 Mouse.rightDown = false;
+Mouse.focus = false;
 
 Mouse.onCanvas = function()
 {
@@ -51,6 +52,14 @@ Mouse.start = function(_canvas)
             Mouse.rightDown = true;
         }
 	});
+    _canvas.addEventListener ("mouseout", function()
+    {
+        Mouse.focus = false;
+    });
+    _canvas.addEventListener ("mouseover", function()
+    {
+        Mouse.focus = true;
+    });
 };
 
 Mouse.update = function()
