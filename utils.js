@@ -89,3 +89,11 @@ function goToUrl(url)
 {
     return window.location.href = url;
 }
+
+
+//Can be used to stop an input element from adding a dropdown, e.g.:
+//onkeydown="cancelDropdownOnEnter(event, this)"
+function cancelDropdownOnEnter(event, e)
+{
+    return event.which != 13 && event.keyCode != 13;
+}
