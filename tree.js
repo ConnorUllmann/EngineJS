@@ -4,23 +4,31 @@ function Tree(root)
     this.nodes = [];
 }
 
-Tree.prototype.toJson = function()
+Tree.prototype.toJsonObj = function()
 {
     let obj = {};
     obj["rootId"] = this.root.id;
     obj["nodes"] = this.nodes;
-    return JSON.stringify(obj);
+    return obj
 };
 
-Tree.FromJson = function(json)
+Tree.prototype.toJson = function()
+{
+    return JSON.stringify(this.toJsonObj());
+};
+
+Tree.FromJsonObj = function(jsonObj)
 {
     let tree = new Tree();
-    tree.fromJson(json);
+    tree.fromJsonObj(jsonObj);
     return tree;
 };
-Tree.prototype.fromJson = function(json)
+Tree.FromJson = function(json)
 {
-    let obj = JSON.parse(json);
+    return Tree.FromJsonObj(JSON.parse(json));
+};
+Tree.prototype.fromJsonObj = function(obj)
+{
     let rootId = obj["rootId"];
     let nodes = obj["nodes"];
 
@@ -42,6 +50,10 @@ Tree.prototype.fromJson = function(json)
 
     for(let parentId in mapping)
         nodesById[parentId].childrenIds = mapping[parentId];
+};
+Tree.prototype.fromJson = function(json)
+{
+    this.fromJsonObj(JSON.parse(json));
 };
 
 Tree.prototype.childIdToParentIdMapping = function()
