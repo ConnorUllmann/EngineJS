@@ -33,6 +33,6 @@ World.prototype.render = function()
 {
     Entity.updateAll();
     this.clearCanvas(this.backgroundColor);
-    Mouse.update();
     Entity.renderAll();
+    Mouse.update();
 };

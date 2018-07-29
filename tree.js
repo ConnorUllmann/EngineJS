@@ -76,16 +76,16 @@ Tree.prototype.fromJsonObj = function(nodes)
 
     this.propagateDepth(this.root, 0, nodesById);
 };
+Tree.prototype.fromJson = function(json)
+{
+    this.fromJsonObj(JSON.parse(json));
+};
+
 Tree.prototype.propagateDepth = function(node, depth, nodesById)
 {
     node.depth = depth;
     for(let i = 0; i < node.childrenIds.length; i++)
         this.propagateDepth(nodesById[node.childrenIds[i]], depth+1, nodesById);
-};
-
-Tree.prototype.fromJson = function(json)
-{
-    this.fromJsonObj(JSON.parse(json));
 };
 
 Tree.prototype.childIdToParentIdMapping = function()
