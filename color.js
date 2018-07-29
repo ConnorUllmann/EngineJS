@@ -42,6 +42,7 @@ Color.sampleRandomColorGoldenRatio = function(saturation, value)
     startValueRandomColorGoldenRatio %= 1;
     return Color.hsvToColor(startValueRandomColorGoldenRatio, saturation, value);
 };
+Color.rerandomizeRandomColorGoldenRatio = function() { startValueRandomColorGoldenRatio = Math.random(); };
 
 
 https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb

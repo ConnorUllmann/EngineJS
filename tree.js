@@ -1,11 +1,79 @@
 function Tree(root)
 {
     this.root = root;
+    this.nodes = [];
 }
+
+Tree.prototype.toJson = function()
+{
+    let obj = {};
+    obj["rootId"] = this.root.id;
+    obj["nodes"] = this.nodes;
+    return JSON.stringify(obj);
+};
+
+Tree.FromJson = function(json)
+{
+    let tree = new Tree();
+    tree.fromJson(json);
+    return tree;
+};
+Tree.prototype.fromJson = function(json)
+{
+    let obj = JSON.parse(json);
+    let rootId = obj["rootId"];
+    let nodes = obj["nodes"];
+
+    let mapping = {};
+    for(let i = 0; i < nodes.length; i++)
+    {
+        let parent = nodes[i];
+        mapping[parent.id] = [];
+        for(let j = 0; j < parent.childrenIds.length; j++)
+            mapping[parent.id].push(parent.childrenIds[j]);
+    }
+
+    let nodesById = {};
+    for(let i = 0; i < nodes.length; i++)
+        nodesById[nodes[i].id] = nodes[i];
+
+    this.root = nodesById[rootId];
+    this.nodes = nodes;
+
+    for(let parentId in mapping)
+        nodesById[parentId].childrenIds = mapping[parentId];
+};
+
+Tree.prototype.childIdToParentIdMapping = function()
+{
+    let mapping = {};
+    let nodes = this.nodes;
+    for(let i = 0; i < nodes.length; i++)
+    {
+        let parent = nodes[i];
+        for(let j = 0; j < parent.childrenIds.length; j++)
+        {
+            mapping[parent.childrenIds[j]] = parent.id;
+        }
+    }
+    return mapping;
+};
+
+Tree.prototype.getTreeNodesById = function()
+{
+    if(this.root == null)
+        return [];
+
+    let result = {};
+    let nodes = this.nodes;
+    for(let i = 0; i < nodes.length; i++)
+        result[nodes[i].id] = nodes[i];
+    return result;
+};
 
 Tree.prototype.depth = function()
 {
-    let nodes = this.getTreeNodes();
+    let nodes = this.nodes;
     let depth = 0;
     for(let i = 0; i < nodes.length; i++)
     {
@@ -17,29 +85,12 @@ Tree.prototype.depth = function()
 
 Tree.prototype.getLeafTreeNodes = function()
 {
-    let nodes = this.getTreeNodes();
+    let nodes = this.nodes();
     let result = [];
     for(let i = 0; i < nodes.length; i++)
     {
-        if(nodes[i].isLeaf())
+        if(nodes[i].childrenIds <= 0)
             result.push(nodes[i]);
-    }
-    return result;
-};
-
-Tree.prototype.getTreeNodes = function()
-{
-    if(this.root == null)
-        return [];
-
-    let nodes = [this.root];
-    let result = [];
-    while(nodes.length > 0)
-    {
-        let node = nodes.pop();
-        result.push(node);
-        if(!node.isLeaf())
-            nodes.push(...node.children.reversed());
     }
     return result;
 };
@@ -47,7 +98,7 @@ Tree.prototype.getTreeNodes = function()
 Tree.prototype.getTreeNodesByDepth = function()
 {
     let nodesByDepth = {};
-    let nodes = this.getTreeNodes();
+    let nodes = this.nodes;
     for(let i = 0; i < nodes.length; i++)
     {
        if(!(nodes[i].depth in nodesByDepth))
@@ -57,37 +108,30 @@ Tree.prototype.getTreeNodesByDepth = function()
     return nodesByDepth;
 };
 
-TreeNode.ID = 0;
-function TreeNode(parent)
+Tree.NodeId = 0;
+
+Tree.prototype.addNode = function(node, parent)
 {
-    this.children = [];
-    this.id = TreeNode.generateID();
+    if(parent != null && Tree.NodeId <= parent.id)
+        Tree.NodeId = parent.id+1;
+
+    node.id = Tree.NodeId++;
     if(parent != null)
     {
-        parent.children.push(this);
-        this.depth = parent.depth + 1;
+        parent.childrenIds.push(node.id);
+        node.depth = parent.depth + 1;
     }
     else
-        this.depth = 0;
+        node.depth = 0;
+    this.nodes.push(node);
+};
+
+function TreeNode()
+{
+    this.childrenIds = [];
+    this.id = -1;
+    this.depth = -1;
 }
-
-TreeNode.generateID = function()
-{
-    return TreeNode.ID++;
-};
-
-TreeNode.prototype.isLeaf = function()
-{
-    return this.children.length <= 0;
-};
-
-TreeNode.prototype.propagateDepth = function(depth)
-{
-    for(let i = 0; i < this.children.length; i++)
-    {
-        this.children[i].propagateDepth(this.depth+1);
-    }
-};
 
 /*
 let root = new TreeNode();
