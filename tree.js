@@ -4,12 +4,24 @@ function Tree(root)
     this.nodes = [];
 }
 
-Tree.prototype.toJsonObj = function()
+Tree.prototype.toJsonObj = function(...additionalFields)
 {
-    let obj = {};
-    obj["rootId"] = this.root.id;
-    obj["nodes"] = this.nodes;
-    return obj
+    let list = [];
+    for(let i = 0; i < this.nodes.length; i++)
+    {
+        let node = this.nodes[i];
+        let tempObj = {};
+        tempObj["childrenIds"] = node.childrenIds;
+        tempObj["id"] = node.id;
+        if(additionalFields != null)
+        {
+            for(let j = 0; j < additionalFields.length; j++)
+                tempObj[additionalFields[j]] = node[additionalFields[j]];
+        }
+        list.push(tempObj);
+    }
+
+    return list;
 };
 
 Tree.prototype.toJson = function()
@@ -27,11 +39,8 @@ Tree.FromJson = function(json)
 {
     return Tree.FromJsonObj(JSON.parse(json));
 };
-Tree.prototype.fromJsonObj = function(obj)
+Tree.prototype.fromJsonObj = function(nodes)
 {
-    let rootId = obj["rootId"];
-    let nodes = obj["nodes"];
-
     let mapping = {};
     for(let i = 0; i < nodes.length; i++)
     {
@@ -45,12 +54,35 @@ Tree.prototype.fromJsonObj = function(obj)
     for(let i = 0; i < nodes.length; i++)
         nodesById[nodes[i].id] = nodes[i];
 
+    let ids = Object.keys(nodesById);
+    for(let i = 0; i < nodes.length; i++)
+    {
+        let node = nodes[i];
+        for(let j = 0; j < node.childrenIds.length; j++)
+        {
+            let index = ids.indexOf(node.childrenIds[j].toString());
+            if(index >= 0)
+                ids.removeAt(index);
+        }
+    }
+    if(ids.length != 1)
+        alert("Error in project file--multiple root nodes in the timeline.");
+    let rootId = ids[0];
     this.root = nodesById[rootId];
     this.nodes = nodes;
 
     for(let parentId in mapping)
         nodesById[parentId].childrenIds = mapping[parentId];
+
+    this.propagateDepth(this.root, 0, nodesById);
 };
+Tree.prototype.propagateDepth = function(node, depth, nodesById)
+{
+    node.depth = depth;
+    for(let i = 0; i < node.childrenIds.length; i++)
+        this.propagateDepth(nodesById[node.childrenIds[i]], depth+1, nodesById);
+};
+
 Tree.prototype.fromJson = function(json)
 {
     this.fromJsonObj(JSON.parse(json));
