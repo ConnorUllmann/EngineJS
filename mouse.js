@@ -9,6 +9,7 @@ Mouse.rightPressed = false;
 Mouse.leftDown = false;
 Mouse.rightDown = false;
 Mouse.focus = false;
+Mouse.scrollY = 0;
 
 Mouse.onCanvas = function()
 {
@@ -60,6 +61,10 @@ Mouse.start = function(_canvas)
     {
         Mouse.focus = true;
     });
+    _canvas.addEventListener('wheel', function(e)
+    {
+        Mouse.scrollY = e.deltaY;
+    });
 };
 
 Mouse.update = function()
@@ -68,4 +73,5 @@ Mouse.update = function()
     Mouse.leftPressed = false;
     Mouse.rightReleased = false;
     Mouse.rightPressed = false;
+    Mouse.scrollY = 0;
 };
