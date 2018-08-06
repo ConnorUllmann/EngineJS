@@ -152,14 +152,9 @@ Tree.prototype.getTreeNodesByDepth = function()
     return nodesByDepth;
 };
 
-Tree.NodeId = 0;
 
 Tree.prototype.addNode = function(node, parent)
 {
-    if(parent != null && Tree.NodeId <= parent.id)
-        Tree.NodeId = parent.id+1;
-
-    node.id = Tree.NodeId++;
     if(parent != null)
     {
         parent.childrenIds.push(node.id);
@@ -170,12 +165,33 @@ Tree.prototype.addNode = function(node, parent)
     this.nodes.push(node);
 };
 
+Tree.prototype.removeNode = function(node)
+{
+    let nodesRemoveIndex = this.nodes.indexOf(node);
+    if(nodesRemoveIndex < 0)
+        return;
+    this.nodes.removeAt(nodesRemoveIndex);
+
+    for(let i = 0; i < this.nodes.length; i++)
+    {
+        let removeIndex = this.nodes[i].childrenIds.indexOf(node.id);
+        if(removeIndex >= 0)
+            this.nodes[i].childrenIds.removeAt(removeIndex);
+    }
+};
+
+Tree.NodeId = 0;
 function TreeNode()
 {
-    this.childrenIds = [];
-    this.id = -1;
-    this.depth = -1;
+    this.id = Tree.NodeId++;
+    this.reset();
 }
+
+TreeNode.prototype.reset = function()
+{
+    this.childrenIds = [];
+    this.depth = -1;
+};
 
 /*
 let root = new TreeNode();
