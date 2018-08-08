@@ -97,3 +97,21 @@ function cancelDropdownOnEnter(event, e)
 {
     return event.which != 13 && event.keyCode != 13;
 }
+
+
+//http://javascript-coder.com/files/javascript-form-value/javascript-form-value-multi-select-example.html
+function getSelectedValuesForSelectMultiple(selectMultipleElement)
+{
+    let selectedValues = [];
+    for(let i = 0; i < selectMultipleElement.length; i++)
+    {
+        if(selectMultipleElement.options[i].selected)
+            selectedValues.push(selectMultipleElement.options[i].value);
+    }
+    return selectedValues;
+}
+function deselectAllValuesForSelectMultiple(selectMultipleElement)
+{
+    for(let i = 0; i < selectMultipleElement.length; i++)
+        selectMultipleElement.options[i].selected = false;
+}
