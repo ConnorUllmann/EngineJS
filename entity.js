@@ -3,6 +3,18 @@ Entity.toAdd = [];
 Entity.toDestroy = [];
 Entity.ID = 0;
 
+// // To inherit:
+// function ExampleEntity(x, y)
+// {
+//     Entity.call(this, x, y);
+// }
+// ExampleEntity.prototype = Object.create(Entity.prototype);
+// ExampleEntity.prototype.constructor = ExampleEntity;
+// ExampleEntity.prototype.update = function()
+// {
+//     Entity.prototype.update.call(this);
+// }
+
 function Entity(_x, _y)
 {	
 	this.x = _x;
@@ -11,11 +23,11 @@ function Entity(_x, _y)
 	this.id = Entity.generateID();
 	this.visible = true;
 	Entity.toAdd.push(this);
-};
+}
 Entity.generateID = function()
 {
 	return Entity.ID++;
-}
+};
 
 Entity.prototype.added = function() //Triggered when this entity is added to the scene.
 {

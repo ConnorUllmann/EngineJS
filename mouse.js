@@ -14,8 +14,8 @@ Mouse.scrollY = 0;
 Mouse.onCanvas = function()
 {
 	return Mouse.x != null && Mouse.y != null &&
-		Mouse.x >= 0 && Mouse.x < world.canvas.width &&
-		Mouse.y >= 0 && Mouse.y < world.canvas.height;
+		Mouse.x >= 0 && Mouse.x < canvas.width &&
+		Mouse.y >= 0 && Mouse.y < canvas.height;
 };
 
 Mouse.start = function(_canvas)
