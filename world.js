@@ -23,6 +23,7 @@ World.prototype.start = function(canvasId)
 
     this.context = context = this.canvas.getContext('2d');
     Mouse.start(this.canvas);
+    Keyboard.start();
 };
 World.prototype.clearCanvas = function(color)
 {
@@ -35,4 +36,5 @@ World.prototype.render = function()
     this.clearCanvas(this.backgroundColor);
     Entity.renderAll();
     Mouse.update();
+    Keyboard.update();
 };
