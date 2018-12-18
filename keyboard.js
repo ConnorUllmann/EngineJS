@@ -50,35 +50,37 @@ Keyboard.update = function()
 
 Keyboard.keysForKeyCode = function(keyCode)
 {
+    const specialKeysMapping = {
+        8:["backspace"],
+        9:["tab"],
+        13:["enter"],
+        16:["shift"],
+        17:["ctrl"],
+        18:["alt"],
+        19:["pause/break"],
+        20:["caps lock"],
+        27:["escape"],
+        32:["space"],
+        33:["page up"],
+        34:["page down"],
+        35:["end"],
+        36:["home"],
+        37:["left"],
+        38:["up"],
+        39:["right"],
+        40:["down"],
+        45:["insert"],
+        46:["delete"],
+        189:["-", "_"],
+        187:["=", "+"]
+    };
     let key = String.fromCharCode(keyCode);
     let keyLowerCase = key.toLowerCase();
     let keyUpperCase = key.toUpperCase();
-    const specialKeys = {
-        8:"backspace",
-        9:"tab",
-        13:"enter",
-        16:"shift",
-        17:"ctrl",
-        18:"alt",
-        19:"pause/break",
-        20:"caps lock",
-        27:"escape",
-        32:"space",
-        33:"page up",
-        34:"page down",
-        35:"end",
-        36:"home",
-        37:"left arrow",
-        38:"up arrow",
-        39:"right arrow",
-        40:"down arrow",
-        45:"insert",
-        46:"delete"
-    };
     let result = [keyCode, keyLowerCase, keyUpperCase];
 
-    let specialKey = specialKeys[keyCode];
-    if(specialKey !== undefined)
-        result.push(specialKey);
+    let specialKeys = specialKeysMapping[keyCode];
+    if(specialKeys !== undefined)
+        result.push(...specialKeys);
     return result;
 };

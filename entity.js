@@ -12,6 +12,7 @@ Entity.ID = 0;
 // ExampleEntity.prototype.constructor = ExampleEntity;
 // ExampleEntity.prototype.update = function()
 // {
+//	   // Call update function of a parent
 //     Entity.prototype.update.call(this);
 // }
 
