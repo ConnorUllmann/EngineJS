@@ -1,4 +1,3 @@
-
 function Draw(){}
 
 Draw.circle = function(ctx, x, y, radius, fillStyle)
@@ -7,12 +6,12 @@ Draw.circle = function(ctx, x, y, radius, fillStyle)
 	ctx.arc(x, y, radius, 0, 2 * Math.PI);
 	ctx.fillStyle = fillStyle;
 	ctx.fill();
-}
+};
 Draw.rect = function(ctx, x, y, w, h, fillStyle)
 {
     ctx.fillStyle = fillStyle;
     ctx.fillRect(x, y, w, h);
-}
+};
 Draw.triangle = function(ctx, x1, y1, x2, y2, x3, y3, fillStyle)
 {
     ctx.fillStyle = fillStyle;
@@ -24,15 +23,15 @@ Draw.triangle = function(ctx, x1, y1, x2, y2, x3, y3, fillStyle)
 }
 Draw.rectLines = function(ctx, x, y, w, h, strokeStyle, lineWidth=1)
 {
-	var points = [
+	let points = [
 		[x, y],
 		[x + w, y],
 		[x + w, y + h],
 		[x, y + h],
 		[x, y]
-	]
+	];
 	Draw.lines(ctx, points, strokeStyle, lineWidth);
-}
+};
 Draw.line = function(ctx, x1, y1, x2, y2, strokeStyle, lineWidth=1)
 {
 	ctx.beginPath();
@@ -41,7 +40,7 @@ Draw.line = function(ctx, x1, y1, x2, y2, strokeStyle, lineWidth=1)
 	ctx.lineWidth = lineWidth;
 	ctx.strokeStyle = strokeStyle;
 	ctx.stroke();
-}
+};
 Draw.lines = function(ctx, points, strokeStyle, lineWidth=1)
 {
 	if(points.length <= 0) return;
@@ -52,16 +51,16 @@ Draw.lines = function(ctx, points, strokeStyle, lineWidth=1)
 	ctx.lineWidth = lineWidth;
 	ctx.strokeStyle = strokeStyle;
 	ctx.stroke();
-}
+};
 Draw.text = function(ctx, text, x, y, fillStyle, font, halign="left", valign="top")
 { //positive x is toward the top of the screen, positive y is to the left side of the screen
 	Draw.textStyle(ctx, fillStyle, font, halign, valign);
 	ctx.fillText(text, x, y);
-}
+};
 Draw.textStyle = function(ctx, fillStyle, font, halign, valign)
 {
 	ctx.font = font;
 	ctx.fillStyle = fillStyle;
 	ctx.textAlign = halign;
 	ctx.textBaseline=valign;
-}
+};
