@@ -2,10 +2,18 @@ function Draw(){}
 
 Draw.circle = function(ctx, x, y, radius, fillStyle)
 {
-	ctx.beginPath();
-	ctx.arc(x, y, radius, 0, 2 * Math.PI);
-	ctx.fillStyle = fillStyle;
-	ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+};
+Draw.circleOutline = function(ctx, x, y, radius, strokeStyle, lineWidth=1)
+{
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI);
+    ctx.strokeStyle = strokeStyle;
+    ctx.lineWidth = lineWidth;
+    ctx.stroke();
 };
 Draw.rect = function(ctx, x, y, w, h, fillStyle)
 {
@@ -20,7 +28,7 @@ Draw.triangle = function(ctx, x1, y1, x2, y2, x3, y3, fillStyle)
 	ctx.lineTo(x2, y2);
 	ctx.lineTo(x3, y3);
 	ctx.fill();
-}
+};
 Draw.rectLines = function(ctx, x, y, w, h, strokeStyle, lineWidth=1)
 {
 	let points = [

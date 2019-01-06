@@ -1,5 +1,12 @@
 function Utils() {}
 
+/* Length of an equilateral triangle's altitude given the side length */
+Utils.EquilateralAltitudeCoefficient = Math.sqrt(3) / 2;
+Utils.equilateralAltitude = function(equilateralTriangleSideLength)
+{
+    return Utils.EquilateralAltitudeCoefficient * equilateralTriangleSideLength;
+};
+
 Utils.dateStringToDate = function(string)
 {
     let date = new Date();

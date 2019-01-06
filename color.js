@@ -5,10 +5,14 @@ function Color(_red, _green, _blue, _alpha=1)
 	this.blue = Math.min(Math.max(Math.floor(_blue), 0), 255);
 	this.alpha = Math.min(Math.max(_alpha, 0), 1);
 }
+Color.prototype.clone = function()
+{
+    return new Color(this.red, this.green, this.blue, this.alpha);
+};
 Color.prototype.toString = function()
 {
 	return "rgba(" + this.red.toString() + "," + this.green.toString() + "," + this.blue.toString() + "," + this.alpha.toString() + ")";
-}
+};
 
 Color.prototype.lerp = function(color, t)
 {
