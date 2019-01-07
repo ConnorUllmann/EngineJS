@@ -23,52 +23,56 @@ Draw.rect = function(ctx, x, y, w, h, fillStyle)
 Draw.triangle = function(ctx, x1, y1, x2, y2, x3, y3, fillStyle)
 {
     ctx.fillStyle = fillStyle;
-	ctx.beginPath();
-	ctx.moveTo(x1, y1);
-	ctx.lineTo(x2, y2);
-	ctx.lineTo(x3, y3);
-	ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.lineTo(x3, y3);
+    ctx.fill();
 };
 Draw.rectLines = function(ctx, x, y, w, h, strokeStyle, lineWidth=1)
 {
-	let points = [
-		[x, y],
-		[x + w, y],
-		[x + w, y + h],
-		[x, y + h],
-		[x, y]
-	];
-	Draw.lines(ctx, points, strokeStyle, lineWidth);
+    let points = [
+        [x, y],
+        [x + w, y],
+        [x + w, y + h],
+        [x, y + h],
+        [x, y]
+    ];
+    Draw.lines(ctx, points, strokeStyle, lineWidth);
 };
 Draw.line = function(ctx, x1, y1, x2, y2, strokeStyle, lineWidth=1)
 {
-	ctx.beginPath();
-	ctx.moveTo(x1, y1);
-	ctx.lineTo(x2, y2);
-	ctx.lineWidth = lineWidth;
-	ctx.strokeStyle = strokeStyle;
-	ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = strokeStyle;
+    ctx.stroke();
 };
 Draw.lines = function(ctx, points, strokeStyle, lineWidth=1)
 {
-	if(points.length <= 0) return;
-	ctx.beginPath();
-	ctx.moveTo(points[0][0], points[0][1]);
-	for(let i = 1; i < points.length; i++)
-		ctx.lineTo(points[i][0], points[i][1]);
-	ctx.lineWidth = lineWidth;
-	ctx.strokeStyle = strokeStyle;
-	ctx.stroke();
+    if(points.length <= 0) return;
+    ctx.beginPath();
+    ctx.moveTo(points[0][0], points[0][1]);
+    for(let i = 1; i < points.length; i++)
+        ctx.lineTo(points[i][0], points[i][1]);
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = strokeStyle;
+    ctx.stroke();
 };
-Draw.text = function(ctx, text, x, y, fillStyle, font, halign="left", valign="top")
+Draw.text = function(ctx, text, x, y, fillStyle, font, halign="left", valign="top", rotationRadians=0)
 { //positive x is toward the top of the screen, positive y is to the left side of the screen
-	Draw.textStyle(ctx, fillStyle, font, halign, valign);
-	ctx.fillText(text, x, y);
+    Draw.textStyle(ctx, fillStyle, font, halign, valign);
+    // if(rotationRadians !== 0)
+    //     ctx.rotate(rotationRadians);
+    ctx.fillText(text, x, y);
+    // if(rotationRadians !== 0)
+    //     ctx.rotate(-rotationRadians);
 };
 Draw.textStyle = function(ctx, fillStyle, font, halign, valign)
 {
-	ctx.font = font;
-	ctx.fillStyle = fillStyle;
-	ctx.textAlign = halign;
-	ctx.textBaseline=valign;
+    ctx.font = font;
+    ctx.fillStyle = fillStyle;
+    ctx.textAlign = halign;
+    ctx.textBaseline=valign;
 };
