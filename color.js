@@ -5,9 +5,9 @@ function Color(_red, _green, _blue, _alpha=1)
 	this.blue = Math.min(Math.max(Math.floor(_blue), 0), 255);
 	this.alpha = Math.min(Math.max(_alpha, 0), 1);
 }
-Color.prototype.clone = function()
+Color.prototype.clone = function(alpha = null)
 {
-    return new Color(this.red, this.green, this.blue, this.alpha);
+    return new Color(this.red, this.green, this.blue, alpha !== null ? alpha: this.alpha);
 };
 Color.prototype.toString = function()
 {

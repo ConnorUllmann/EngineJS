@@ -65,9 +65,17 @@ Array.prototype.removeAt = function(index)
 //Returns a new array that is a reverse of the given array
 Array.prototype.reversed = function()
 {
-	let list = this.slice();
-	list.reverse();
+    let list = this.slice();
+    list.reverse();
     return list;
+};
+
+//Returns a random element of the array
+Array.prototype.sample = function()
+{
+    if(this.length === 0)
+        return null;
+    return this[Math.floor(Math.random() * this.length)];
 };
 
 //https://stackoverflow.com/questions/2936112/text-wrap-in-a-canvas-element
