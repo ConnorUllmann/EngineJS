@@ -78,6 +78,17 @@ Array.prototype.sample = function()
     return this[Math.floor(Math.random() * this.length)];
 };
 
+//https://stackoverflow.com/questions/105034/create-guid-uuid-in-javascript
+function guid()
+{
+    return "ss-s-s-s-sss".replace(/s/g, s4);
+}
+function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+}
+
 //https://stackoverflow.com/questions/2936112/text-wrap-in-a-canvas-element
 function getLines(ctx, text, maxWidth)
 {
