@@ -27,7 +27,7 @@ Mouse.start = function(_canvas)
 		Mouse.x = (evt.clientX - rect.left) * scale;
 		Mouse.y = (evt.clientY - rect.top) * scale;
 	}, false);
-    _canvas.addEventListener("mouseup", function(ev)
+    document.body.addEventListener("mouseup", function(ev)
 	{
         if(ev.button === 0) //Left
         {
@@ -40,7 +40,7 @@ Mouse.start = function(_canvas)
             Mouse.rightDown = false;
         }
 	});
-	_canvas.addEventListener("mousedown", function(ev)
+    document.body.addEventListener("mousedown", function(ev)
 	{
         if(ev.button === 0) //Left
         {
