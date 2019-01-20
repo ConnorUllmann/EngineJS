@@ -10,22 +10,23 @@ Mouse.leftDown = false;
 Mouse.rightDown = false;
 Mouse.focus = false;
 Mouse.scrollY = 0;
+Mouse.scale = 1;
 
 Mouse.onCanvas = function()
 {
-	return Mouse.x != null && Mouse.y != null &&
+	return Mouse.focus &&
+        Mouse.x != null && Mouse.y != null &&
 		Mouse.x >= 0 && Mouse.x < canvas.width &&
 		Mouse.y >= 0 && Mouse.y < canvas.height;
 };
 
 Mouse.start = function(_canvas)
 {
-	let scale = 1;// _canvas.width / parseInt(_canvas.style.width.replace("\"", "").replace("px", ""));
     _canvas.addEventListener('mousemove', function(evt)
 	{
         let rect = _canvas.getBoundingClientRect();
-		Mouse.x = (evt.clientX - rect.left) * scale;
-		Mouse.y = (evt.clientY - rect.top) * scale;
+		Mouse.x = (evt.clientX - rect.left) * Mouse.scale;
+		Mouse.y = (evt.clientY - rect.top) * Mouse.scale;
 	}, false);
     document.body.addEventListener("mouseup", function(ev)
 	{
@@ -65,10 +66,12 @@ Mouse.start = function(_canvas)
     {
         Mouse.scrollY = e.deltaY;
     });
+    Mouse.update();
 };
 
 Mouse.update = function()
 {
+    Mouse.scale = canvas.width / canvas.clientWidth;
     Mouse.leftReleased = false;
     Mouse.leftPressed = false;
     Mouse.rightReleased = false;
