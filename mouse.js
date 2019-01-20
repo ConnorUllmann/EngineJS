@@ -26,6 +26,7 @@ Mouse.start = function(_canvas)
     window.addEventListener('touchstart', function()
     {
         Mouse.touchscreen = true;
+        alert("This is a touchscreen!");
     });
     _canvas.addEventListener('mousemove', function(evt)
 	{
