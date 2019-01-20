@@ -11,6 +11,7 @@ Mouse.rightDown = false;
 Mouse.focus = false;
 Mouse.scrollY = 0;
 Mouse.scale = 1;
+Mouse.touchscreen = false;
 
 Mouse.onCanvas = function()
 {
@@ -22,6 +23,10 @@ Mouse.onCanvas = function()
 
 Mouse.start = function(_canvas)
 {
+    window.addEventListener('touchstart', function()
+    {
+        Mouse.touchscreen = true;
+    });
     _canvas.addEventListener('mousemove', function(evt)
 	{
         let rect = _canvas.getBoundingClientRect();
