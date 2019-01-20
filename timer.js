@@ -1,15 +1,25 @@
 function Timer(rate=1)
 {
+    this.rate = rate; // multiple for the value used to update the timer
+
     this.value = 0; // always in the range [0, 1]
-    this.rate = rate;
-    this.triggered = false; // Whether or not the timer crossed the 1 threshold this frame
+    this.triggered = false; // whether or not the timer crossed the 1 threshold this frame
+    this.started = false; //whether or not the timer has been updated yet;
 }
+
+Timer.prototype.reset = function()
+{
+    this.value = 0;
+    this.triggered = false;
+    this.started = false;
+};
 
 Timer.prototype.update = function()
 {
     let nextValue = this.getNextValueRaw();
     this.triggered = nextValue >= 1;
     this.value = this.cleanValue(nextValue);
+    this.started = true;
 };
 
 Timer.prototype.getNextValueRaw = function()
@@ -53,7 +63,7 @@ ZoomTimer.prototype.isFinished = function()
 
 function LoopTimer(rate)
 {
-    Timer.call(rate);
+    Timer.call(this, rate);
 }
 LoopTimer.prototype = Object.create(Timer.prototype);
 LoopTimer.prototype.constructor = LoopTimer;
@@ -61,4 +71,9 @@ LoopTimer.prototype.constructor = LoopTimer;
 LoopTimer.prototype.cleanValue = function(rawValue)
 {
     return rawValue % 1;
+};
+
+LoopTimer.prototype.isFinished = function()
+{
+    return false;
 };
