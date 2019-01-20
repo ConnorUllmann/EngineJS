@@ -45,7 +45,7 @@ Timer.prototype.toRange = function(min, max)
 
 function ZoomTimer(rate)
 {
-    Timer.call(rate);
+    Timer.call(this, rate);
 }
 ZoomTimer.prototype = Object.create(Timer.prototype);
 ZoomTimer.prototype.constructor = ZoomTimer;
