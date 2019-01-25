@@ -47,3 +47,17 @@ Point.prototype.closestPointOnLineSegment = function(a, b)
 	if(r > ab.lengthSq()) return b;
 	return ret;
 };
+Point.prototype.closest = function(points)
+{
+	let minDistanceSq = null;
+	let minPoint = null;
+	points.forEach(o => {
+        let distanceSq = this.subtract(o).lengthSq();
+        if (minDistanceSq === null || distanceSq < minDistanceSq)
+		{
+            minDistanceSq = distanceSq;
+            minPoint = o;
+		}
+	});
+	return minPoint;
+};

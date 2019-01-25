@@ -42,6 +42,14 @@ Utils.digits = function(n)
 	return count;
 };
 
+Utils.angleDiffRadians = function(from, to)
+{
+    let diff = to - from;
+    while (diff > Math.PI) { diff -= 2 * Math.PI; }
+    while (diff <= -Math.PI) { diff += 2 * Math.PI; }
+    return diff;
+};
+
 //https://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-get-parameters
 function getUrlProperties()
 {
@@ -52,7 +60,13 @@ function getUrlProperties()
             vars[key] = decodeURIComponent(value);
         });
     return vars;
-}
+};
+
+Array.prototype.removeThis = function(item)
+{
+    let index = this.indexOf(item);
+    this.removeAt(index);
+};
 
 Array.prototype.removeAt = function(index)
 {
