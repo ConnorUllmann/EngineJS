@@ -27,8 +27,13 @@ World.prototype.start = function(canvasId)
 };
 World.prototype.clearCanvas = function(color)
 {
+    if(color == null)
+    {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        return;
+    }
     this.context.fillStyle = color.toString();
-    this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 };
 World.prototype.render = function()
 {
