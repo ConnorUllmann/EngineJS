@@ -22,6 +22,7 @@ function Entity(_x, _y)
 	this.y = _y;
 	this.depth = 0;
 	this.id = Entity.generateID();
+	this.active = true;
 	this.visible = true;
 	Entity.toAdd.push(this);
 }
@@ -79,14 +80,11 @@ Entity.updateAll = function()
 	Entity.sortByUpdateOrder();
 	
 	//Update all entities.
-	for(let i = 0; i < Entity.entities.length; i++)
-	{
-		Entity.entities[i].update();
-	}
-	for(let i = 0; i < Entity.entities.length; i++)
-	{
-		Entity.entities[i].postUpdate();
-	}
+	let entities = Entity.entities.filter(o => o.active);
+	for(let i = 0; i < entities.length; i++)
+		entities[i].update();
+	for(let i = 0; i < entities.length; i++)
+        entities[i].postUpdate();
 	
 	//Destroy entities that are queued to be destroyed.
 	while(Entity.toDestroy.length > 0)
