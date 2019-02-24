@@ -19,7 +19,7 @@ World.prototype.start = function(canvasId)
         throw "Cannot retrieve canvas context!";
 
     //Need the lambda or else this.render() will have the Window instance as "this" inside the function scope
-    setInterval(() => this.render(), 60);
+    setInterval(() => this.render(), 16);
 
     this.context = context = this.canvas.getContext('2d');
     Mouse.start(this.canvas);
@@ -27,8 +27,13 @@ World.prototype.start = function(canvasId)
 };
 World.prototype.clearCanvas = function(color)
 {
+    if(color == null)
+    {
+        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        return;
+    }
     this.context.fillStyle = color.toString();
-    this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
+    this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 };
 World.prototype.render = function()
 {

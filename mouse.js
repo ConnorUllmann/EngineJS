@@ -29,12 +29,24 @@ Mouse.start = function(_canvas)
 		Mouse.x = (evt.clientX - rect.left) * Mouse.scale;
 		Mouse.y = (evt.clientY - rect.top) * Mouse.scale;
 	}, false);
+
+    if(Mouse.touchscreen)
+    {
+        document.body.addEventListener("touchstart", function(ev)
+        {
+            this.leftMouseDownEvent();
+        });
+        document.body.addEventListener("touchend", function(ev)
+        {
+            this.leftMouseUpEvent();
+        });
+    }
+    
     document.body.addEventListener("mouseup", function(ev)
 	{
         if(ev.button === 0) //Left
         {
-            Mouse.leftReleased = true;
-            Mouse.leftDown = false;
+            Mouse.leftMouseUpEvent();
         }
         else if(ev.button === 2) //Right
         {
@@ -46,8 +58,7 @@ Mouse.start = function(_canvas)
 	{
         if(ev.button === 0) //Left
         {
-            Mouse.leftPressed = true;
-            Mouse.leftDown = true;
+            Mouse.leftMouseDownEvent();
         }
         else if(ev.button === 2) //Right
         {
@@ -68,6 +79,18 @@ Mouse.start = function(_canvas)
         Mouse.scrollY = e.deltaY;
     });
     Mouse.update();
+};
+
+Mouse.leftMouseDownEvent = function()
+{
+    Mouse.leftPressed = true;
+    Mouse.leftDown = true;
+};
+
+Mouse.leftMouseUpEvent = function()
+{
+    Mouse.leftReleased = true;
+    Mouse.leftDown = false;
 };
 
 Mouse.update = function()
