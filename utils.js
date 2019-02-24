@@ -69,6 +69,12 @@ function getUrlProperties()
     return vars;
 };
 
+function saveCanvasScreenshot()
+{
+    var w=window.open('about:blank','image from canvas');
+    w.document.write("<img src='"+canvas.toDataURL("image/png")+"' alt='from canvas'/>");
+}
+
 Array.prototype.removeThis = function(item)
 {
     let index = this.indexOf(item);
