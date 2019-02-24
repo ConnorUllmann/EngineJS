@@ -60,7 +60,7 @@ Draw.lines = function(ctx, points, strokeStyle, lineWidth=1)
     ctx.strokeStyle = strokeStyle;
     ctx.stroke();
 };
-Draw.text = function(ctx, text, x, y, fillStyle, font, halign="left", valign="top", rotationRadians=0)
+Draw.text = function(ctx, text, x, y, fillStyle, font=null, halign="left", valign="top", rotationRadians=0)
 { //positive x is toward the top of the screen, positive y is to the left side of the screen
     Draw.textStyle(ctx, fillStyle, font, halign, valign);
     // if(rotationRadians !== 0)
