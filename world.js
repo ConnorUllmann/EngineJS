@@ -19,7 +19,7 @@ World.prototype.start = function(canvasId)
         throw "Cannot retrieve canvas context!";
 
     //Need the lambda or else this.render() will have the Window instance as "this" inside the function scope
-    setInterval(() => this.render(), 60);
+    setInterval(() => this.render(), 16);
 
     this.context = context = this.canvas.getContext('2d');
     Mouse.start(this.canvas);
