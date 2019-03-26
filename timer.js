@@ -24,7 +24,7 @@ Timer.prototype.update = function()
 
 Timer.prototype.getNextValueRaw = function()
 {
-    return this.value + Entity.delta / 1000 * this.rate;
+    return this.value + this.delta / 1000 * this.rate;
 };
 
 Timer.prototype.cleanValue = function(rawValue)

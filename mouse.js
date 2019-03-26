@@ -1,44 +1,48 @@
-function Mouse() {}
-
-Mouse.x = 0;
-Mouse.y = 0;
-Mouse.leftReleased = false;
-Mouse.leftPressed = false;
-Mouse.rightReleased = false;
-Mouse.rightPressed = false;
-Mouse.leftDown = false;
-Mouse.rightDown = false;
-Mouse.focus = false;
-Mouse.scrollY = 0;
-Mouse.scale = 1;
-Mouse.touchscreen = "ontouchstart" in document.documentElement;
-
-Mouse.onCanvas = function()
+function Mouse(world)
 {
-	return Mouse.focus &&
-        Mouse.x != null && Mouse.y != null &&
-		Mouse.x >= 0 && Mouse.x < canvas.width &&
-		Mouse.y >= 0 && Mouse.y < canvas.height;
+    this.world = world;
+    this.x = 0;
+    this.y = 0;
+    this.leftReleased = false;
+    this.leftPressed = false;
+    this.rightReleased = false;
+    this.rightPressed = false;
+    this.leftDown = false;
+    this.rightDown = false;
+    this.focus = false;
+    this.scrollY = 0;
+    this.scale = 1;
+    this.touchscreen = "ontouchstart" in document.documentElement;
+}
+
+
+Mouse.prototype.onCanvas = function()
+{
+	return this.focus &&
+        this.x != null && this.y != null &&
+        this.x >= 0 && this.x < this.world.canvas.width &&
+        this.y >= 0 && this.y < this.world.canvas.height;
 };
 
-Mouse.start = function(_canvas)
+Mouse.prototype.start = function()
 {
-    _canvas.addEventListener('mousemove', function(evt)
+    let mouse = this;
+    this.world.canvas.addEventListener('mousemove', function(evt)
 	{
-        let rect = _canvas.getBoundingClientRect();
-		Mouse.x = (evt.clientX - rect.left) * Mouse.scale;
-		Mouse.y = (evt.clientY - rect.top) * Mouse.scale;
+        let rect = mouse.world.canvas.getBoundingClientRect();
+		this.x = (evt.clientX - rect.left) * this.scale;
+		this.y = (evt.clientY - rect.top) * this.scale;
 	}, false);
 
-    if(Mouse.touchscreen)
+    if(this.touchscreen)
     {
         document.body.addEventListener("touchstart", function(ev)
         {
-            this.leftMouseDownEvent();
+            mouse.leftMouseDownEvent();
         });
         document.body.addEventListener("touchend", function(ev)
         {
-            this.leftMouseUpEvent();
+            mouse.leftMouseUpEvent();
         });
     }
     
@@ -46,59 +50,59 @@ Mouse.start = function(_canvas)
 	{
         if(ev.button === 0) //Left
         {
-            Mouse.leftMouseUpEvent();
+            mouse.leftMouseUpEvent();
         }
         else if(ev.button === 2) //Right
         {
-            Mouse.rightReleased = true;
-            Mouse.rightDown = false;
+            mouse.rightReleased = true;
+            mouse.rightDown = false;
         }
 	});
     document.body.addEventListener("mousedown", function(ev)
 	{
         if(ev.button === 0) //Left
         {
-            Mouse.leftMouseDownEvent();
+            mouse.leftMouseDownEvent();
         }
         else if(ev.button === 2) //Right
         {
-            Mouse.rightPressed = true;
-            Mouse.rightDown = true;
+            mouse.rightPressed = true;
+            mouse.rightDown = true;
         }
 	});
-    _canvas.addEventListener ("mouseout", function()
+    this.world.canvas.addEventListener ("mouseout", function()
     {
-        Mouse.focus = false;
+        mouse.focus = false;
     });
-    _canvas.addEventListener ("mouseover", function()
+    this.world.canvas.addEventListener ("mouseover", function()
     {
-        Mouse.focus = true;
+        mouse.focus = true;
     });
-    _canvas.addEventListener('wheel', function(e)
+    this.world.canvas.addEventListener('wheel', function(e)
     {
-        Mouse.scrollY = e.deltaY;
+        mouse.scrollY = e.deltaY;
     });
-    Mouse.update();
+    this.update();
 };
 
-Mouse.leftMouseDownEvent = function()
+Mouse.prototype.leftMouseDownEvent = function()
 {
-    Mouse.leftPressed = true;
-    Mouse.leftDown = true;
+    this.leftPressed = true;
+    this.leftDown = true;
 };
 
-Mouse.leftMouseUpEvent = function()
+Mouse.prototype.leftMouseUpEvent = function()
 {
-    Mouse.leftReleased = true;
-    Mouse.leftDown = false;
+    this.leftReleased = true;
+    this.leftDown = false;
 };
 
-Mouse.update = function()
+Mouse.prototype.update = function()
 {
-    Mouse.scale = canvas.width / canvas.clientWidth;
-    Mouse.leftReleased = false;
-    Mouse.leftPressed = false;
-    Mouse.rightReleased = false;
-    Mouse.rightPressed = false;
-    Mouse.scrollY = 0;
+    this.scale = this.world.canvas.width / this.world.canvas.clientWidth;
+    this.leftReleased = false;
+    this.leftPressed = false;
+    this.rightReleased = false;
+    this.rightPressed = false;
+    this.scrollY = 0;
 };

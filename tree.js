@@ -1,3 +1,22 @@
+/* Usage
+let root = new TreeNode();
+let tree = new Tree(root);
+
+let A = new TreeNode(root);
+let B = new TreeNode(root);
+let C = new TreeNode(A);
+let D = new TreeNode(A);
+let E = new TreeNode(B);
+let F = new TreeNode(D);
+let G = new TreeNode(D);
+let H = new TreeNode(D);
+let I = new TreeNode(E);
+let J = new TreeNode(I);
+
+console.log(tree);
+console.log(tree.getLeafTreeNodes());
+*/
+
 function Tree(root)
 {
     this.root = root;
@@ -180,10 +199,10 @@ Tree.prototype.removeNode = function(node)
     }
 };
 
-Tree.NodeId = 0;
+TreeNode.ID = 0;
 function TreeNode()
 {
-    this.id = Tree.NodeId++;
+    this.id = TreeNode.ID++;
     this.reset();
 }
 
@@ -192,22 +211,3 @@ TreeNode.prototype.reset = function()
     this.childrenIds = [];
     this.depth = -1;
 };
-
-/*
-let root = new TreeNode();
-let tree = new Tree(root);
-
-let A = new TreeNode(root);
-let B = new TreeNode(root);
-let C = new TreeNode(A);
-let D = new TreeNode(A);
-let E = new TreeNode(B);
-let F = new TreeNode(D);
-let G = new TreeNode(D);
-let H = new TreeNode(D);
-let I = new TreeNode(E);
-let J = new TreeNode(I);
-
-console.log(tree);
-console.log(tree.getLeafTreeNodes());
-*/
