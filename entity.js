@@ -21,17 +21,10 @@ function Entity(_x, _y, _world=null)
 	this.visible = true;
 
     this.id = null;
-    this.world = null;
-	if(_world != null)
-		this.addToWorld(_world);
+    this.world = _world;
+	if(this.world != null)
+        this.world._addEntity(this);
 }
-
-Entity.prototype.addToWorld = function(world)
-{
-	this.world = world;
-	this.world.entitiesToAdd.push(this);
-    this.id = this.world.generateID();
-};
 
 Entity.prototype.added = function() //Triggered when this entity is added to the world.
 {
@@ -42,7 +35,7 @@ Entity.prototype.removed = function() //Triggered when this entity is removed fr
 
 Entity.prototype.destroy = function() //Call this to destroy this entity (queues it up for removal at the next available point).
 {
-	this.world.entitiesToDestroy.push(this);
+	this.world._destroyEntity(this);
 };
 
 Entity.prototype.update = function()

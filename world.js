@@ -2,24 +2,21 @@ function World()
 {
     this.canvas = null;
     this.context = null;
-    this.backgroundColor = "#ccc";
+    this.backgroundColor = new Color(128, 128, 128);
     this.camera = new Camera(0, 0);
     this.mouse = new Mouse(this);
     this.keyboard = new Keyboard(this);
 
     this.entities = [];
     this.entitiesToAdd = [];
-    this.entitiesToDestroy = [];
+    this.entitiesToRemove = [];
     this.entityID = 0;
 
     this.delta = 0;
     this.firstUpdate = null;
-    this.lastUpdate = Date.now();
+    this.lastUpdate = null;
 }
-World.prototype.generateID = function()
-{
-    return this.entityID++;
-};
+
 World.prototype.start = function(canvasId)
 {
     this.canvas = document.getElementById(canvasId);
@@ -27,14 +24,18 @@ World.prototype.start = function(canvasId)
         throw "Canvas doesn't exist!";
     if(!this.canvas.getContext)
         throw "Cannot retrieve canvas context!";
+    this.context = this.canvas.getContext('2d');
+
+    this.firstUpdate = null;
+    this.lastUpdate = Date.now();
+
+    this.mouse.start();
+    this.keyboard.start();
 
     //Need the lambda or else this.render() will have the Window instance as "this" inside the function scope
     setInterval(() => this.render(), 16);
-
-    this.context = this.canvas.getContext('2d');
-    this.mouse.start();
-    this.keyboard.start();
 };
+
 World.prototype.clearCanvas = function(color)
 {
     if(color == null)
@@ -45,6 +46,7 @@ World.prototype.clearCanvas = function(color)
     this.context.fillStyle = color.toString();
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 };
+
 World.prototype.render = function()
 {
     this.updateAll();
@@ -54,19 +56,17 @@ World.prototype.render = function()
     this.keyboard.update();
 };
 
-
-World.prototype.sortByUpdateOrder = function()
-{
-    this.entities.sort(this.compareUpdateOrders);
-};
 World.prototype.updateAll = function()
 {
     if(this.firstUpdate == null)
         this.firstUpdate = Date.now();
 
-    this.updateDelta();
+    // Update delta
+    let now = Date.now();
+    this.delta = now - this.lastUpdate;
+    this.lastUpdate = now;
 
-    //Add the new entities that are queued to be created.
+    // Add the new entities that are queued to be created.
     while(this.entitiesToAdd.length > 0)
     {
         let e = this.entitiesToAdd.shift();
@@ -74,19 +74,20 @@ World.prototype.updateAll = function()
         e.added();
     }
 
-    this.sortByUpdateOrder();
+    // Re-sort entities after adding the new ones
+    this._sortByUpdateOrder();
 
-    //Update all entities.
+    // Update all entities
     let entities = this.entities.filter(o => o.active);
     for(let i = 0; i < entities.length; i++)
         entities[i].update();
     for(let i = 0; i < entities.length; i++)
         entities[i].postUpdate();
 
-    //Destroy entities that are queued to be destroyed.
-    while(this.entitiesToDestroy.length > 0)
+    // Destroy entities that are queued to be destroyed.
+    while(this.entitiesToRemove.length > 0)
     {
-        let e = this.entitiesToDestroy.pop();
+        let e = this.entitiesToRemove.pop();
         let ind = this.entities.indexOf(e);
         if(ind > -1)
         {
@@ -98,8 +99,8 @@ World.prototype.updateAll = function()
 
 World.prototype.renderAll = function()
 {
-    //Render all entities.
-    this.sortByUpdateOrder();
+    // Render all entities (re-sorting them in case there were changes during the updates)
+    this._sortByUpdateOrder();
     let entities = this.entities.filter(o => o.visible);
     for(let i = 0; i < entities.length; i++)
         entities[i].render();
@@ -111,18 +112,28 @@ World.prototype.destroyAll = function()
         this.entities[i].destroy();
 };
 
-World.prototype.compareUpdateOrders = function(a, b)
+World.prototype._sortByUpdateOrder = function()
+{
+    this.entities.sort(this._compareUpdateOrders);
+};
+
+World.prototype._compareUpdateOrders = function(a, b)
 {
     if(a.depth === b.depth)
         return a.id - b.id;
     return a.depth - b.depth;
 };
 
-World.prototype.updateDelta = function()
+World.prototype._addEntity = function(entity)
 {
-    let now = Date.now();
-    this.delta = now - this.lastUpdate;
-    this.lastUpdate = now;
+    this.entitiesToAdd.push(entity);
+    entity.id = this.entityID++;
+    entity.world = this;
+};
+
+World.prototype._destroyEntity = function(entity)
+{
+    this.entitiesToRemove.push(entity);
 };
 
 World.prototype.timeSinceStart = function()
