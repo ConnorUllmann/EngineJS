@@ -8,6 +8,7 @@ Draw.circle = function(ctx, x, y, radius, fillStyle)
     ctx.fillStyle = fillStyle;
     ctx.fill();
 };
+
 Draw.circleOutline = function(ctx, x, y, radius, strokeStyle, lineWidth=1)
 {
     ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
@@ -17,12 +18,7 @@ Draw.circleOutline = function(ctx, x, y, radius, strokeStyle, lineWidth=1)
     ctx.lineWidth = lineWidth;
     ctx.stroke();
 };
-Draw.rect = function(ctx, x, y, w, h, fillStyle)
-{
-    ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
-    ctx.fillStyle = fillStyle;
-    ctx.fillRect(x, y, w, h);
-};
+
 Draw.triangle = function(ctx, x1, y1, x2, y2, x3, y3, fillStyle)
 {
     ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
@@ -33,6 +29,14 @@ Draw.triangle = function(ctx, x1, y1, x2, y2, x3, y3, fillStyle)
     ctx.lineTo(x3, y3);
     ctx.fill();
 };
+
+Draw.rect = function(ctx, x, y, w, h, fillStyle)
+{
+    ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
+    ctx.fillStyle = fillStyle;
+    ctx.fillRect(x, y, w, h);
+};
+
 Draw.rectLines = function(ctx, x, y, w, h, strokeStyle, lineWidth=1)
 {
     let points = [
@@ -44,6 +48,7 @@ Draw.rectLines = function(ctx, x, y, w, h, strokeStyle, lineWidth=1)
     ];
     Draw.lines(ctx, points, strokeStyle, lineWidth);
 };
+
 Draw.line = function(ctx, x1, y1, x2, y2, strokeStyle, lineWidth=1)
 {
     ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
@@ -54,6 +59,7 @@ Draw.line = function(ctx, x1, y1, x2, y2, strokeStyle, lineWidth=1)
     ctx.strokeStyle = strokeStyle;
     ctx.stroke();
 };
+
 Draw.lines = function(ctx, points, strokeStyle, lineWidth=1)
 {
     ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
@@ -66,6 +72,7 @@ Draw.lines = function(ctx, points, strokeStyle, lineWidth=1)
     ctx.strokeStyle = strokeStyle;
     ctx.stroke();
 };
+
 Draw.text = function(ctx, text, x, y, fillStyle, font=null, halign="left", valign="top", rotationRadians=0)
 { //positive x is toward the top of the screen, positive y is to the left side of the screen
     ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
@@ -76,6 +83,7 @@ Draw.text = function(ctx, text, x, y, fillStyle, font=null, halign="left", valig
     // if(rotationRadians !== 0)
     //     ctx.rotate(-rotationRadians);
 };
+
 Draw.textStyle = function(ctx, fillStyle, font, halign, valign)
 {
     ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
