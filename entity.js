@@ -21,9 +21,10 @@ function Entity(_x, _y, _world=null)
 	this.visible = true;
 
     this.id = null;
-    this.world = _world;
-	if(this.world != null)
-        this.world._addEntity(this);
+    this.world = null;
+
+	if(_world != null)
+        _world._addEntity(this);
 }
 
 Entity.prototype.added = function() //Triggered when this entity is added to the world.
