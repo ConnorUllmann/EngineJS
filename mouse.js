@@ -30,8 +30,8 @@ Mouse.prototype.start = function()
     this.world.canvas.addEventListener('mousemove', function(evt)
 	{
         let rect = mouse.world.canvas.getBoundingClientRect();
-		this.x = (evt.clientX - rect.left) * this.scale;
-		this.y = (evt.clientY - rect.top) * this.scale;
+		mouse.x = (evt.clientX - rect.left) * mouse.scale;
+        mouse.y = (evt.clientY - rect.top) * mouse.scale;
 	}, false);
 
     if(this.touchscreen)

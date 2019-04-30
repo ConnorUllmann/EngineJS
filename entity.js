@@ -1,8 +1,8 @@
 // Usage:
 //
-// function ExampleEntity(x, y)
+// function ExampleEntity(x, y, world)
 // {
-//     Entity.call(this, x, y);
+//     Entity.call(this, x, y, world);
 // }
 // ExampleEntity.prototype = Object.create(Entity.prototype);
 // ExampleEntity.prototype.constructor = ExampleEntity;
