@@ -34,8 +34,25 @@ Grid.CardinalNeighborsRelativeIndexMap = [
 Grid.prototype.getCardinalNeighbors = function(i, j)
 {
     return Grid.CardinalNeighborsRelativeIndexMap
-        .map(o => this.grid.get(i + o.x, j + o.y))
+        .map(o => this.get(i + o.x, j + o.y))
         .filter(o => o !== null);
+};
+
+Grid.prototype.getSquareNeighbors = function(i, j)
+{
+    let neighbors = [];
+    for(let ti = -1; ti <= 1; ti++)
+    {
+        for (let tj = -1; tj <= 1; tj++)
+        {
+            if(ti === 0 && tj === 0)
+                continue;
+            let neighbor = this.get(i + ti, j + tj);
+            if(neighbor != null)
+                neighbors.push(neighbor);
+        }
+    }
+    return neighbors;
 };
 
 /* Executes the given function (which takes in the coordinates of the tile to set) on each tile in the Grid */

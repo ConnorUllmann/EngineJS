@@ -254,3 +254,8 @@ Array.prototype.sample = function()
         return null;
     return this[Math.floor(Math.random() * this.length)];
 };
+
+Array.prototype.swap = function(x, y)
+{
+    this[x] = this.splice(y, 1, this[x])[0];
+};

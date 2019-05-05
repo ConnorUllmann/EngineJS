@@ -24,7 +24,8 @@ Timer.prototype.update = function()
 
 Timer.prototype.getNextValueRaw = function()
 {
-    return this.value + this.delta / 1000 * this.rate;
+    //TODO: can't use a global world reference here...but don't want to pass it in either :(ddddd
+    return this.value + world.delta / 1000 * this.rate;
 };
 
 Timer.prototype.cleanValue = function(rawValue)
