@@ -259,3 +259,13 @@ Array.prototype.swap = function(x, y)
 {
     this[x] = this.splice(y, 1, this[x])[0];
 };
+
+Array.prototype.flattened = function()
+{
+    return [].concat.apply([], this);
+};
+
+Array.prototype.any = function(boolCheck)
+{
+    return this.some(boolCheck);
+};

@@ -15,6 +15,11 @@ function World()
     this.delta = 0;
     this.firstUpdate = null;
     this.lastUpdate = null;
+
+    this.debug = false;
+    this.debugFpsTrackListMaxSize = 10;
+    this.debugFpsTrackList = [];
+    this.debugFpsCurrent = 0;
 }
 
 World.prototype.start = function(canvasId)
@@ -104,6 +109,18 @@ World.prototype.renderAll = function()
     let entities = this.entities.filter(o => o.visible);
     for(let i = 0; i < entities.length; i++)
         entities[i].render();
+
+    if(this.debug)
+    {
+        this.debugFpsTrackList.unshift(Math.floor(1000/this.delta));
+        if(this.debugFpsTrackList.length >= this.debugFpsTrackListMaxSize)
+        {
+            this.debugFpsCurrent = this.debugFpsTrackList.reduce((totalFps, fps) => totalFps + fps) / this.debugFpsTrackList.length;
+            this.debugFpsTrackList.length = 0;
+        }
+        Draw.rect(this.context, 0, 0, 40, 25, new Color(0, 0, 0));
+        Draw.text(this.context, Math.floor(this.debugFpsCurrent), 20, 13, new Color(255, 255, 255), "20px Helvetica", "center", "middle");
+    }
 };
 
 World.prototype.destroyAll = function()

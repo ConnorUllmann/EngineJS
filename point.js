@@ -29,6 +29,13 @@ Point.prototype.proj = function(b)
 	let d = dot / Math.max(blen2, 0.000001);
 	return new Point(d * b.x, d * b.y);
 };
+Point.prototype.normalized = function(length=1)
+{
+	if(this.x === 0 && this.y === 0)
+		return new Point(0, 0);
+	let temp = length / Math.sqrt(this.lengthSq());
+	return new Point(this.x * temp, this.y * temp);
+};
 
 
 Point.prototype.insideLineSegmentIfColinear = function(a, b)
