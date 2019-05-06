@@ -227,8 +227,9 @@ Utils.getRandomName = function()
 
 Array.prototype.removeThis = function(item)
 {
-    let index = this.indexOf(item);
-    this.removeAt(index);
+    if(!this.includes(item))
+        return;
+    this.removeAt(this.indexOf(item));
 };
 
 Array.prototype.removeAt = function(index)
