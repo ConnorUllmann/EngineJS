@@ -55,6 +55,103 @@ Grid.prototype.getSquareNeighbors = function(i, j)
     return neighbors;
 };
 
+Grid.prototype.getRaytraceTiles = function(iStart, jStart, iFinish, jFinish, isSolidCheck=null)
+{
+    let tiles = [];
+    this.raytrace(iStart, jStart, iFinish, jFinish, (i, j) => {
+        let tile = this.get(i, j);
+        if(isSolidCheck !== null && isSolidCheck(tile))
+            return true;
+        tiles.push(tile);
+        return false;
+    });
+    return tiles;
+};
+
+Grid.prototype.isPathObstructed = function(iStart, jStart, iFinish, jFinish, isSolidCheck)
+{
+    let canSee = true;
+    this.raytrace(iStart, jStart, iFinish, jFinish, (i, j) => {
+        let tile = this.get(i, j);
+        if(isSolidCheck(tile))
+        {
+            canSee = false;
+            return true;
+        }
+    });
+    return !canSee;
+};
+
+// http://playtechs.blogspot.com/2007/03/raytracing-on-grid.html
+// Allows for fractional i,j. For example, (iStart, jStart) = (1.5, 2.5) will raytrace starting from the center of tile (1, 2)
+// onFinish only called if breakCheck was not triggered
+Grid.prototype.raytrace = function(iStart, jStart, iFinish, jFinish, breakCheck=null)
+{
+    let iDiff = Math.abs(iFinish - iStart);
+    let jDiff = Math.abs(jFinish - jStart);
+
+    let iStartInt = Math.floor(iStart);
+    let jStartInt = Math.floor(jStart);
+
+    let totalTiles = 1;
+    let iIncrement = 0;
+    let jIncrement = 0;
+    let error = 0;
+
+    if (iDiff === 0)
+    {
+        iIncrement = 0;
+        error = Number.MAX_SAFE_INTEGER;
+    }
+    else if (iFinish > iStart)
+    {
+        iIncrement = 1;
+        totalTiles += Math.floor(iFinish) - iStartInt;
+        error = (Math.floor(iStart) + 1 - iStart) * jDiff;
+    }
+    else
+    {
+        iIncrement = -1;
+        totalTiles += iStartInt - Math.floor(iFinish);
+        error = (iStart - Math.floor(iStart)) * jDiff;
+    }
+
+    if (jDiff === 0)
+    {
+        jIncrement = 0;
+        error -= Number.MAX_SAFE_INTEGER;
+    }
+    else if (jFinish > jStart)
+    {
+        jIncrement = 1;
+        totalTiles += Math.floor(jFinish) - jStartInt;
+        error -= (Math.floor(jStart) + 1 - jStart) * iDiff;
+    }
+    else
+    {
+        jIncrement = -1;
+        totalTiles += jStartInt - Math.floor(jFinish);
+        error -= (jStart - Math.floor(jStart)) * iDiff;
+    }
+
+    while(totalTiles-- > 0)
+    {
+        if(breakCheck(iStartInt, jStartInt))
+            break;
+
+        if (error > 0)
+        {
+            jStartInt += jIncrement;
+            error -= iDiff;
+        }
+        else
+        {
+            iStartInt += iIncrement;
+            error += jDiff;
+        }
+    }
+};
+
 /* Executes the given function (which takes in the coordinates of the tile to set) on each tile in the Grid */
 Grid.prototype.setEach = function(tileAction)
 {
