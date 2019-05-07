@@ -33,7 +33,7 @@ PathMap.prototype.distance = function(tile0, tile1)
             (tile0.j - tile1.j) * (tile0.j - tile1.j));
 };
 
-PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget)
+PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget, useClosestNonSolidTileIfTargetIsSolid=false)
 {
     this.reset();
 
@@ -45,7 +45,14 @@ PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget)
         Math.max(0, Math.min(this.gridPath.rows-1, iTarget)),
         Math.max(0, Math.min(this.gridPath.columns-1, jTarget)));
     if(this.getSolid(first.gridObject))
-        return [];
+    {
+        if (!useClosestNonSolidTileIfTargetIsSolid)
+            return [];
+        first = this.gridPath.tiles.flattened().filter(o => !this.getSolid(o.gridObject)).minOf(o => new Point(o.i, o.j).subtract(new Point(iTarget, jTarget)).lengthSq());
+        if(first === null)
+            return [];
+        return this.findPath(iStart, jStart, first.i, first.j, useClosestNonSolidTileIfTargetIsSolid);
+    }
 
     let last = this.gridPath.get(
         Math.max(0, Math.min(this.gridPath.rows-1, iStart)),

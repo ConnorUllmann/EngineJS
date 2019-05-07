@@ -270,3 +270,23 @@ Array.prototype.any = function(boolCheck)
 {
     return this.some(boolCheck);
 };
+
+// Returns the element of the array with the lowest valueGetter(element) value
+Array.prototype.minOf = function(valueGetter)
+{
+    if(this.length === 0)
+        return null;
+
+    let minItem = this[0];
+    let minValue = valueGetter(minItem);
+    for(let item of this)
+    {
+        let value = valueGetter(item);
+        if(value < minValue)
+        {
+            minItem = item;
+            minValue = value;
+        }
+    }
+    return minItem;
+};
