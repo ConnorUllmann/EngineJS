@@ -290,3 +290,8 @@ Array.prototype.minOf = function(valueGetter)
     }
     return minItem;
 };
+
+Array.prototype.maxOf = function(valueGetter)
+{
+    return this.minOf(o => -valueGetter(o));
+};
