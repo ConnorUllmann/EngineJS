@@ -49,20 +49,20 @@ Color.sampleRandomColorGoldenRatio = function(saturation, value)
 Color.rerandomizeRandomColorGoldenRatio = function() { startValueRandomColorGoldenRatio = Math.random(); };
 
 
-https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+//https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 Color.componentToHex = function(c)
 {
     let hex = c.toString(16);
     return hex.length == 1 ? "0" + hex : hex;
 };
 
-https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+//https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 Color.rgbToHex = function(r, g, b)
 {
     return "#" + Color.componentToHex(r) + Color.componentToHex(g) + Color.componentToHex(b);
 };
 
-https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
+//https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
 Color.hexToColor = function(hex)
 {
     // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
@@ -100,6 +100,6 @@ Color.hsvToColor = function(h, s, v)
         case 3: r = p, g = q, b = v; break;
         case 4: r = t, g = p, b = v; break;
         case 5: r = v, g = p, b = q; break;
-    };
+    }
     return new Color(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
 };

@@ -48,7 +48,9 @@ PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget, useClose
     {
         if (!useClosestNonSolidTileIfTargetIsSolid)
             return [];
-        first = this.gridPath.tiles.flattened().filter(o => !this.getSolid(o.gridObject)).minOf(o => new Point(o.i, o.j).subtract(new Point(iTarget, jTarget)).lengthSq());
+        first = this.gridPath.tiles.flattened()
+            .filter(o => !this.getSolid(o.gridObject))
+            .minOf(o => Utils.distanceSq(o.i, o.j, iTarget, jTarget));
         if(first === null)
             return [];
         return this.findPath(iStart, jStart, first.i, first.j, useClosestNonSolidTileIfTargetIsSolid);
@@ -72,7 +74,7 @@ PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget, useClose
         if(current === last)
         {
             current.reset();
-            while(true)
+            while(true) // some say I'm bold
             {
                 path.push(current);
                 let neighborsBacktrack = this.neighborsCallback(current.i, current.j);

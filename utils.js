@@ -1,5 +1,14 @@
 function Utils() {}
 
+Utils.distanceSq = function(x0, y0, x1, y1)
+{
+    return (x0 - x1) * (x0 - x1) + (y0 - y1) * (y0 - y1);
+};
+Utils.distance = function(x0, y0, x1, y1)
+{
+    return Math.sqrt(Utils.distanceSq(x0, y0, x1, y1));
+};
+
 /* Length of an equilateral triangle's altitude given the side length */
 Utils.EquilateralAltitudeCoefficient = Math.sqrt(3) / 2;
 Utils.equilateralAltitude = function(equilateralTriangleSideLength)
