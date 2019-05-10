@@ -197,3 +197,65 @@ Grid.prototype.firstWhere = function(tileEval)
     }
     return null;
 };
+
+//https://lodev.org/cgtutor/floodfill.html
+Grid.prototype.getRegion = function(i, j, getValue)
+{
+    let oldValue = getValue(this.get(i, j));
+    let region = [];
+
+    let i1 = 0;
+    let spanAbove = false;
+    let spanBelow = false;
+
+    let stack = new Stack();
+    stack.push(new Point(i, j));
+    while(true)
+    {
+        let pt = stack.pop();
+        if(pt == null)
+            break;
+        i = pt.x;
+        j = pt.y;
+
+        i1 = i;
+        while(i1 >= 0 && getValue(this.get(i1, j)) === oldValue)
+            i1--;
+        i1++;
+
+        spanAbove = false;
+        spanBelow = false;
+        while(i1 < this.rows && getValue(this.get(i1, j)) === oldValue)
+        {
+            let tile = this.get(i1, j);
+            if(region.includes(tile))
+                break;
+            if(tile == null)
+            {
+                console.log("null!");
+                break;
+            }
+            region.push(tile);
+            if(!spanAbove && j > 0 && getValue(this.get(i1, j - 1)) === oldValue)
+            {
+                stack.push(new Point(i1, j - 1));
+                spanAbove = true;
+            }
+            else if(spanAbove && j > 0 && getValue(this.get(i1, j - 1)) !== oldValue)
+            {
+                spanAbove = false;
+            }
+            if(!spanBelow && j < this.columns - 1 && getValue(this.get(i1, j + 1)) === oldValue)
+            {
+                stack.push(new Point(i1, j + 1));
+                spanBelow = true;
+            }
+            else if(spanBelow && j < this.columns - 1 && getValue(this.get(i1, j + 1)) !== oldValue)
+            {
+                spanBelow = false;
+            }
+            i1++;
+        }
+    }
+    return region;
+};

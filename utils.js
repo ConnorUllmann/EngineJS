@@ -280,6 +280,16 @@ Array.prototype.any = function(boolCheck)
     return this.some(boolCheck);
 };
 
+Array.prototype.max = function()
+{
+    return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function()
+{
+    return Math.min.apply(null, this);
+};
+
 // Returns the element of the array with the lowest valueGetter(element) value
 Array.prototype.minOf = function(valueGetter)
 {
@@ -303,4 +313,8 @@ Array.prototype.minOf = function(valueGetter)
 Array.prototype.maxOf = function(valueGetter)
 {
     return this.minOf(o => -valueGetter(o));
+};
+
+Array.prototype.clone = function() {
+    return this.slice(0);
 };
