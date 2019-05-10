@@ -252,7 +252,7 @@ Array.prototype.removeAt = function(index)
 //Returns a new array that is a reverse of the given array
 Array.prototype.reversed = function()
 {
-    let list = this.slice();
+    let list = this.clone();
     list.reverse();
     return list;
 };
