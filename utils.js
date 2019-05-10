@@ -280,6 +280,14 @@ Array.prototype.any = function(boolCheck)
     return this.some(boolCheck);
 };
 
+Array.prototype.first = function(boolCheck)
+{
+    for(let element of this)
+        if (boolCheck(element))
+            return element;
+    return null;
+};
+
 Array.prototype.max = function()
 {
     return Math.max.apply(null, this);

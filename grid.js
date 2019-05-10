@@ -228,13 +228,8 @@ Grid.prototype.getRegion = function(i, j, getValue)
         while(i1 < this.rows && getValue(this.get(i1, j)) === oldValue)
         {
             let tile = this.get(i1, j);
-            if(region.includes(tile))
+            if(tile == null || region.includes(tile))
                 break;
-            if(tile == null)
-            {
-                console.log("null!");
-                break;
-            }
             region.push(tile);
             if(!spanAbove && j > 0 && getValue(this.get(i1, j - 1)) === oldValue)
             {
