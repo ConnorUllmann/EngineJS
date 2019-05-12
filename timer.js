@@ -1,7 +1,6 @@
-function Timer(rate=1)
+function Timer(seconds=1)
 {
-    this.rate = rate; // multiple for the value used to update the timer
-
+    this.seconds = seconds;
     this.value = 0; // always in the range [0, 1]
     this.triggered = false; // whether or not the timer crossed the 1 threshold this frame
     this.started = false; //whether or not the timer has been updated yet;
@@ -24,8 +23,10 @@ Timer.prototype.update = function()
 
 Timer.prototype.getNextValueRaw = function()
 {
-    //TODO: can't use a global world reference here...but don't want to pass it in either :(ddddd
-    return this.value + world.delta / 1000 * this.rate;
+    if(this.seconds === 0)
+        return 1;
+    //TODO: can't use a global world reference here...but don't want to pass it in either :(
+    return this.value + world.delta / 1000 / this.seconds;
 };
 
 Timer.prototype.cleanValue = function(rawValue)
@@ -62,9 +63,9 @@ ZoomTimer.prototype.isFinished = function()
 };
 
 
-function LoopTimer(rate)
+function LoopTimer(seconds)
 {
-    Timer.call(this, rate);
+    Timer.call(this, seconds);
 }
 LoopTimer.prototype = Object.create(Timer.prototype);
 LoopTimer.prototype.constructor = LoopTimer;

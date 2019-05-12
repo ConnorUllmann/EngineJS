@@ -4,6 +4,11 @@ function Point(_x, _y)
 	this.y = _y;
 }
 
+Point.create = function(length, angleRadians)
+{
+	return new Point(length * Math.cos(angleRadians), length * Math.sin(angleRadians));
+};
+
 Point.prototype.toString = function() { return "(" + this.x + "," + this.y + ")"; };
 
 Point.prototype.lengthSq = function()
@@ -35,6 +40,18 @@ Point.prototype.normalized = function(length=1)
 		return new Point(0, 0);
 	let temp = length / Math.sqrt(this.lengthSq());
 	return new Point(this.x * temp, this.y * temp);
+};
+Point.prototype.midpoint = function(b)
+{
+	return new Point((this.x + b.x) / 2, (this.y + b.y) / 2);
+};
+Point.prototype.distanceSqTo = function(b)
+{
+    return Utils.distanceSq(this.x, this.y, b.x, b.y);
+};
+Point.prototype.distanceTo = function(b)
+{
+    return Utils.distance(this.x, this.y, b.x, b.y);
 };
 
 

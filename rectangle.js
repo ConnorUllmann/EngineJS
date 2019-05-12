@@ -21,3 +21,22 @@ Rectangle.prototype.collidesRectangle = function(rectangle)
            this.x < rectangle.x + rectangle.w &&
            this.y < rectangle.y + rectangle.h;
 };
+
+//https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
+Rectangle.prototype.collidesCircle = function(xCircle, yCircle, radius)
+{
+    let xCircleDistance = Math.abs(xCircle - (this.x + this.w/2));
+    let yCircleDistance = Math.abs(yCircle - (this.y + this.h/2));
+
+    if (xCircleDistance > (this.w/2 + radius)) { return false; }
+    if (yCircleDistance > (this.h/2 + radius)) { return false; }
+
+    if (xCircleDistance <= (this.w/2)) { return true; }
+    if (yCircleDistance <= (this.h/2)) { return true; }
+
+    let cornerDistanceSq =
+        (xCircleDistance - this.w/2) * (xCircleDistance - this.w/2) +
+        (yCircleDistance - this.h/2) * (yCircleDistance - this.h/2);
+
+    return cornerDistanceSq <= (radius * radius);
+};
