@@ -323,6 +323,12 @@ Array.prototype.maxOf = function(valueGetter)
     return this.minOf(o => -valueGetter(o));
 };
 
-Array.prototype.clone = function() {
+Array.prototype.clone = function()
+{
     return this.slice(0);
+};
+
+Array.prototype.clear = function()
+{
+    this.length = 0;
 };

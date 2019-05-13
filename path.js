@@ -33,7 +33,7 @@ PathMap.prototype.distance = function(tile0, tile1)
             (tile0.j - tile1.j) * (tile0.j - tile1.j));
 };
 
-PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget, useClosestNonSolidTileIfTargetIsSolid=false)
+PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget, useClosestNonSolidTileIfTargetIsSolid=true)
 {
     this.reset();
 
@@ -48,8 +48,8 @@ PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget, useClose
     {
         if (!useClosestNonSolidTileIfTargetIsSolid)
             return [];
-        first = this.gridPath.tiles.flattened()
-            .filter(o => !this.getSolid(o.gridObject))
+        // find the tile in the region I have access to which is closest to the target and find a path to it instead
+        first = this.gridPath.getRegion(iStart, jStart, o => !this.getSolid(o.gridObject))
             .minOf(o => Utils.distanceSq(o.i, o.j, iTarget, jTarget));
         if(first === null)
             return [];
