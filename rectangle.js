@@ -40,3 +40,13 @@ Rectangle.prototype.collidesCircle = function(xCircle, yCircle, radius)
 
     return cornerDistanceSq <= (radius * radius);
 };
+
+Rectangle.prototype.corners = function()
+{
+    return [
+        new Point(this.x, this.y),
+        new Point(this.x, this.y + this.h),
+        new Point(this.x + this.w, this.y + this.h),
+        new Point(this.x + this.w, this.y)
+    ];
+};

@@ -62,6 +62,29 @@ Utils.angleDiffRadians = function(from, to)
     return diff;
 };
 
+Utils.getPointTangentToCircle = function(xLineA, yLineA, xLineB, yLineB, xCircle, yCircle, radiusCircle)
+{
+    //If the first point is inside the circle, make the second point outside the circle.
+    if (Utils.distanceSq(xLineA, yLineA, xCircle, yCircle) <= radiusCircle * radiusCircle)
+    {
+        let angle = Math.atan2(yLineA - yCircle, xLineA - xCircle);
+        return new Point(radiusCircle * Math.cos(angle) + xCircle, radiusCircle * Math.sin(angle) + yCircle);
+    }
+
+    //Use maths to find both points on the circle that share a tangent line with the first point.
+    let cv = new Point(xCircle - xLineA, yCircle - yLineA);
+    let length = Math.sqrt(cv.lengthSq() - radiusCircle * radiusCircle);
+
+    let end = [];
+    let angle = cv.angle() - Math.atan2(radiusCircle, length);
+    end.push(new Point(length * Math.cos(angle) + xLineA, length * Math.sin(angle) + yLineA));
+    angle = cv.angle() + Math.atan2(radiusCircle, length);
+    end.push(new Point(length * Math.cos(angle) + xLineA, length * Math.sin(angle) + yLineA));
+
+    //Of the two points, return which one is closest to the second point.
+    return end[Utils.distanceSq(xLineB, yLineB, end[1].x, end[1].y) < Utils.distanceSq(xLineB, yLineB, end[0].x, end[0].y) ? 1 : 0];
+};
+
 Utils.log = function(text, level = "info")
 {
     let d = new Date();

@@ -54,6 +54,11 @@ Point.prototype.distanceTo = function(b)
     return Utils.distance(this.x, this.y, b.x, b.y);
 };
 
+Point.prototype.angle = function()
+{
+	return Math.atan2(this.y, this.x);
+};
+
 
 Point.prototype.insideLineSegmentIfColinear = function(a, b)
 {
@@ -84,4 +89,9 @@ Point.prototype.closest = function(points)
 		}
 	});
 	return minPoint;
+};
+
+Point.prototype.leftOfLine = function(a, b)
+{
+    return Math.sign((b.x - a.x) * (this.y - a.y) - (b.y - a.y) * (this.x - a.x)) > 0;
 };
