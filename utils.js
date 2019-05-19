@@ -346,6 +346,11 @@ Array.prototype.maxOf = function(valueGetter)
     return this.minOf(o => -valueGetter(o));
 };
 
+Array.prototype.sum = function()
+{
+    return this.reduce((total, increment) => total + increment);
+};
+
 Array.prototype.clone = function()
 {
     return this.slice(0);
@@ -354,4 +359,11 @@ Array.prototype.clone = function()
 Array.prototype.clear = function()
 {
     this.length = 0;
+};
+
+// Chainable sort (modifies existing array)
+Array.prototype.sorted = function(compare)
+{
+    this.sort(compare);
+    return this;
 };
