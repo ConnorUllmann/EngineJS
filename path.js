@@ -41,6 +41,12 @@ PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget, useClose
     let closed = [];
     let path = [];
 
+    let last = this.gridPath.get(
+        Math.max(0, Math.min(this.gridPath.rows-1, iStart)),
+        Math.max(0, Math.min(this.gridPath.columns-1, jStart)));
+    if(this.getSolid(last.gridObject))
+        return [];
+
     let first = this.gridPath.get(
         Math.max(0, Math.min(this.gridPath.rows-1, iTarget)),
         Math.max(0, Math.min(this.gridPath.columns-1, jTarget)));
@@ -55,12 +61,6 @@ PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget, useClose
             return [];
         return this.findPath(iStart, jStart, first.i, first.j, useClosestNonSolidTileIfTargetIsSolid);
     }
-
-    let last = this.gridPath.get(
-        Math.max(0, Math.min(this.gridPath.rows-1, iStart)),
-        Math.max(0, Math.min(this.gridPath.columns-1, jStart)));
-    if(this.getSolid(last.gridObject))
-        return [];
 
     first.setHeuristicProperties(0, this.distance(first, last));
     open.add(first);
