@@ -75,6 +75,12 @@ ExampleEntity.prototype.render = function()
 }
 ```
 
+Adding one of these entities to a world is as easy as instantiating a new instance and passing in the world to which it should belong:
+```javascript
+// creates a new ExampleEntity in the middle of the canvas
+new ExampleEntity(world.canvas.width/2, world.canvas.height/2, world);
+```
+
 ### Keyboard
 
 ### Mouse
