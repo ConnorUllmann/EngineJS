@@ -9,6 +9,11 @@ Utils.distance = function(x0, y0, x1, y1)
     return Math.sqrt(Utils.distanceSq(x0, y0, x1, y1));
 };
 
+Utils.clamp = function(x, min, max)
+{
+    return Math.max(min, Math.min(max, x));
+};
+
 /* Length of an equilateral triangle's altitude given the side length */
 Utils.EquilateralAltitudeCoefficient = Math.sqrt(3) / 2;
 Utils.equilateralAltitude = function(equilateralTriangleSideLength)

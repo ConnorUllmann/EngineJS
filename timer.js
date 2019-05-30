@@ -31,7 +31,7 @@ Timer.prototype.getNextValueRaw = function()
 
 Timer.prototype.cleanValue = function(rawValue)
 {
-    return Math.max(0, Math.min(1, rawValue));
+    return Utils.clamp(rawValue, 0, 1);
 };
 
 Timer.prototype.isFinished = function()

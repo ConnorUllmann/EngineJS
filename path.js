@@ -42,14 +42,14 @@ PathMap.prototype.findPath = function(iStart, jStart, iTarget, jTarget, useClose
     let path = [];
 
     let last = this.gridPath.get(
-        Math.max(0, Math.min(this.gridPath.rows-1, iStart)),
-        Math.max(0, Math.min(this.gridPath.columns-1, jStart)));
+        Utils.clamp(iStart, 0, this.gridPath.rows-1),
+        Utils.clamp(jStart, 0, this.gridPath.columns-1));
     if(this.getSolid(last.gridObject))
         return [];
 
     let first = this.gridPath.get(
-        Math.max(0, Math.min(this.gridPath.rows-1, iTarget)),
-        Math.max(0, Math.min(this.gridPath.columns-1, jTarget)));
+        Utils.clamp(iTarget, 0, this.gridPath.rows-1),
+        Utils.clamp(jTarget, 0, this.gridPath.columns-1));
     if(this.getSolid(first.gridObject))
     {
         if (!useClosestNonSolidTileIfTargetIsSolid)

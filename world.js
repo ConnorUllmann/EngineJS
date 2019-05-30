@@ -12,7 +12,9 @@ function World()
     this.entitiesToRemove = [];
     this.entityID = 0;
 
+    // milliseconds since the last frame
     this.delta = 0;
+
     this.firstUpdate = null;
     this.lastUpdate = null;
 
