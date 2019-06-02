@@ -3,7 +3,6 @@ function World()
     this.canvas = null;
     this.context = null;
     this.backgroundColor = new Color(128, 128, 128);
-    this.camera = new Camera(0, 0);
     this.mouse = new Mouse(this);
     this.keyboard = new Keyboard(this);
 

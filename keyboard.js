@@ -54,11 +54,11 @@ Keyboard.keysForKeyCode = function(keyCode)
     const specialKeysMapping = {
         8:["backspace"],
         9:["tab"],
-        13:["enter"],
+        13:["enter", "return"],
         16:["shift"],
-        17:["ctrl"],
+        17:["ctrl", "control"],
         18:["alt"],
-        19:["pause/break"],
+        19:["pause", "break", "pause/break"],
         20:["caps lock"],
         27:["escape"],
         32:["space"],
@@ -80,8 +80,7 @@ Keyboard.keysForKeyCode = function(keyCode)
     let keyUpperCase = key.toUpperCase();
     let result = [keyCode, keyLowerCase, keyUpperCase];
 
-    let specialKeys = specialKeysMapping[keyCode];
-    if(specialKeys !== undefined)
-        result.push(...specialKeys);
+    if(keyCode in specialKeysMapping)
+        result.push(...specialKeysMapping[keyCode]);
     return result;
 };

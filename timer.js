@@ -3,7 +3,8 @@ function Timer(seconds=1)
     this.seconds = seconds;
     this.value = 0; // always in the range [0, 1]
     this.triggered = false; // whether or not the timer crossed the 1 threshold this frame
-    this.started = false; //whether or not the timer has been updated yet;
+    this.started = false; //whether or not the timer has been updated yet
+    this.paused = false;
 }
 
 Timer.prototype.reset = function()
@@ -11,10 +12,14 @@ Timer.prototype.reset = function()
     this.value = this.seconds === 0 ? 1 : 0;
     this.triggered = false;
     this.started = false;
+    this.paused = false;
 };
 
 Timer.prototype.update = function()
 {
+    if(this.paused)
+        return;
+
     let nextValue = this.getNextValueRaw();
     this.triggered = nextValue >= 1;
     this.value = this.cleanValue(nextValue);
