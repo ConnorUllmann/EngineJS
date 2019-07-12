@@ -30,6 +30,47 @@ Draw.triangle = function(ctx, x1, y1, x2, y2, x3, y3, fillStyle)
     ctx.fill();
 };
 
+Draw.regularPolygon = function(ctx, x, y, radius, sides, fillStyle, angleRadians=0)
+{
+    if(sides <= 0)
+        throw `Cannot draw a regular polygon with ${sides} sides`;
+    ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
+    ctx.beginPath();
+    for(let i = 0; i < sides; i++)
+    {
+        let angleRadiansCorner = Math.PI * 2 * i / sides + angleRadians;
+        let xCorner = x + radius * Math.cos(angleRadiansCorner);
+        let yCorner = y + radius * Math.sin(angleRadiansCorner);
+        if(i === 0)
+            ctx.moveTo(xCorner, yCorner);
+        else
+            ctx.lineTo(xCorner, yCorner);
+    }
+    ctx.fillStyle = fillStyle;
+    ctx.fill();
+};
+
+Draw.regularPolygonOutline = function(ctx, x, y, radius, sides, strokeStyle, angleRadians=0, lineWidth=1)
+{
+    if(sides <= 0)
+        throw `Cannot draw a regular polygon with ${sides} sides`;
+    ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts
+    ctx.beginPath();
+    for(let i = 0; i < sides; i++)
+    {
+        let angleRadiansCorner = Math.PI * 2 * i / sides + angleRadians;
+        let xCorner = x + radius * Math.cos(angleRadiansCorner);
+        let yCorner = y + radius * Math.sin(angleRadiansCorner);
+        if(i === 0)
+            ctx.moveTo(xCorner, yCorner);
+        else
+            ctx.lineTo(xCorner, yCorner);
+    }
+    ctx.lineWidth = lineWidth;
+    ctx.strokeStyle = strokeStyle;
+    ctx.stroke();
+};
+
 Draw.rect = function(ctx, x, y, w, h, fillStyle)
 {
     ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts

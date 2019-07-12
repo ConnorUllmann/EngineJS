@@ -99,6 +99,7 @@ World.prototype.updateAll = function()
         {
             this.entities.splice(ind, 1);
             e.removed();
+            e.destroyed = true;
         }
     }
 };

@@ -51,6 +51,7 @@ Keyboard.prototype.update = function()
 
 Keyboard.keysForKeyCode = function(keyCode)
 {
+    // TODO: lshift/rshift
     const specialKeysMapping = {
         8:["backspace"],
         9:["tab"],

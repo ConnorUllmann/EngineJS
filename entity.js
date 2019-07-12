@@ -19,6 +19,7 @@ function Entity(_x, _y, _world=null)
 	this.depth = 0;
 	this.active = true;
 	this.visible = true;
+	this.destroyed = false;
 
     this.id = null;
     this.world = null;

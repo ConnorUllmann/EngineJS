@@ -14,12 +14,17 @@ Rectangle.prototype.collidesPoint = function(x, y)
            y < this.y + this.h;
 };
 
+Rectangle.collide = function(ax, ay, aw, ah, bx, by, bw, bh)
+{
+    return ax + aw > bx &&
+           ay + ah > by &&
+           ax < bx + bw &&
+           ay < by + bh;
+};
+
 Rectangle.prototype.collidesRectangle = function(rectangle)
 {
-    return this.x + this.w > rectangle.x &&
-           this.y + this.h > rectangle.y &&
-           this.x < rectangle.x + rectangle.w &&
-           this.y < rectangle.y + rectangle.h;
+    return Rectangle.collide(this.x, this.y, this.w, this.h, rectangle.x, rectangle.y, rectangle.w, rectangle.h);
 };
 
 //https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
