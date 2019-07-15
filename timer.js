@@ -7,8 +7,9 @@ function Timer(seconds=1)
     this.paused = false;
 }
 
-Timer.prototype.reset = function()
+Timer.prototype.reset = function(seconds=null)
 {
+    this.seconds = seconds != null ? seconds : this.seconds;
     this.value = this.seconds === 0 ? 1 : 0;
     this.triggered = false;
     this.started = false;
