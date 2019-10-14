@@ -19,6 +19,14 @@ Draw.circleOutline = function(ctx, x, y, radius, strokeStyle, lineWidth=1)
     ctx.stroke();
 };
 
+// same as circleOutline except you specify the inner and outer radii
+Draw.ring = function(ctx, x, y, innerRadius, outerRadius, strokeStyle)
+{
+    const lineWidth = outerRadius - innerRadius;
+    const radius = (outerRadius + innerRadius) / 2;
+    Draw.circleOutline(ctx, x, y, radius, strokeStyle, lineWidth);
+};
+
 Draw.triangle = function(ctx, x1, y1, x2, y2, x3, y3, fillStyle)
 {
     ctx = ctx.context === undefined ? ctx : ctx.context; // allow passing in worlds & contexts

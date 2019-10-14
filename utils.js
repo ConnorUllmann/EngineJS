@@ -262,6 +262,12 @@ Utils.getRandomName = function()
     return names.sample();
 };
 
+//https://stackoverflow.com/a/34116242
+Utils.isArray = function(obj)
+{
+    return !!obj && obj.constructor === Array;
+};
+
 Array.prototype.removeThis = function(item)
 {
     if(!this.includes(item))

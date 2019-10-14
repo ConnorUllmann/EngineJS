@@ -106,3 +106,8 @@ Mouse.prototype.update = function()
     this.rightPressed = false;
     this.scrollY = 0;
 };
+
+Mouse.prototype.distanceSqTo = function(point)
+{
+    return Utils.distanceSq(this.x, this.y, point.x, point.y);
+};

@@ -48,7 +48,7 @@ Actor.prototype.getRightX = function() { return this.x + this.width/2; };
 Actor.prototype.getTopY = function() { return this.y - this.height/2; };
 Actor.prototype.getBottomY = function() { return this.y + this.height/2; };
 Actor.prototype.isMouseHovering = function() { return this.world.mouse.x >= this.getLeftX() && this.world.mouse.y >= this.getTopY() && this.world.mouse.x < this.getRightX() && this.world.mouse.y < this.getBottomY() };
-
+Actor.prototype.distanceSqToMouse = function() { return this.world.mouse.distanceSqTo(this); };
 Actor.prototype.collides = function(actor)
 {
     return Rectangle.collide(this.getLeftX(), this.getTopY(), this.width, this.height, actor.getLeftX(), actor.getTopY(), actor.width, actor.height);
