@@ -1,4 +1,4 @@
-function Point(_x, _y)
+function Point(_x=0, _y=0)
 {
 	this.x = _x;
 	this.y = _y;
@@ -40,6 +40,10 @@ Point.prototype.normalized = function(length=1)
 		return new Point(0, 0);
 	let temp = length / Math.sqrt(this.lengthSq());
 	return new Point(this.x * temp, this.y * temp);
+};
+Point.prototype.scale = function(scale)
+{
+	return this.normalized(scale * Math.sqrt(this.lengthSq()));
 };
 Point.prototype.midpoint = function(b)
 {
