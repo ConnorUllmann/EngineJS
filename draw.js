@@ -114,9 +114,9 @@ Draw.lines = function(world, points, strokeStyle, lineWidth=1)
     const context = world.context;
     if(points.length <= 0) return;
     context.beginPath();
-    context.moveTo(points[0][0], points[0][1]);
+    context.moveTo(points[0][0] - world.camera.x, points[0][1] - world.camera.y);
     for(let i = 1; i < points.length; i++)
-        context.lineTo(points[i][0], points[i][1]);
+        context.lineTo(points[i][0] - world.camera.x, points[i][1] - world.camera.y);
     context.lineWidth = lineWidth;
     context.strokeStyle = strokeStyle;
     context.stroke();

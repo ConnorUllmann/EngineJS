@@ -121,8 +121,8 @@ World.prototype.renderAll = function()
             this.debugFpsCurrent = this.debugFpsTrackList.reduce((totalFps, fps) => totalFps + fps) / this.debugFpsTrackList.length;
             this.debugFpsTrackList.length = 0;
         }
-        Draw.rect(this.context, 0, 0, 40, 25, new Color(0, 0, 0));
-        Draw.text(this.context, Math.floor(this.debugFpsCurrent), 20, 13, new Color(255, 255, 255), "20px Helvetica", "center", "middle");
+        Draw.rect(this, this.camera.x, this.camera.y, 40, 25, new Color(0, 0, 0));
+        Draw.text(this, Math.floor(this.debugFpsCurrent), this.camera.x + 20, this.camera.y + 13, new Color(255, 255, 255), "20px Helvetica", "center", "middle");
     }
 };
 
