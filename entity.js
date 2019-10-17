@@ -13,7 +13,8 @@
 // }
 
 function Entity(_x, _y, _world=null)
-{	
+{
+	Point.call(this, _x, _y);
 	this.x = _x;
 	this.y = _y;
 	this.depth = 0;
@@ -27,6 +28,8 @@ function Entity(_x, _y, _world=null)
 	if(_world != null)
         _world._addEntity(this);
 }
+Entity.prototype = Object.create(Point.prototype);
+Entity.prototype.constructor = Entity;
 
 Entity.prototype.added = function() //Triggered when this entity is added to the world.
 {

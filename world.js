@@ -2,6 +2,7 @@ function World()
 {
     this.canvas = null;
     this.context = null;
+    this.camera = new Camera();
     this.backgroundColor = new Color(128, 128, 128);
     this.mouse = new Mouse(this);
     this.keyboard = new Keyboard(this);
