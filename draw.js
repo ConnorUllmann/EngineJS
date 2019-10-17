@@ -4,7 +4,7 @@ Draw.circle = function(world, x, y, radius, fillStyle)
 {
     const context = world.context;
     context.beginPath();
-    context.arc(x, y, radius, 0, 2 * Math.PI);
+    context.arc(x - world.camera.x, y - world.camera.y, radius, 0, 2 * Math.PI);
     context.fillStyle = fillStyle;
     context.fill();
 };
@@ -13,7 +13,7 @@ Draw.circleOutline = function(world, x, y, radius, strokeStyle, lineWidth=1)
 {
     const context = world.context;
     context.beginPath();
-    context.arc(x, y, radius, 0, 2 * Math.PI);
+    context.arc(x - world.camera.x, y - world.camera.y, radius, 0, 2 * Math.PI);
     context.strokeStyle = strokeStyle;
     context.lineWidth = lineWidth;
     context.stroke();
@@ -32,9 +32,9 @@ Draw.triangle = function(world, x1, y1, x2, y2, x3, y3, fillStyle)
     const context = world.context; 
     context.fillStyle = fillStyle;
     context.beginPath();
-    context.moveTo(x1, y1);
-    context.lineTo(x2, y2);
-    context.lineTo(x3, y3);
+    context.moveTo(x1 - world.camera.x, y1 - world.camera.y);
+    context.lineTo(x2 - world.camera.x, y2 - world.camera.y);
+    context.lineTo(x3 - world.camera.x, y3 - world.camera.y);
     context.fill();
 };
 
@@ -83,7 +83,7 @@ Draw.rect = function(world, x, y, w, h, fillStyle)
 {
     const context = world.context;
     context.fillStyle = fillStyle;
-    context.fillRect(x, y, w, h);
+    context.fillRect(x - world.camera.x, y - world.camera.y, w, h);
 };
 
 Draw.rectLines = function(world, x, y, w, h, strokeStyle, lineWidth=1)
@@ -102,8 +102,8 @@ Draw.line = function(world, x1, y1, x2, y2, strokeStyle, lineWidth=1)
 {
     const context = world.context;
     context.beginPath();
-    context.moveTo(x1, y1);
-    context.lineTo(x2, y2);
+    context.moveTo(x1 - world.camera.x, y1 - world.camera.y);
+    context.lineTo(x2 - world.camera.x, y2 - world.camera.y);
     context.lineWidth = lineWidth;
     context.strokeStyle = strokeStyle;
     context.stroke();
@@ -128,7 +128,7 @@ Draw.text = function(world, text, x, y, fillStyle, font=null, halign="left", val
     Draw.textStyle(world, fillStyle, font, halign, valign);
     // if(rotationRadians !== 0)
     //     world.rotate(rotationRadians);
-    context.fillText(text, x, y);
+    context.fillText(text, x - world.camera.x, y - world.camera.y);
     // if(rotationRadians !== 0)
     //     world.rotate(-rotationRadians);
 };
