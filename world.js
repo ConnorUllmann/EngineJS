@@ -5,7 +5,8 @@ function World()
     this.camera = new Camera();
     this.backgroundColor = new Color(128, 128, 128);
     this.mouse = new Mouse(this);
-    this.keyboard = new Keyboard(this);
+    this.keyboard = new Keyboard();
+    this.gamepads = new Gamepads();
 
     this.entities = [];
     this.entitiesToAdd = [];
@@ -61,6 +62,7 @@ World.prototype.render = function()
     this.renderAll();
     this.mouse.update();
     this.keyboard.update();
+    this.gamepads.update();
 };
 
 World.prototype.updateAll = function()
