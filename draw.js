@@ -19,6 +19,25 @@ Draw.circleOutline = function(world, x, y, radius, strokeStyle, lineWidth=1)
     context.stroke();
 };
 
+Draw.oval = function(world, x, y, xRadius, yRadius, fillStyle, angleRadians=0)
+{
+    const context = world.context;
+    context.beginPath();
+    context.ellipse(x - world.camera.x, y - world.camera.y, xRadius, yRadius, angleRadians, 0, 2 * Math.PI);
+    context.fillStyle = fillStyle;
+    context.fill();
+};
+
+Draw.ovalOutline = function(world, x, y, xRadius, yRadius, strokeStyle, angleRadians=0, lineWidth=1)
+{
+    const context = world.context;
+    context.beginPath();
+    context.ellipse(x - world.camera.x, y - world.camera.y, xRadius, yRadius, angleRadians, 0, 2 * Math.PI);
+    context.strokeStyle = strokeStyle;
+    context.lineWidth = lineWidth;
+    context.stroke();
+};
+
 // same as circleOutline except you specify the inner and outer radii
 Draw.ring = function(world, x, y, innerRadius, outerRadius, strokeStyle)
 {
