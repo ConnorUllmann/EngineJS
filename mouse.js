@@ -1,8 +1,7 @@
 function Mouse(world)
 {
+    Point.call(this, 0, 0);
     this.world = world;
-    this.x = 0;
-    this.y = 0;
     this.leftReleased = false;
     this.leftPressed = false;
     this.rightReleased = false;
@@ -14,6 +13,8 @@ function Mouse(world)
     this.scale = 1;
     this.touchscreen = "ontouchstart" in document.documentElement;
 }
+Mouse.prototype = Object.create(Point.prototype);
+Mouse.prototype.constructor = Mouse;
 
 
 Mouse.prototype.onCanvas = function()

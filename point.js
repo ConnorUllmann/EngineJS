@@ -99,3 +99,13 @@ Point.prototype.leftOfLine = function(a, b)
 {
     return Math.sign((b.x - a.x) * (this.y - a.y) - (b.y - a.y) * (this.x - a.x)) > 0;
 };
+
+Point.prototype.rotate = function(angleRadians, center=null)
+{
+	const x = this.x - (center ? center.x : 0);
+	const y = this.y - (center ? center.y : 0);
+	return new Point(
+        (center ? center.x : 0) + x * Math.cos(angleRadians) - y * Math.sin(angleRadians),
+        (center ? center.y : 0) + y * Math.cos(angleRadians) + x * Math.sin(angleRadians)
+	);
+};
