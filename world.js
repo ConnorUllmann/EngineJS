@@ -11,6 +11,7 @@ function World()
     this.entities = [];
     this.entitiesToAdd = [];
     this.entitiesToRemove = [];
+    this.singleFrameRenderCallsByDepth = {};
     this.entityID = 0;
 
     // milliseconds since the last frame
@@ -70,6 +71,9 @@ World.prototype.updateAll = function()
     if(this.firstUpdate == null)
         this.firstUpdate = Date.now();
 
+    if('`' in this.keyboard.pressed)
+        this.debug = !this.debug;
+
     // Update delta
     let now = Date.now();
     this.delta = now - this.lastUpdate;
@@ -111,9 +115,15 @@ World.prototype.renderAll = function()
 {
     // Render all entities (re-sorting them in case there were changes during the updates)
     this._sortByUpdateOrder();
-    let entities = this.entities.filter(o => o.visible);
-    for(let i = 0; i < entities.length; i++)
-        entities[i].render();
+    this.entities
+        .filter(o => o.visible)
+        .forEach(o => this.addSingleFrameRenderCallAtDepth(o.depth, () => o.render()));
+    Object.keys(this.singleFrameRenderCallsByDepth)
+        .map(depth => Number(depth))
+        .sort((a,b) => b-a)
+        .map(depth => this.singleFrameRenderCallsByDepth[depth])
+        .forEach(renderCalls => renderCalls.forEach(renderCall => renderCall()));
+    this.singleFrameRenderCallsByDepth = {};
 
     if(this.debug)
     {
@@ -161,4 +171,12 @@ World.prototype._destroyEntity = function(entity)
 World.prototype.timeSinceStart = function()
 {
     return Date.now() - this.firstUpdate;
+};
+
+World.prototype.addSingleFrameRenderCallAtDepth = function(depth, renderCall)
+{
+    if(depth in this.singleFrameRenderCallsByDepth)
+        this.singleFrameRenderCallsByDepth[depth].push(renderCall);
+    else
+        this.singleFrameRenderCallsByDepth[depth] = [renderCall];
 };

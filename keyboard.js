@@ -74,7 +74,8 @@ Keyboard.keysForKeyCode = function(keyCode)
         45:["insert"],
         46:["delete"],
         189:["-", "_"],
-        187:["=", "+"]
+        187:["=", "+"],
+        192:["`", "~"]
     };
     let key = String.fromCharCode(keyCode);
     let keyLowerCase = key.toLowerCase();
