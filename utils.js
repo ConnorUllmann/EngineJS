@@ -129,6 +129,29 @@ Utils.lerpAngle = function(startAngle, finishAngle, normal=0.5, clamp=false) {
     return startAngle + Utils.angleDiffRadians(startAngle, finishAngle) * (clamp ? Utils.clamp(normal, 0, 1) : normal);
 };
 
+// Returns a list of the velocity vectors a projectile would need in order to hit the (xTarget, yTarget) from (xStart, yStart)
+// given the speed of the shot and gravity. Returns 0, 1, or 2 Points (if two points, the highest-arching vector is first)
+Utils.getLaunchVectors = function(xStart, yStart, xTarget, yTarget, gravityMagnitude, velocityMagnitude)
+{
+    const g = -gravityMagnitude;
+    const xDiff = xTarget - xStart;
+    const yDiff = yTarget - yStart;
+    const v = velocityMagnitude;
+    const v2 = v * v;
+    const sqrt = v2 * v2 - g * (g * xDiff * xDiff + 2 * yDiff * v2);
+
+    if(xDiff === 0 && sqrt === 0)
+        return [Point.create((xDiff === 0 ? 1 : Math.sign(xDiff)) * v, -Math.PI / 2)];
+
+    if (sqrt >= 0)
+        return [
+            Point.create((xDiff === 0 ? 1 : Math.sign(xDiff)) * v, Math.atan((v2 + Math.sqrt(sqrt)) / (g * xDiff))),
+            Point.create((xDiff === 0 ? 1 : Math.sign(xDiff)) * v, Math.atan((v2 - Math.sqrt(sqrt)) / (g * xDiff)))
+        ];
+
+    return [];
+};
+
 //https://stackoverflow.com/questions/2936112/text-wrap-in-a-canvas-element
 Utils.getLines = function(ctx, text, maxWidth)
 {

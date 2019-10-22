@@ -20,6 +20,8 @@ function World()
     this.firstUpdate = null;
     this.lastUpdate = null;
 
+    this.fps = 60;
+
     this.debug = false;
     this.debugFpsTrackListMaxSize = 10;
     this.debugFpsTrackList = [];
@@ -42,7 +44,7 @@ World.prototype.start = function(canvasId)
     this.keyboard.start();
 
     //Need the lambda or else this.render() will have the Window instance as "this" inside the function scope
-    setInterval(() => this.render(), 16);
+    setInterval(() => this.render(), this.millisecondsPerFrame());
 };
 
 World.prototype.clearCanvas = function(color)
@@ -168,9 +170,14 @@ World.prototype._destroyEntity = function(entity)
     this.entitiesToRemove.push(entity);
 };
 
-World.prototype.timeSinceStart = function()
+World.prototype.millisecondsSinceStart = function()
 {
     return Date.now() - this.firstUpdate;
+};
+
+World.prototype.millisecondsPerFrame = function()
+{
+    return 1000 / this.fps;
 };
 
 World.prototype.addSingleFrameRenderCallAtDepth = function(depth, renderCall)
