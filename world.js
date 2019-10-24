@@ -1,12 +1,15 @@
-function World()
+function World(transparentBackground=false)
 {
     this.canvas = null;
     this.context = null;
     this.camera = new Camera();
-    this.backgroundColor = new Color(128, 128, 128);
     this.mouse = new Mouse(this);
     this.keyboard = new Keyboard();
     this.gamepads = new Gamepads();
+
+    // should not be changed after calling .start() as it will have no effect
+    this.__transparentBackground = transparentBackground;
+    this.backgroundColor = new Color(128, 128, 128);
 
     this.entities = [];
     this.entitiesToAdd = [];
@@ -35,7 +38,7 @@ World.prototype.start = function(canvasId)
         throw "Canvas doesn't exist!";
     if(!this.canvas.getContext)
         throw "Cannot retrieve canvas context!";
-    this.context = this.canvas.getContext('2d');
+    this.context = this.canvas.getContext('2d', { alpha: this.__transparentBackground });
 
     this.firstUpdate = null;
     this.lastUpdate = Date.now();

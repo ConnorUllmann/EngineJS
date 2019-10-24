@@ -1,5 +1,10 @@
 function Draw(){}
 
+// Example:
+// Draw.applyBlendMode(world, BlendMode.Overlay, () =>
+// {
+//     Draw.circle(world, 50, 50, 10, new Color(255, 0, 0));
+// });
 Draw.applyBlendMode = function(world, blendMode, drawCall)
 {
     const context = world.context;
