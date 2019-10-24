@@ -9,6 +9,7 @@ function World(transparentBackground=false)
 
     // should not be changed after calling .start() as it will have no effect
     this.__transparentBackground = transparentBackground;
+
     this.backgroundColor = new Color(128, 128, 128);
 
     this.entities = [];
