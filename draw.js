@@ -1,5 +1,44 @@
 function Draw(){}
 
+Draw.applyBlendMode = function(world, blendMode, drawCall)
+{
+    const context = world.context;
+    const blendModeOriginal = context.globalCompositeOperation;
+    context.globalCompositeOperation = blendMode;
+    drawCall();
+    context.globalCompositeOperation = blendModeOriginal;
+};
+
+BlendMode = {
+    Default: 'source-over',
+    SourceOver: 'source-over',
+    SourceIn: 'source-in',
+    SourceOut: 'source-out',
+    SourceAtop: 'source-atop',
+    DestinationOver: 'destination-over',
+    DestinationIn: 'destination-in',
+    DestinationOut: 'destination-out',
+    DestinationAtop: 'destination-atop',
+    Lighter: 'lighter',
+    Copy: 'copy',
+    Xor: 'xor',
+    Multiply: 'multiply',
+    Screen: 'screen',
+    Overlay: 'overlay',
+    Darken: 'darken',
+    Lighten: 'lighten',
+    ColorDodge: 'color-dodge',
+    ColorBurn: 'color-burn',
+    HardLight: 'hard-light',
+    SoftLight: 'soft-light',
+    Difference: 'difference',
+    Exclusion: 'exclusion',
+    Hue: 'hue',
+    Saturation: 'saturation',
+    Color: 'color',
+    Luminosity: 'luminosity'
+};
+
 Draw.circle = function(world, x, y, radius, fillStyle)
 {
     const context = world.context;
