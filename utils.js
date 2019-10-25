@@ -9,6 +9,42 @@ Utils.distance = function(x0, y0, x1, y1)
     return Math.sqrt(Utils.distanceSq(x0, y0, x1, y1));
 };
 
+Utils.factorial = function(n)
+{
+    if(n <= 0)
+        return 0;
+    if(n === 1)
+        return 1;
+    let factorial = 1;
+    for(let i = n; i > 1; i--)
+        factorial *= i;
+    return factorial;
+};
+
+Utils.binomialCoefficient = function(n, k)
+{
+    let result = 1;
+    for(let i = n - k + 1; i <= n; i++)
+        result *= i;
+    for(let i = 1; i <= k; i++)
+        result /= i;
+    return result;
+};
+
+Utils.bezierPoint = function(t, points)
+{
+    const n = points.length - 1;
+    let sum = new Point();
+    for(let i = 0; i < points.length; i++)
+    {
+        const point = points[i];
+        const binomial = Utils.binomialCoefficient(n, i);
+        const scalar = binomial * Math.pow(1 - t, n - i) * Math.pow(t, i);
+        sum = sum.add(point.scale(scalar));
+    }
+    return sum;
+};
+
 Utils.clamp = function(x, min, max)
 {
     return Math.max(min, Math.min(max, x));
@@ -345,11 +381,36 @@ Array.prototype.any = function(boolCheck)
     return this.some(boolCheck);
 };
 
-Array.prototype.first = function(boolCheck)
+Array.prototype.first = function(boolCheck=null)
 {
+    if(boolCheck === null)
+    {
+        return this.length <= 0
+            ? null
+            : this[0];
+    }
+
     for(let element of this)
         if (boolCheck(element))
             return element;
+    return null;
+};
+
+Array.prototype.last = function(boolCheck=null)
+{
+    if(boolCheck === null)
+    {
+        return this.length <= 0
+            ? null
+            : this[this.length-1];
+    }
+
+    for(let i = this.length-1; i >= 0; i--)
+    {
+        const element = this[i];
+        if (boolCheck(element))
+            return element;
+    }
     return null;
 };
 
@@ -358,6 +419,7 @@ Array.prototype.max = function()
     return Math.max.apply(null, this);
 };
 
+// TODO: Doesn't appear to be working?
 Array.prototype.min = function()
 {
     return Math.min.apply(null, this);
