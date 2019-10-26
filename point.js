@@ -9,7 +9,14 @@ Point.create = function(length, angleRadians)
 	return new Point(length * Math.cos(angleRadians), length * Math.sin(angleRadians));
 };
 
-Point.prototype.toString = function() { return "(" + this.x + "," + this.y + ")"; };
+Point.prototype.toString = function()
+{
+    return JSON.stringify(
+    {
+        x: this.x.toFixed(1),
+        y: this.y.toFixed(1)
+    });
+};
 
 Point.prototype.lengthSq = function()
 {

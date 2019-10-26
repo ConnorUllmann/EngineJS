@@ -21,6 +21,7 @@ function Entity(_x, _y, _world=null)
 	this.active = true;
 	this.visible = true;
 	this.destroyed = false;
+	this.class = this.constructor.name;
 
     this.id = null;
     this.world = null;
@@ -29,6 +30,17 @@ function Entity(_x, _y, _world=null)
         _world._addEntity(this);
 }
 Point.parents(Entity);
+
+Entity.prototype.toString = function()
+{
+	return JSON.stringify(
+	{
+        class: this.class,
+        id: this.id,
+        x: this.x.toFixed(1),
+        y: this.y.toFixed(1)
+    });
+};
 
 Entity.prototype.added = function() //Triggered when this entity is added to the world.
 {
