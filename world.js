@@ -126,7 +126,7 @@ World.prototype.renderAll = function()
     this._sortByUpdateOrder();
     this.entities
         .filter(o => o.visible)
-        .forEach(o => this.addSingleFrameRenderCallAtDepth(o.depth, () => o.render()));
+        .forEach(o => this.queueRenderCall(o.depth, () => o.render()));
     Object.keys(this.singleFrameRenderCallsByDepth)
         .map(depth => Number(depth))
         .sort((a,b) => b-a)
@@ -187,7 +187,7 @@ World.prototype.millisecondsPerFrame = function()
     return 1000 / this.fps;
 };
 
-World.prototype.addSingleFrameRenderCallAtDepth = function(depth, renderCall)
+World.prototype.queueRenderCall = function(depth, renderCall)
 {
     if(depth in this.singleFrameRenderCallsByDepth)
         this.singleFrameRenderCallsByDepth[depth].push(renderCall);

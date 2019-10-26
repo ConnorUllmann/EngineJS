@@ -3,6 +3,23 @@ function Rectangle(x=0, y=0, w=0, h=0)
     Point.call(this, x, y);
     this.w = w;
     this.h = h;
+
+    Object.defineProperty(this, 'xLeft', {
+        get: function() { return this.x; },
+        set: function(x) { this.x = x; }
+    });
+    Object.defineProperty(this, 'xRight', {
+        get: function() { return this.x + this.w; },
+        set: function(x) { this.x = x - this.w; }
+    });
+    Object.defineProperty(this, 'yTop', {
+        get: function() { return this.y; },
+        set: function(y) { this.y = y; }
+    });
+    Object.defineProperty(this, 'yBottom', {
+        get: function() { return this.y + this.h; },
+        set: function(y) { this.y = y - this.h; }
+    });
 }
 Rectangle.prototype = Object.create(Point.prototype);
 Rectangle.prototype.constructor = Rectangle;

@@ -361,9 +361,9 @@ Array.prototype.reversed = function()
 //Returns a random element of the array
 Array.prototype.sample = function()
 {
-    if(this.length === 0)
-        return null;
-    return this[Math.floor(Math.random() * this.length)];
+    return this.length > 0
+        ? this[Math.floor(Math.random() * this.length)]
+        : null;
 };
 
 Array.prototype.swap = function(x, y)
@@ -414,11 +414,46 @@ Array.prototype.last = function(boolCheck=null)
     return null;
 };
 
-Array.prototype.max = function(valueGetter=null)
+// AisBetterThanB = a function which takes two parameters and returns true if the first one is "better" than the second one, false otherwise.
+// Returns the single element that won every comparison it was involved in (or null if the list is empty).
+//
+// Examples:
+//
+// Problem: I need the object with the highest score, or the first match if there's a tie
+// [{score:5}, {id:'a', score:6}, {id:'b', score:6}, {score:3}]
+//  .bestOf((a, b) => a.score > b.score)
+//      = {id:'a', score:6}
+// Note: alternative formulation = [{score:5}, {score:6}, {score:3}].maxOf(o => o.score)
+//
+// Problem: I need the object with the highest score, or the last match if there's a tie
+// [{score:5}, {id:'a', score:6}, {id:'b', score:6}, {score:3}]
+//  .bestOf((a, b) => a.score >= b.score)
+//      = {id:'b', score:6}
+//
+// Problem: I need the character with the longest name who is still alive
+// [
+//     {name:'harry', alive:true},
+//     {name:'ron', alive:true},
+//     {name:'hermione', alive:true},
+//     {name:'voldemort', alive:false}
+// ].bestOf((a, b) => a.alive && a.name.length > b.name.length)
+//     = {name:'hermione', alive:true}
+//
+// Problem: I need the object that is facing most upward
+// [{direction: new Point(2, 6)}, {direction: new Point(-4, -3)}]
+//  .bestOf((a, b) => a.direction.normalized().dot(new Point(0, -1)) > b.direction.normalized().dot(new Point(0, -1)))
+//      = {direction: new Point(-4, -3)}
+//
+Array.prototype.bestOf = function(AisBetterThanB)
 {
-    return Math.max.apply(null, valueGetter != null
-        ? this.map(o => valueGetter(o))
-        : this);
+    if(this.length === 0)
+        return null;
+
+    let bestItem = this[0];
+    for(let item of this)
+        if(AisBetterThanB(item, bestItem))
+            bestItem = item;
+    return bestItem;
 };
 
 Array.prototype.min = function(valueGetter=null)
@@ -426,25 +461,6 @@ Array.prototype.min = function(valueGetter=null)
     return Math.min.apply(null, valueGetter != null
         ? this.map(o => valueGetter(o))
         : this);
-};
-
-// isBetter: function which takes two parameters and returns true if the first one is "better" than the second one, false otherwise.
-// Returns the single element that won every comparison it was involved in (or null if the list is empty).
-//
-// Examples:
-// [{score:5}, {score:6}, {score:3}].bestOf((a, b) => a.score > b.score) = {score:6}
-// [{name:'harry'}, {name:'ron'}, {name:'hermione'}].bestOf((a, b) => a.name.length > b.name.length) = {name:'hermione'}
-//
-Array.prototype.bestOf = function(isBetter)
-{
-    if(this.length === 0)
-        return null;
-
-    let bestItem = this[0];
-    for(let item of this)
-        if(isBetter(item, bestItem))
-            bestItem = item;
-    return bestItem;
 };
 
 // Returns the element of the array with the lowest valueGetter(element) value
@@ -456,6 +472,15 @@ Array.prototype.minOf = function(valueGetter)
         : null;
 };
 
+Array.prototype.max = function(valueGetter=null)
+{
+    return Math.max.apply(null, valueGetter != null
+        ? this.map(o => valueGetter(o))
+        : this);
+};
+
+// Returns the element of the array with the highest valueGetter(element) value
+// Note: the first match is returned if there is a tie
 Array.prototype.maxOf = function(valueGetter)
 {
     return this.length > 0
@@ -466,6 +491,28 @@ Array.prototype.maxOf = function(valueGetter)
 Array.prototype.sum = function()
 {
     return this.reduce((total, increment) => total + increment);
+};
+
+// Example:
+// [
+//      {id:'squirtle'},
+//      {id:'bulbasaur'},
+//      {id:'charmander'}
+// ]
+// .mappedBy(o => o.id) =
+// {
+//      squirtle: {id: 'squirtle'},
+//      bulbasaur: {id: 'bulbasaur'},
+//      charmander: {id: 'charmander'}
+// }
+Array.prototype.mappedBy = function(keyGetter)
+{
+    return this.reduce((obj, element) =>
+    {
+        obj[keyGetter(element)] = element;
+        return obj
+    },
+    {});
 };
 
 Array.prototype.clone = function()
@@ -483,4 +530,36 @@ Array.prototype.sorted = function(compare)
 {
     this.sort(compare);
     return this;
+};
+
+
+// makes a given class a child of the class this method is called upon
+//
+// Example: creating a class "Square"
+// which inherits from another class "Rectangle"
+// which inherits from another class "Point"
+//
+// function Point(x, y)
+// {
+//      this.x = x;
+//      this.y = y;
+// }
+//
+// function Rectangle(x, y, w, h)
+// {
+//      Point.call(this, x, y);
+//      this.w = width;
+//      this.h = height;
+// }
+// Point.parents(Rectangle);
+//
+// function Square(x, y, size)
+// {
+//      Rectangle.call(this, x, y, size, size);
+// }
+// Rectangle.parents(Square)
+Function.prototype.parents = function(childClass)
+{
+    childClass.prototype = Object.create(this.prototype);
+    childClass.prototype.constructor = childClass;
 };
