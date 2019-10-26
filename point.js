@@ -63,36 +63,44 @@ Point.prototype.angle = function()
 	return Math.atan2(this.y, this.x);
 };
 
-
-Point.prototype.insideLineSegmentIfColinear = function(a, b)
+Point.prototype.reflect = function(normal, origin=null)
 {
-	let ap = point.subtract(a);
-	let ab = b.subtract(a);
-	let v = ap.dot(ab);
-	return v >= 0 && v <= ab.lengthSq();
+	if(origin == null)
+    {
+        const reflectionPoint = this.closestPointOnLine(new Point(), normal);
+        return reflectionPoint.subtract(this).scale(2).add(this);
+    }
+
+	const reflectionPoint = this.closestPointOnLine(origin, origin.add(normal));
+	return reflectionPoint.subtract(this).scale(2).add(this);
 };
+
+// Point.prototype.insideLineSegmentIfColinear = function(a, b)
+// {
+// 	let ap = point.subtract(a);
+// 	let ab = b.subtract(a);
+// 	let v = ap.dot(ab);
+// 	return v >= 0 && v <= ab.lengthSq();
+// };
+
 Point.prototype.closestPointOnLineSegment = function(a, b)
 {
-	let ab = b.subtract(a);
-	let ret = this.subtract(a).proj(ab).add(a);
-	let r = ret.subtract(a).dot(ab);
-	if(r < 0) return a;
-	if(r > ab.lengthSq()) return b;
-	return ret;
+    let ab = b.subtract(a);
+    let ret = this.subtract(a).proj(ab).add(a);
+    let r = ret.subtract(a).dot(ab);
+    if(r < 0) return a;
+    if(r > ab.lengthSq()) return b;
+    return ret;
 };
+
+Point.prototype.closestPointOnLine = function(a, b)
+{
+    return this.subtract(a).proj(b.subtract(a)).add(a);
+};
+
 Point.prototype.closest = function(points)
 {
-	let minDistanceSq = null;
-	let minPoint = null;
-	points.forEach(o => {
-        let distanceSq = this.subtract(o).lengthSq();
-        if (minDistanceSq === null || distanceSq < minDistanceSq)
-		{
-            minDistanceSq = distanceSq;
-            minPoint = o;
-		}
-	});
-	return minPoint;
+	return points.minOf(o => this.subtract(o).lengthSq());
 };
 
 Point.prototype.leftOfLine = function(a, b)

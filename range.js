@@ -12,7 +12,7 @@ function Range(_start, _end)
 	this.valid = _start != _end;
 }
 
-Range.prototype.Collides = function(range)
+Range.prototype.collides = function(range)
 {
 	if (!this.valid || !range.valid)
 		return false;
@@ -35,7 +35,7 @@ function Ranges()
 	this.ranges = [];
 }
 
-Ranges.prototype.handleCollisions = function()
+Ranges.prototype._handleCollisions = function()
 {
 	this.ranges.sort(function(a, b) { return a.start - b.start; });
 	for(let i = 0; i < this.ranges.length-1; i++)
@@ -43,7 +43,7 @@ Ranges.prototype.handleCollisions = function()
 		let range = this.ranges[i];
 		let nextRange = this.ranges[i + 1];
 
-		let collides = range.Collides(nextRange);
+		let collides = range.collides(nextRange);
 		if (collides || range.end == nextRange.start)
 		{
 			this.ranges[i] = new Range(Math.min(range.start, nextRange.start), Math.max(range.end, nextRange.end));
@@ -53,21 +53,21 @@ Ranges.prototype.handleCollisions = function()
 	}
 };
 
-Ranges.prototype.Add = function(start, length)
+Ranges.prototype.add = function(start, length)
 {
 	if (length <= 0)
 		return;
 	this.ranges.push(new Range(start, start + length));
-	this.handleCollisions();
+	this._handleCollisions();
 };
 
-Ranges.prototype.Collides = function(start, length)
+Ranges.prototype.collides = function(start, length)
 {
 	if(length <= 0)
 		return false;
 	for(let i = 0; i < this.ranges.length; i++)
 	{
-		if(this.ranges[i].Collides(new Range(start, start + length)))
+		if(this.ranges[i].collides(new Range(start, start + length)))
 			return true;
 	}
 	return false;

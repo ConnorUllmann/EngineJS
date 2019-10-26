@@ -1,10 +1,11 @@
 function Rectangle(x=0, y=0, w=0, h=0)
 {
-    this.x = x;
-    this.y = y;
+    Point.call(this, x, y);
     this.w = w;
     this.h = h;
 }
+Rectangle.prototype = Object.create(Point.prototype);
+Rectangle.prototype.constructor = Rectangle;
 
 Rectangle.prototype.collidesPoint = function(x, y)
 {

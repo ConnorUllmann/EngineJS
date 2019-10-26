@@ -414,40 +414,53 @@ Array.prototype.last = function(boolCheck=null)
     return null;
 };
 
-Array.prototype.max = function()
+Array.prototype.max = function(valueGetter=null)
 {
-    return Math.max.apply(null, this);
+    return Math.max.apply(null, valueGetter != null
+        ? this.map(o => valueGetter(o))
+        : this);
 };
 
-// TODO: Doesn't appear to be working?
-Array.prototype.min = function()
+Array.prototype.min = function(valueGetter=null)
 {
-    return Math.min.apply(null, this);
+    return Math.min.apply(null, valueGetter != null
+        ? this.map(o => valueGetter(o))
+        : this);
 };
 
-// Returns the element of the array with the lowest valueGetter(element) value
-Array.prototype.minOf = function(valueGetter)
+// isBetter: function which takes two parameters and returns true if the first one is "better" than the second one, false otherwise.
+// Returns the single element that won every comparison it was involved in (or null if the list is empty).
+//
+// Examples:
+// [{score:5}, {score:6}, {score:3}].bestOf((a, b) => a.score > b.score) = {score:6}
+// [{name:'harry'}, {name:'ron'}, {name:'hermione'}].bestOf((a, b) => a.name.length > b.name.length) = {name:'hermione'}
+//
+Array.prototype.bestOf = function(isBetter)
 {
     if(this.length === 0)
         return null;
 
-    let minItem = this[0];
-    let minValue = valueGetter(minItem);
+    let bestItem = this[0];
     for(let item of this)
-    {
-        let value = valueGetter(item);
-        if(value < minValue)
-        {
-            minItem = item;
-            minValue = value;
-        }
-    }
-    return minItem;
+        if(isBetter(item, bestItem))
+            bestItem = item;
+    return bestItem;
+};
+
+// Returns the element of the array with the lowest valueGetter(element) value
+// Note: the first match is returned if there is a tie
+Array.prototype.minOf = function(valueGetter)
+{
+    return this.length > 0
+        ? this.bestOf((a, b) => valueGetter(a) < valueGetter(b))
+        : null;
 };
 
 Array.prototype.maxOf = function(valueGetter)
 {
-    return this.minOf(o => -valueGetter(o));
+    return this.length > 0
+        ? this.bestOf((a, b) => valueGetter(a) > valueGetter(b))
+        : null;
 };
 
 Array.prototype.sum = function()

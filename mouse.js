@@ -21,8 +21,8 @@ Mouse.prototype.onCanvas = function()
 {
 	return this.focus &&
         this.x != null && this.y != null &&
-        this.x >= 0 && this.x < this.world.canvas.width &&
-        this.y >= 0 && this.y < this.world.canvas.height;
+        this.x >= 0 && this.x < this.world.camera.w &&
+        this.y >= 0 && this.y < this.world.camera.h;
 };
 
 Mouse.prototype.start = function()
@@ -100,7 +100,7 @@ Mouse.prototype.leftMouseUpEvent = function()
 
 Mouse.prototype.update = function()
 {
-    this.scale = this.world.canvas.width / this.world.canvas.clientWidth;
+    this.scale = this.world.camera.w / this.world.canvas.clientWidth;
     this.leftReleased = false;
     this.leftPressed = false;
     this.rightReleased = false;
