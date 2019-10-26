@@ -86,16 +86,15 @@ new Player(world.canvas.width/2, world.canvas.height/2, world);
 
 The Keyboard class tracks all keyboard inputs (unsurprisingly) and is instantiated and updated by its World. For example, you might want to check inside an Entity's update or render function whether the "A" button was pressed this frame:
 ```javascript
-'a' in this.world.keyboard.pressed
-'A' in this.world.keyboard.pressed
+Key.A in this.world.keyboard.pressed
 ```
 Some keys have additional names which can be used, especially if there isn't a specific character for that key. For example, to check if the user released the "enter" key this frame, we can use the following expression:
 ```javascript
-'enter' in this.world.keyboard.released
+Key.ENTER in this.world.keyboard.released === Key.RETURN in this.world.keyboard.released
 ```
 Lastly, you can check if a key is currently held down during the current frame (which will be true on the frame it is pressed but false on the frame it is released), you can check the Keyboard's "down" dictionary—for example, to see if the player is currently holding down "backspace":
 ```javascript
-'backspace' in this.world.keyboard.down
+KEY.BACKSPACE in this.world.keyboard.down
 ```
 
 ### Mouse

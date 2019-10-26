@@ -77,7 +77,7 @@ World.prototype.updateAll = function()
     if(this.firstUpdate == null)
         this.firstUpdate = Date.now();
 
-    if('`' in this.keyboard.pressed)
+    if(Key.TILDA in this.keyboard.pressed)
         this.debug = !this.debug;
 
     // Update delta

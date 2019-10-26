@@ -12,22 +12,22 @@ function Gamepads()
     this.deadzoneDefault = 0.2;
 
     this.buttonMappings = {
-        0: ['a', 'A'],
-        1: ['b', 'B'],
-        2: ['x', 'X'],
-        3: ['y', 'Y'],
-        4: ['lb', 'LB'],
-        5: ['rb', 'RB'],
+        0: [Button.A],
+        1: [Button.B],
+        2: [Button.X],
+        3: [Button.Y],
+        4: [Button.LB],
+        5: [Button.RB],
         // 6 - left trigger
         // 7 - right trigger
-        8: ['select', 'back'],
-        9: ['start'],
-        10: ['l3', 'L3'],
-        11: ['r3', 'R3'],
-        12: ['up', 'UP'],
-        13: ['down', 'DOWN'],
-        14: ['left', 'LEFT'],
-        15: ['right', 'RIGHT'],
+        8: [Button.SELECT, Button.BACK],
+        9: [Button.START],
+        10: [Button.L3],
+        11: [Button.R3],
+        12: [Button.UP],
+        13: [Button.DOWN],
+        14: [Button.LEFT],
+        15: [Button.RIGHT],
         // 16 - ???
     };
 }
@@ -44,7 +44,7 @@ Gamepads.prototype.update = function()
 
     const gamepads = Object.values(navigator.getGamepads())
         .filter(o => o != null && o.connected)
-        .reduce((dict, o) => { return { ...dict, [o.index]: o }; }, {});
+        .mappedBy(o => o.index);
 
     for(let gamepadIndex in gamepads)
     {
@@ -56,10 +56,6 @@ Gamepads.prototype.update = function()
         this.rightAnalogStickByIndex[gamepadIndex] = new Point(this.applyDeadzone(gamepad.axes[2]), this.applyDeadzone(gamepad.axes[3]));
         this.leftTriggerByIndex[gamepadIndex] = gamepad.buttons[6].value;
         this.rightTriggerByIndex[gamepadIndex] = gamepad.buttons[7].value;
-
-        const downNext = {};
-        const pressedNext = {};
-        const releasedNext = {};
 
         if(!(gamepadIndex in this.downByIndex))
             this.downByIndex[gamepadIndex] = {};
