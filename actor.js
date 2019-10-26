@@ -7,8 +7,7 @@ function Actor(x, y, world, width, height)
     this.draggable = true;
     this.mouseOffset = new Point();
 }
-Actor.prototype = Object.create(Entity.prototype);
-Actor.prototype.constructor = Actor;
+Entity.parents(Actor);
 
 Actor.prototype.update = function()
 {

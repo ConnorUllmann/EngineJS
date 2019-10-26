@@ -4,8 +4,8 @@
 // {
 //     Entity.call(this, x, y, world);
 // }
-// ExampleEntity.prototype = Object.create(Entity.prototype);
-// ExampleEntity.prototype.constructor = ExampleEntity;
+// Entity.parents(ExampleEntity);
+//
 // ExampleEntity.prototype.update = function()
 // {
 //	   // Call update function of a parent
@@ -28,8 +28,7 @@ function Entity(_x, _y, _world=null)
 	if(_world != null)
         _world._addEntity(this);
 }
-Entity.prototype = Object.create(Point.prototype);
-Entity.prototype.constructor = Entity;
+Point.parents(Entity);
 
 Entity.prototype.added = function() //Triggered when this entity is added to the world.
 {

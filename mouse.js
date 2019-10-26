@@ -13,8 +13,7 @@ function Mouse(world)
     this.scale = 1;
     this.touchscreen = "ontouchstart" in document.documentElement;
 }
-Mouse.prototype = Object.create(Point.prototype);
-Mouse.prototype.constructor = Mouse;
+Point.parents(Mouse);
 
 
 Mouse.prototype.onCanvas = function()

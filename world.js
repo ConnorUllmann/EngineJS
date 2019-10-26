@@ -46,7 +46,6 @@ World.prototype.start = function(canvasId)
 
     this.mouse.start();
     this.keyboard.start();
-    this.camera.start();
 
     //Need the lambda or else this.render() will have the Window instance as "this" inside the function scope
     setInterval(() => this.render(), this.millisecondsPerFrame());
@@ -116,8 +115,6 @@ World.prototype.updateAll = function()
             e.destroyed = true;
         }
     }
-
-    this.camera.update();
 };
 
 World.prototype.renderAll = function()
