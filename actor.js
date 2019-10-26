@@ -18,7 +18,7 @@ Actor.prototype.update = function()
 Actor.prototype.render = function()
 {
     if(this.world.debug)
-        Draw.rectLines(this.world, this.xLeft(), this.yTop(), this.width, this.height, "#f00");
+        Draw.rectangleOutline(this.world, this.xLeft(), this.yTop(), this.width, this.height, "#f00");
 };
 
 Actor.prototype.updateMouseDrag = function()

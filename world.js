@@ -30,6 +30,14 @@ function World(transparentBackground=false)
     this.debugFpsTrackListMaxSize = 10;
     this.debugFpsTrackList = [];
     this.debugFpsCurrent = 0;
+
+    Object.defineProperty(this, 'millisecondsSinceStart', {
+        get: function() { return Date.now() - this.firstUpdate; }
+    });
+    Object.defineProperty(this, 'millisecondsPerFrame', {
+        get: function() { return 1000 / this.fps; },
+        set: function(x) { this.fps = 1000 / x; }
+    });
 }
 
 World.prototype.start = function(canvasId)
@@ -48,7 +56,7 @@ World.prototype.start = function(canvasId)
     this.keyboard.start();
 
     //Need the lambda or else this.render() will have the Window instance as "this" inside the function scope
-    setInterval(() => this.render(), this.millisecondsPerFrame());
+    setInterval(() => this.render(), this.millisecondsPerFrame);
 };
 
 World.prototype.clearCanvas = function(color)
@@ -139,7 +147,7 @@ World.prototype.renderAll = function()
             this.debugFpsCurrent = this.debugFpsTrackList.reduce((totalFps, fps) => totalFps + fps) / this.debugFpsTrackList.length;
             this.debugFpsTrackList.length = 0;
         }
-        Draw.rect(this, this.camera.x, this.camera.y, 40, 25, new Color(0, 0, 0));
+        Draw.rectangle(this, this.camera.x, this.camera.y, 40, 25, new Color(0, 0, 0));
         Draw.text(this, Math.floor(this.debugFpsCurrent), this.camera.x + 20, this.camera.y + 13, new Color(255, 255, 255), "20px Helvetica", "center", "middle");
     }
 };
@@ -172,16 +180,6 @@ World.prototype._addEntity = function(entity)
 World.prototype._destroyEntity = function(entity)
 {
     this.entitiesToRemove.push(entity);
-};
-
-World.prototype.millisecondsSinceStart = function()
-{
-    return Date.now() - this.firstUpdate;
-};
-
-World.prototype.millisecondsPerFrame = function()
-{
-    return 1000 / this.fps;
 };
 
 World.prototype.queueRenderCall = function(depth, renderCall)

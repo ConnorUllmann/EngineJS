@@ -20,6 +20,14 @@ function Rectangle(x=0, y=0, w=0, h=0)
         get: function() { return this.y + this.h; },
         set: function(y) { this.y = y - this.h; }
     });
+    Object.defineProperty(this, 'xCenter', {
+        get: function() { return this.x + this.w/2; },
+        set: function(x) { this.x = x - this.w/2; }
+    });
+    Object.defineProperty(this, 'yCenter', {
+        get: function() { return this.y + this.h/2; },
+        set: function(y) { this.y = y - this.h/2; }
+    });
 }
 Point.parents(Rectangle);
 

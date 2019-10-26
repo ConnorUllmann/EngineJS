@@ -54,8 +54,8 @@ Keyboard.keysForKeyEvent = function(event) {
     let key = String.fromCharCode(keyCode);
     let result = [keyCode, key.toLowerCase()];
 
-    if (keyCode in Keyboard.SpecialKeysMapping)
-        result.push(...Keyboard.SpecialKeysMapping[keyCode]);
+    if (keyCode in Keyboard.NamedKeysMap)
+        result.push(...Keyboard.NamedKeysMap[keyCode]);
 
     switch(keyCode)
     {
@@ -93,7 +93,7 @@ Keyboard.keysForKeyEvent = function(event) {
     return result;
 };
 
-Keyboard.SpecialKeysMapping = {
+Keyboard.NamedKeysMap = {
     8: [Key.BACKSPACE],
     9: [Key.TAB],
     16: [Key.SHIFT],
