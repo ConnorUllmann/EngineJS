@@ -3,16 +3,45 @@ function Actor(x, y, world, width, height)
     Entity.call(this, x, y, world);
     this.width = width;
     this.height = height;
-    
+
+    this.canMove = true;
     this.draggable = true;
     this.mouseOffset = new Point();
+
+    this.gravity = 0;
+    this.friction = 1;
+
+    //must be reset every frame as it is reset to the gravity vector after each physics update
+    this.acceleration = new Point(0, this.gravity);
+    this.velocity = new Point();
+
+    this.xVelocityMin = null;
+    this.xVelocityMax = null;
+    this.yVelocityMin = null;
+    this.yVelocityMax = null;
 }
 Entity.parents(Actor);
 
-Actor.prototype.update = function()
+Actor.prototype.postUpdate = function()
 {
-    if(this.draggable)
+    if(!this.canMove)
+        return;
+
+    this.velocity = this.velocity.add(this.acceleration.scale(this.world.delta))
+        .scale(this.friction);
+
+    this.velocity.x = Utils.clamp(this.velocity.x, this.xVelocityMin, this.xVelocityMax);
+    this.velocity.y = Utils.clamp(this.velocity.y, this.yVelocityMin, this.yVelocityMax);
+
+    const position = this.add(this.velocity.scale(this.world.delta));
+    this.x = position.x;
+    this.y = position.y;
+
+    if (this.draggable)
         this.updateMouseDrag();
+
+    this.acceleration.x = 0;
+    this.acceleration.y = this.gravity;
 };
 
 Actor.prototype.render = function()

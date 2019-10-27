@@ -47,7 +47,13 @@ Utils.bezierPoint = function(t, points)
 
 Utils.clamp = function(x, min, max)
 {
-    return Math.max(min, Math.min(max, x));
+    return min == null
+        ? (max == null
+            ? x
+            : Math.min(max, x))
+        : (max == null
+            ? Math.max(min, x)
+            : Math.max(min, Math.min(max, x)));
 };
 
 /* Length of an equilateral triangle's altitude given the side length */
