@@ -175,23 +175,36 @@ Utils.lerpAngle = function(startAngle, finishAngle, normal=0.5, clamp=false) {
 // given the speed of the shot and gravity. Returns 0, 1, or 2 Points (if two points, the highest-arching vector is first)
 Utils.getLaunchVectors = function(xStart, yStart, xTarget, yTarget, gravityMagnitude, velocityMagnitude)
 {
-    const g = -gravityMagnitude;
+    if(velocityMagnitude === 0)
+        return [];
+
+    if(gravityMagnitude === 0)
+        return [new Point(xTarget, yTarget).subtract(xStart, yStart).normalized(velocityMagnitude)];
+
     const xDiff = xTarget - xStart;
     const yDiff = yTarget - yStart;
+    const g = -gravityMagnitude;
     const v = velocityMagnitude;
     const v2 = v * v;
     const sqrt = v2 * v2 - g * (g * xDiff * xDiff + 2 * yDiff * v2);
 
     if(xDiff === 0 && sqrt === 0)
-        return [Point.create((xDiff === 0 ? 1 : Math.sign(xDiff)) * v, -Math.PI / 2)];
+        return [Point.create(Math.sign(xDiff) * v, -Math.PI / 2)];
 
-    if (sqrt >= 0)
-        return [
-            Point.create((xDiff === 0 ? 1 : Math.sign(xDiff)) * v, Math.atan((v2 + Math.sqrt(sqrt)) / (g * xDiff))),
-            Point.create((xDiff === 0 ? 1 : Math.sign(xDiff)) * v, Math.atan((v2 - Math.sqrt(sqrt)) / (g * xDiff)))
-        ];
+    if(xDiff === 0)
+        return yDiff > 0
+            ? [new Point(0, v)]
+            : yDiff < 0
+                ? [new Point(0, -v)]
+                : [new Point(0, v), new Point(0, -v)];
 
-    return [];
+    if (sqrt < 0)
+        return [];
+
+    return [
+        Point.create(Math.sign(xDiff) * v, Math.atan((v2 + Math.sqrt(sqrt))/(g * xDiff))),
+        Point.create(Math.sign(xDiff) * v, Math.atan((v2 - Math.sqrt(sqrt))/(g * xDiff)))
+    ];
 };
 
 //https://stackoverflow.com/questions/2936112/text-wrap-in-a-canvas-element

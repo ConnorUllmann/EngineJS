@@ -116,7 +116,7 @@ Other properties, such as the amount the user has scrolled with the mouse this f
 
 Timers are simple objects that update each frame to interpolate their `value` variable from 0 to 1. There are a few types, but each is used the same way. First, you instantiate the Timer and then you call _timer.update_ each frame thereafter, making sure to check if _timer.triggered_ is true to indicate that the Timer has finished (or restarted, in the case of LoopTimers). On its first update, _timer.started_ will also be set to true.
 
-For example, consider that we want to add a "turret" entity to our game which should shoot a bullet once every 2 seconds. In the turret's constructor, you would instantiate a new Timer:
+For example, consider that we want to add a "turret" entity to our game which should fire a bullet once every 2 seconds. In the turret's constructor, you would instantiate a new Timer:
 ```javascript
 function Turret(x, y, world)
 {
