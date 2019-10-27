@@ -105,6 +105,30 @@ Point.prototype.closestPointOnLine = function(a, b)
     return this.subtract(a).proj(b.subtract(a)).add(a);
 };
 
+Point.linesIntersection = function(firstLineA, firstLineB, secondLineA, secondLineB, asSegments = true)
+{
+    const yFirstLineDiff = firstLineB.y - firstLineA.y;
+    const xFirstLineDiff = firstLineA.x - firstLineB.x;
+    const cFirst = firstLineB.x * firstLineA.y - firstLineA.x * firstLineB.y;
+    const ySecondLineDiff = secondLineB.y - secondLineA.y;
+    const xSecondLineDiff = secondLineA.x - secondLineB.x;
+    const cSecond = secondLineB.x * secondLineA.y - secondLineA.x * secondLineB.y;
+
+    const denominator = yFirstLineDiff * xSecondLineDiff - ySecondLineDiff * xFirstLineDiff;
+    if (denominator === 0)
+        return null;
+    const intersectionPoint = new Point(
+    	(xFirstLineDiff * cSecond - xSecondLineDiff * cFirst) / denominator,
+		(ySecondLineDiff * cFirst - yFirstLineDiff * cSecond) / denominator);
+    return asSegments && (
+    	Math.pow(intersectionPoint.x - firstLineB.x, 2) + Math.pow(intersectionPoint.y - firstLineB.y, 2) > Math.pow(firstLineA.x - firstLineB.x, 2) + Math.pow(firstLineA.y - firstLineB.y, 2) ||
+		Math.pow(intersectionPoint.x - firstLineA.x, 2) + Math.pow(intersectionPoint.y - firstLineA.y, 2) > Math.pow(firstLineA.x - firstLineB.x, 2) + Math.pow(firstLineA.y - firstLineB.y, 2) ||
+		Math.pow(intersectionPoint.x - secondLineB.x, 2) + Math.pow(intersectionPoint.y - secondLineB.y, 2) > Math.pow(secondLineA.x - secondLineB.x, 2) + Math.pow(secondLineA.y - secondLineB.y, 2) ||
+		Math.pow(intersectionPoint.x - secondLineA.x, 2) + Math.pow(intersectionPoint.y - secondLineA.y, 2) > Math.pow(secondLineA.x - secondLineB.x, 2) + Math.pow(secondLineA.y - secondLineB.y, 2))
+    	? null
+		: intersectionPoint;
+};
+
 Point.prototype.closest = function(points)
 {
 	return points.minOf(o => this.subtract(o).lengthSq());
