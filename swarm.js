@@ -41,11 +41,11 @@ function SwarmInstinct(swarmer)
     this.angle = 0;
 
     // RadiusOfRepulsion must be <= RadiusOfAlignment
-    this.RadiusOfRepulsion = 50;
+    this.RadiusOfRepulsion = 30;
     // RadiusOfAlignment must be <= RadiusOfAttraction
-    this.RadiusOfAlignment = 20;
+    this.RadiusOfAlignment = 70;
     this.RadiusOfAttraction = 400;
-    this.RadiusOfPredatorAvoidance = 600;
+    this.RadiusOfPredatorAvoidance = 400;
     this.RepulsionMultiplier = 50;
     this.AlignmentMultiplier = 1;
     this.AttractionMultiplier = 1;
