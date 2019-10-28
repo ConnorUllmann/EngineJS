@@ -35,10 +35,23 @@ Swarm.prototype.getAngle = function(swarmer)
     return this.swarmInstincts.first(o => o.swarmer === swarmer).angle;
 };
 
+Swarm.prototype.isAvoidingPredator = function(swarmer)
+{
+    return this.swarmInstincts.first(o => o.swarmer === swarmer).isAvoidingPredator;
+};
+
+Swarm.prototype.isRepulsed = function(swarmer)
+{
+    return this.swarmInstincts.first(o => o.swarmer === swarmer).isRepulsed;
+};
+
 function SwarmInstinct(swarmer)
 {    
     this.swarmer = swarmer;
     this.angle = 0;
+
+    this.isRepulsed = false;
+    this.isAvoidingPredator = false;
 
     // RadiusOfRepulsion must be <= RadiusOfAlignment
     this.RadiusOfRepulsion = 30;
@@ -68,10 +81,15 @@ SwarmInstinct.prototype.updateAngle = function(swarmInstincts, predators)
         .reduce((sum, point) => sum.add(point), new Point());
     if(predatorDirection.lengthSq() > 0.01)
     {
+        this.isAvoidingPredator = true;
         this.angle = predatorDirection.angle();
     }
     else
     {
+        this.isAvoidingPredator = false;
+
+        // reset to start as isRepulsed will update inside swarmVectorForNeighbor
+        this.isRepulsed = false;
         this.angle = swarmInstincts
             .map(swarmInstinct => this.swarmVectorForNeighbor(swarmInstinct))
             .reduce((sum, point) => sum.add(point))
@@ -81,14 +99,17 @@ SwarmInstinct.prototype.updateAngle = function(swarmInstincts, predators)
 
 SwarmInstinct.prototype.swarmVectorForNeighbor = function(neighborSwarmInstinct)
 {
-    if (this.swarmer === neighborSwarmInstinct)
+    if (this.swarmer === neighborSwarmInstinct.swarmer)
         return new Point();
     const position = new Point(this.swarmer.x, this.swarmer.y);
     const neighborPosition = new Point(neighborSwarmInstinct.swarmer.x, neighborSwarmInstinct.swarmer.y);
     const distanceSquared = neighborPosition.subtract(position).lengthSq();
+    const isRepulsed = distanceSquared <= this.RadiusOfRepulsion * this.RadiusOfRepulsion;
+    if(isRepulsed)
+        this.isRepulsed = true;
     return distanceSquared < 0.001
         ? new Point()
-        : distanceSquared <= this.RadiusOfRepulsion * this.RadiusOfRepulsion
+        : isRepulsed
             ? position.subtract(neighborPosition).normalized(this.RepulsionMultiplier)
             : distanceSquared <= this.RadiusOfAlignment * this.RadiusOfAlignment
                 ? Point.create(this.AlignmentMultiplier, neighborSwarmInstinct.angle)

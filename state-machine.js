@@ -35,10 +35,10 @@ StateMachine.prototype.changeState = function(stateName)
 
     const statePrev = this.getCurrentState();
     const stateNext = this.states[stateName];
-    if(statePrev.finish)
+    if(statePrev && statePrev.finish)
         statePrev.finish();
     this.currentStateName = stateName;
-    if(stateNext.start)
+    if(stateNext && stateNext.start)
         stateNext.start();
 };
 
@@ -46,7 +46,7 @@ StateMachine.prototype.start = function(initialStateName)
 {
     if(initialStateName == null)
         throw "Cannot start a StateMachine with a null state!";
-    if(Object.keys(this.states.length).length <= 0)
+    if(Object.keys(this.states).length <= 0)
         throw "Cannot start a StateMachine which has had no states added to it!";
     this.changeState(initialStateName);
 };
@@ -54,6 +54,6 @@ StateMachine.prototype.start = function(initialStateName)
 StateMachine.prototype.update = function()
 {
     const state = this.getCurrentState();
-    if(state.update)
+    if(state && state.update)
         state.update();
 };
