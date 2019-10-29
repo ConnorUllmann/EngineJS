@@ -141,10 +141,25 @@ Point.prototype.leftOfLine = function(a, b)
 
 Point.prototype.rotate = function(angleRadians, center=null)
 {
-	const x = this.x - (center ? center.x : 0);
-	const y = this.y - (center ? center.y : 0);
-	return new Point(
+    const x = this.x - (center ? center.x : 0);
+    const y = this.y - (center ? center.y : 0);
+    return new Point(
         (center ? center.x : 0) + x * Math.cos(angleRadians) - y * Math.sin(angleRadians),
         (center ? center.y : 0) + y * Math.cos(angleRadians) + x * Math.sin(angleRadians)
-	);
+    );
+};
+
+// returns a version of this point which is flipped over (rotated 180 degrees around) the given point
+// (or the origin if none is provided). Provided because it is faster than using rotate/reflect.
+Point.prototype.flip = function(center=null)
+{
+    return center != null
+		? new Point(2 * center.x - this.x, 2 * center.y - this.y)
+		: this.negative();
+};
+
+// same as rotating a vector 180 degrees
+Point.prototype.negative = function()
+{
+    return new Point(-this.x, -this.y);
 };
