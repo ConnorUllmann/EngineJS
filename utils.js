@@ -45,6 +45,16 @@ Utils.bezierPoint = function(t, points)
     return sum;
 };
 
+// Takes in a list of points and returns a new list of points which make up a bezier curve across them
+// coarseness must be between 0 and 1; smaller value means more points and more detail but longer runtime
+Utils.bezierify = function(points, coarseness=0.05)
+{
+    const bezierPoints = [];
+    for(let i = 0; i <= 1; i += coarseness)
+        bezierPoints.push(Utils.bezierPoint(i, points));
+    return bezierPoints;
+};
+
 Utils.clamp = function(x, min, max)
 {
     return min == null
