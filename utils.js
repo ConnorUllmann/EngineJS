@@ -109,6 +109,14 @@ Utils.angleDiffRadians = function(from, to)
     return diff;
 };
 
+Utils.TAU = 2 * Math.PI;
+
+// calculates "value % modulo" but wraps negative numbers more sensibly
+Utils.moduloSafe = function(value, modulo=Utils.TAU)
+{
+    return ((value % modulo) + modulo) % modulo;
+};
+
 Utils.getPointTangentToCircle = function(xLineA, yLineA, xLineB, yLineB, xCircle, yCircle, radiusCircle)
 {
     //If the first point is inside the circle, make the second point outside the circle.

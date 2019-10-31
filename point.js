@@ -9,6 +9,11 @@ Point.create = function(length, angleRadians)
 	return new Point(length * Math.cos(angleRadians), length * Math.sin(angleRadians));
 };
 
+Point.prototype.clone = function()
+{
+	return new Point(this.x, this.y);
+};
+
 Point.prototype.toString = function()
 {
     return JSON.stringify(
