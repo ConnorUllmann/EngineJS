@@ -108,10 +108,25 @@ Draw.triangleOutline = function(world, x1, y1, x2, y2, x3, y3, strokeStyle, line
     context.moveTo(x1 - world.camera.x, y1 - world.camera.y);
     context.lineTo(x2 - world.camera.x, y2 - world.camera.y);
     context.lineTo(x3 - world.camera.x, y3 - world.camera.y);
-    context.lineTo(x1 - world.camera.x, y1 - world.camera.y);
+    context.closePath();
     context.lineWidth = lineWidth;
     context.strokeStyle = strokeStyle;
     context.stroke();
+};
+
+Draw.polygon = function(world, points, fillStyle)
+{
+    if(points == null || points.length <= 0)
+        return null;
+
+    const context = world.context;
+    context.beginPath();
+    context.moveTo(points.first().x - world.camera.x, points.first().y - world.camera.y);
+    for(let i = 1; i < points.length; i++)
+        context.lineTo(points[i].x - world.camera.x, points[i].y - world.camera.y);
+    context.closePath();
+    context.fillStyle = fillStyle;
+    context.fill();
 };
 
 Draw.regularPolygon = function(world, x, y, radius, sides, fillStyle, angleRadians=0)
@@ -178,6 +193,7 @@ Draw.rectangle = function(world, x, y, w, h, fillStyle)
 
 Draw.rectangleOutline = function(world, x, y, w, h, strokeStyle, lineWidth=1)
 {
+    // TODO: should use .closePath() instead of re-appending [x, y]
     let points = [
         [x, y],
         [x + w, y],
