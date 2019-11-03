@@ -569,6 +569,30 @@ Array.prototype.sorted = function(compare)
     return this;
 };
 
+// Returns the all elements with a unique value as determined by the mapping function "valueGetter"
+// Example:
+// [
+//     {id:0,n:1},
+//     {id:1,n:2},
+//     {id:2,n:1},
+//     {id:3,n:3},
+//     {id:4,n:2}
+// ]
+// .distinct(o => o.n) =
+// [
+//     {id:0,n:1},
+//     {id:1,n:2},
+//     {id:3,n:3}
+// ]
+Array.prototype.distinct = function(valueGetter)
+{
+    const map = this.map(o => valueGetter ? valueGetter(o) : o);
+    return this.filter((value, i) =>
+    {
+        return map.indexOf(valueGetter ? valueGetter(value) : value) === i;
+    });
+};
+
 
 // makes a given class a child of the class this method is called upon
 //

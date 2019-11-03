@@ -48,7 +48,7 @@ Point.prototype.proj = function(b)
 };
 Point.prototype.normalized = function(length=1)
 {
-	if(this.x === 0 && this.y === 0)
+	if((this.x === 0 && this.y === 0) || length === 0)
 		return new Point(0, 0);
 	let temp = length / Math.sqrt(this.lengthSq());
 	return new Point(this.x * temp, this.y * temp);
@@ -167,4 +167,10 @@ Point.prototype.flip = function(center=null)
 Point.prototype.negative = function()
 {
     return new Point(-this.x, -this.y);
+};
+
+// rotates the point randomly in the range given (about the origin)
+Point.prototype.wiggle = function(angleRangeMax)
+{
+    return this.rotate(angleRangeMax * (Math.random() - 0.5));
 };

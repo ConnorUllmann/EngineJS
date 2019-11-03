@@ -8,7 +8,7 @@ function Draw(){}
 Draw.applyBlendMode = function(world, blendMode, drawCall)
 {
     const context = world.context;
-    const blendModeOriginal = context.globalCompositeOperation;
+    const blendModeOriginal = context.globalCompositeOperation.toString();
     context.globalCompositeOperation = blendMode;
     drawCall();
     context.globalCompositeOperation = blendModeOriginal;
@@ -43,6 +43,7 @@ BlendMode = {
     Color: 'color',
     Luminosity: 'luminosity'
 };
+const BlendModes = Object.values(BlendMode).distinct();
 
 Draw.circle = function(world, x, y, radius, fillStyle)
 {

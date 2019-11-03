@@ -25,6 +25,7 @@ function World(transparentBackground=false)
     this.lastUpdate = null;
 
     this.fps = 60;
+    this.fpsVisible = true;
 
     this.debug = false;
     this.debugFpsTrackListMaxSize = 10;
@@ -139,7 +140,7 @@ World.prototype.renderAll = function()
         .forEach(renderCalls => renderCalls.forEach(renderCall => renderCall()));
     this.singleFrameRenderCallsByDepth = {};
 
-    if(this.debug)
+    if(this.debug || this.fpsVisible)
     {
         this.debugFpsTrackList.unshift(Math.floor(1000/this.delta));
         if(this.debugFpsTrackList.length >= this.debugFpsTrackListMaxSize)
