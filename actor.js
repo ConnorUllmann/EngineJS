@@ -79,5 +79,7 @@ Actor.prototype.isMouseHovering = function() { return this.world.mouse.x >= this
 Actor.prototype.distanceSqToMouse = function() { return this.world.mouse.distanceSqTo(this); };
 Actor.prototype.collides = function(actor)
 {
-    return Rectangle.collide(this.xLeft(), this.yTop(), this.width, this.height, actor.xLeft(), actor.yTop(), actor.width, actor.height);
+    return this.active &&
+        actor.active &&
+        Rectangle.collide(this.xLeft(), this.yTop(), this.width, this.height, actor.xLeft(), actor.yTop(), actor.width, actor.height);
 };

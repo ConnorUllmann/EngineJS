@@ -387,6 +387,16 @@ Array.prototype.removeAt = function(index)
     return item;
 };
 
+// returns the elements at the current indices after they've been removed from the array
+// (items return in the reverse order they were in the array;
+//  call .reversed() on the return value to flip it if necessary)
+Array.prototype.removeAtMultiple = function(...indices)
+{
+    return indices
+        .sorted((a, b) => b - a)
+        .map(i => this.removeAt(i));
+};
+
 //Returns a new array that is a reverse of the given array
 Array.prototype.reversed = function()
 {

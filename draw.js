@@ -45,64 +45,69 @@ BlendMode = {
 };
 const BlendModes = Object.values(BlendMode).distinct();
 
-Draw.circle = function(world, x, y, radius, fillStyle)
+Draw.circle = function(world, x, y, radius, fillStyle=null)
 {
     const context = world.context;
     context.beginPath();
-    context.arc(x - world.camera.x, y - world.camera.y, radius, 0, 2 * Math.PI);
-    context.fillStyle = fillStyle;
+    context.arc(x - world.camera.x, y - world.camera.y, radius, 0, Utils.TAU);
+    if(fillStyle)
+        context.fillStyle = fillStyle;
     context.fill();
 };
 
-Draw.circleOutline = function(world, x, y, radius, strokeStyle, lineWidth=1)
+Draw.circleOutline = function(world, x, y, radius, strokeStyle=null, lineWidth=1)
 {
     const context = world.context;
     context.beginPath();
-    context.arc(x - world.camera.x, y - world.camera.y, radius, 0, 2 * Math.PI);
+    context.arc(x - world.camera.x, y - world.camera.y, radius, 0, Utils.TAU);
     context.lineWidth = lineWidth;
-    context.strokeStyle = strokeStyle;
+    if(strokeStyle)
+        context.strokeStyle = strokeStyle;
     context.stroke();
 };
 
 // same as circleOutline except you specify the inner and outer radii
-Draw.ring = function(world, x, y, innerRadius, outerRadius, strokeStyle)
+Draw.ring = function(world, x, y, innerRadius, outerRadius, strokeStyle=null)
 {
     const lineWidth = outerRadius - innerRadius;
     const radius = (outerRadius + innerRadius) / 2;
     Draw.circleOutline(world, x, y, radius, strokeStyle, lineWidth);
 };
 
-Draw.oval = function(world, x, y, xRadius, yRadius, fillStyle, angleRadians=0)
+Draw.oval = function(world, x, y, xRadius, yRadius, fillStyle=null, angleRadians=0)
 {
     const context = world.context;
     context.beginPath();
-    context.ellipse(x - world.camera.x, y - world.camera.y, xRadius, yRadius, angleRadians, 0, 2 * Math.PI);
-    context.fillStyle = fillStyle;
+    context.ellipse(x - world.camera.x, y - world.camera.y, xRadius, yRadius, angleRadians, 0, Utils.TAU);
+    if(fillStyle)
+        context.fillStyle = fillStyle;
     context.fill();
 };
 
-Draw.ovalOutline = function(world, x, y, xRadius, yRadius, strokeStyle, angleRadians=0, lineWidth=1)
+Draw.ovalOutline = function(world, x, y, xRadius, yRadius, strokeStyle=null, angleRadians=0, lineWidth=1)
 {
     const context = world.context;
     context.beginPath();
-    context.ellipse(x - world.camera.x, y - world.camera.y, xRadius, yRadius, angleRadians, 0, 2 * Math.PI);
+    context.ellipse(x - world.camera.x, y - world.camera.y, xRadius, yRadius, angleRadians, 0, Utils.TAU);
     context.lineWidth = lineWidth;
-    context.strokeStyle = strokeStyle;
+    if(strokeStyle)
+        context.strokeStyle = strokeStyle;
     context.stroke();
 };
 
-Draw.triangle = function(world, x1, y1, x2, y2, x3, y3, fillStyle)
+Draw.triangle = function(world, x1, y1, x2, y2, x3, y3, fillStyle=null)
 {
     const context = world.context;
     context.beginPath();
     context.moveTo(x1 - world.camera.x, y1 - world.camera.y);
     context.lineTo(x2 - world.camera.x, y2 - world.camera.y);
     context.lineTo(x3 - world.camera.x, y3 - world.camera.y);
-    context.fillStyle = fillStyle;
+    if(fillStyle)
+        context.fillStyle = fillStyle;
     context.fill();
 };
 
-Draw.triangleOutline = function(world, x1, y1, x2, y2, x3, y3, strokeStyle, lineWidth=1)
+Draw.triangleOutline = function(world, x1, y1, x2, y2, x3, y3, strokeStyle=null, lineWidth=1)
 {
     const context = world.context;
     context.beginPath();
@@ -111,7 +116,8 @@ Draw.triangleOutline = function(world, x1, y1, x2, y2, x3, y3, strokeStyle, line
     context.lineTo(x3 - world.camera.x, y3 - world.camera.y);
     context.closePath();
     context.lineWidth = lineWidth;
-    context.strokeStyle = strokeStyle;
+    if(strokeStyle)
+        context.strokeStyle = strokeStyle;
     context.stroke();
 };
 
@@ -178,17 +184,18 @@ Draw._getRegularPolygonPoints = function(x, y, radius, sides, angleRadians)
     const points = [];
     for(let i = 0; i < sides; i++)
     {
-        const angleRadiansToCorner = Math.PI * 2 * i / sides + angleRadians;
+        const angleRadiansToCorner = Utils.TAU * i / sides + angleRadians;
         const point = Point.create(radius, angleRadiansToCorner).add(position);
         points.push(point);
     }
     return points;
 };
 
-Draw.rectangle = function(world, x, y, w, h, fillStyle)
+Draw.rectangle = function(world, x, y, w, h, fillStyle=null)
 {
     const context = world.context;
-    context.fillStyle = fillStyle;
+    if(fillStyle)
+        context.fillStyle = fillStyle;
     context.fillRect(x - world.camera.x, y - world.camera.y, w, h);
 };
 
@@ -225,18 +232,19 @@ Draw.rectangleGradientHorizontal = function(world, x, y, w, h, colorStopArray)
     context.fillRect(diff.x, diff.y, w, h);
 };
 
-Draw.line = function(world, x1, y1, x2, y2, strokeStyle, lineWidth=1)
+Draw.line = function(world, x1, y1, x2, y2, strokeStyle=null, lineWidth=1)
 {
     const context = world.context;
     context.beginPath();
     context.moveTo(x1 - world.camera.x, y1 - world.camera.y);
     context.lineTo(x2 - world.camera.x, y2 - world.camera.y);
     context.lineWidth = lineWidth;
-    context.strokeStyle = strokeStyle;
+    if(strokeStyle)
+        context.strokeStyle = strokeStyle;
     context.stroke();
 };
 
-Draw.lines = function(world, points, strokeStyle, lineWidth=1)
+Draw.lines = function(world, points, strokeStyle=null, lineWidth=1)
 {
     const context = world.context;
     if(points.length <= 0) return;
@@ -245,11 +253,12 @@ Draw.lines = function(world, points, strokeStyle, lineWidth=1)
     for(let i = 1; i < points.length; i++)
         context.lineTo(points[i][0] - world.camera.x, points[i][1] - world.camera.y);
     context.lineWidth = lineWidth;
-    context.strokeStyle = strokeStyle;
+    if(strokeStyle)
+        context.strokeStyle = strokeStyle;
     context.stroke();
 };
 
-Draw.text = function(world, text, x, y, fillStyle, font=null, halign="left", valign="top", rotationRadians=0)
+Draw.text = function(world, text, x, y, fillStyle=null, font=null, halign="left", valign="top", rotationRadians=0)
 { //positive x is toward the top of the screen, positive y is to the left side of the screen
     const context = world.context;
     Draw.textStyle(world, fillStyle, font, halign, valign);
@@ -260,13 +269,25 @@ Draw.text = function(world, text, x, y, fillStyle, font=null, halign="left", val
     //     world.rotate(-rotationRadians);
 };
 
-Draw.textStyle = function(world, fillStyle, font, halign, valign)
+Draw.textStyle = function(world, fillStyle=null, font=null, halign=null, valign=null)
 {
     const context = world.context;
-    context.font = font;
-    context.textAlign = halign;
-    context.fillStyle = fillStyle;
-    context.textBaseline=valign;
+    if(font)
+        context.font = font;
+    if(halign)
+        context.textAlign = halign;
+    if(fillStyle)
+        context.fillStyle = fillStyle;
+    if(valign)
+        context.textBaseline = valign;
+};
+
+Draw.textWidth = function(world, text, font=null)
+{
+    const context = world.context;
+    if(font)
+        context.font = font;
+    return context.measureText(text).width;
 };
 
 

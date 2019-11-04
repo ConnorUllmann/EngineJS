@@ -31,6 +31,11 @@ function World(transparentBackground=false)
     this.debugFpsTrackListMaxSize = 10;
     this.debugFpsTrackList = [];
     this.debugFpsCurrent = 0;
+    this.debugDisplay = {};
+    this.debugDisplayTextHeight = 20;
+    this.debugDisplayFont = `${this.debugDisplayTextHeight}px Helvetica`;
+    this.debugDisplayBackgroundColor = new Color(0, 0, 0);
+    this.debugDisplayTextColor = new Color(255, 255, 255);
 
     Object.defineProperty(this, 'millisecondsSinceStart', {
         get: function() { return Date.now() - this.firstUpdate; }
@@ -142,14 +147,37 @@ World.prototype.renderAll = function()
 
     if(this.debug || this.fpsVisible)
     {
+        let xOffsetDebugDisplayText = 0;
+        const xMarginBetweenDebugDisplayText = 10;
+        const yMarginBetweenDebugDisplayText = 8;
+
         this.debugFpsTrackList.unshift(Math.floor(1000/this.delta));
         if(this.debugFpsTrackList.length >= this.debugFpsTrackListMaxSize)
         {
             this.debugFpsCurrent = this.debugFpsTrackList.reduce((totalFps, fps) => totalFps + fps) / this.debugFpsTrackList.length;
             this.debugFpsTrackList.length = 0;
         }
-        Draw.rectangle(this, this.camera.x, this.camera.y, 40, 25, new Color(0, 0, 0));
-        Draw.text(this, Math.floor(this.debugFpsCurrent), this.camera.x + 20, this.camera.y + 13, new Color(255, 255, 255), "20px Helvetica", "center", "middle");
+
+        const debugDisplay = { fps: Math.floor(this.debugFpsCurrent), ...this.debugDisplay };
+        for(let name in debugDisplay)
+        {
+            const value = debugDisplay[name];
+            const text = `${name}: ${value}`;
+            const textWidth = Draw.textWidth(this, text, this.debugDisplayFont);
+            const fullWidth = textWidth + 2 * xMarginBetweenDebugDisplayText;
+            const fullHeight = this.debugDisplayTextHeight + 2 * yMarginBetweenDebugDisplayText;
+
+            Draw.rectangle(this,
+                this.camera.x + xOffsetDebugDisplayText, this.camera.y,
+                fullWidth+1, fullHeight, this.debugDisplayBackgroundColor);
+
+            Draw.text(this, text,
+                this.camera.x + xOffsetDebugDisplayText + xMarginBetweenDebugDisplayText,
+                this.camera.y + yMarginBetweenDebugDisplayText,
+                this.debugDisplayTextColor);
+
+            xOffsetDebugDisplayText += fullWidth;
+        }
     }
 };
 
