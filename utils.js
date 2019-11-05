@@ -366,6 +366,14 @@ Utils.getRandomName = function()
     return names.sample();
 };
 
+Utils.createCanvas = function(width, height)
+{
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    return canvas;
+};
+
 //https://stackoverflow.com/a/34116242
 Utils.isArray = function(obj)
 {

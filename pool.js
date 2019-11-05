@@ -24,6 +24,12 @@ function Pool(generateCall, resetCall)
     this.capacity = null;
 }
 
+Pool.prototype.warm = function(count)
+{
+    for(let i = 0; i < count; i++)
+        this.add();
+};
+
 Pool.prototype.get = function(...args)
 {
     const pop = this.objects.pop() || this.generateCall();
