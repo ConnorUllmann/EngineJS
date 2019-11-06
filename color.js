@@ -16,6 +16,10 @@ Color.prototype.toString = function()
 
 Color.prototype.lerp = function(color, t)
 {
+    if(t <= 0)
+        return this.clone();
+    if(t >= 1)
+        return color.clone();
 	let tempColor = color;
 	if(typeof color === 'string')
 		tempColor = Color.hexToColor(color);

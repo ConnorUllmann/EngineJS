@@ -47,6 +47,9 @@ const BlendModes = Object.values(BlendMode).distinct();
 
 Draw.circle = function(world, x, y, radius, fillStyle=null)
 {
+    if(radius <= 0)
+        return;
+
     const context = world.context;
     context.beginPath();
     context.arc(x - world.camera.x, y - world.camera.y, radius, 0, Utils.TAU);
@@ -57,6 +60,9 @@ Draw.circle = function(world, x, y, radius, fillStyle=null)
 
 Draw.circleOutline = function(world, x, y, radius, strokeStyle=null, lineWidth=1)
 {
+    if(radius <= 0)
+        return;
+
     const context = world.context;
     context.beginPath();
     context.arc(x - world.camera.x, y - world.camera.y, radius, 0, Utils.TAU);
@@ -69,6 +75,9 @@ Draw.circleOutline = function(world, x, y, radius, strokeStyle=null, lineWidth=1
 // same as circleOutline except you specify the inner and outer radii
 Draw.ring = function(world, x, y, innerRadius, outerRadius, strokeStyle=null)
 {
+    if(outerRadius <= 0)
+        return;
+
     const lineWidth = outerRadius - innerRadius;
     const radius = (outerRadius + innerRadius) / 2;
     Draw.circleOutline(world, x, y, radius, strokeStyle, lineWidth);
@@ -76,6 +85,9 @@ Draw.ring = function(world, x, y, innerRadius, outerRadius, strokeStyle=null)
 
 Draw.oval = function(world, x, y, xRadius, yRadius, fillStyle=null, angleRadians=0)
 {
+    if(xRadius <= 0 || yRadius <= 0)
+        return;
+
     const context = world.context;
     context.beginPath();
     context.ellipse(x - world.camera.x, y - world.camera.y, xRadius, yRadius, angleRadians, 0, Utils.TAU);
@@ -86,6 +98,9 @@ Draw.oval = function(world, x, y, xRadius, yRadius, fillStyle=null, angleRadians
 
 Draw.ovalOutline = function(world, x, y, xRadius, yRadius, strokeStyle=null, angleRadians=0, lineWidth=1)
 {
+    if(xRadius <= 0 || yRadius <= 0)
+        return;
+
     const context = world.context;
     context.beginPath();
     context.ellipse(x - world.camera.x, y - world.camera.y, xRadius, yRadius, angleRadians, 0, Utils.TAU);
@@ -238,9 +253,11 @@ Draw.line = function(world, x1, y1, x2, y2, strokeStyle=null, lineWidth=1)
     context.beginPath();
     context.moveTo(x1 - world.camera.x, y1 - world.camera.y);
     context.lineTo(x2 - world.camera.x, y2 - world.camera.y);
-    context.lineWidth = lineWidth;
     if(strokeStyle)
         context.strokeStyle = strokeStyle;
+    if(lineWidth < 0)
+        return;
+    context.lineWidth = lineWidth;
     context.stroke();
 };
 
@@ -252,9 +269,11 @@ Draw.lines = function(world, points, strokeStyle=null, lineWidth=1)
     context.moveTo(points[0][0] - world.camera.x, points[0][1] - world.camera.y);
     for(let i = 1; i < points.length; i++)
         context.lineTo(points[i][0] - world.camera.x, points[i][1] - world.camera.y);
-    context.lineWidth = lineWidth;
     if(strokeStyle)
         context.strokeStyle = strokeStyle;
+    if(lineWidth < 0)
+        return;
+    context.lineWidth = lineWidth;
     context.stroke();
 };
 

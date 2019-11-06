@@ -13,6 +13,7 @@ function World(transparentBackground=false)
     this.backgroundColor = new Color(128, 128, 128);
 
     this.entities = [];
+    this.entitiesByClass = {};
     this.entitiesToAdd = [];
     this.entitiesToRemove = [];
     this.singleFrameRenderCallsByDepth = {};
@@ -104,6 +105,9 @@ World.prototype.updateAll = function()
     {
         let e = this.entitiesToAdd.shift();
         this.entities.push(e);
+        if(!(e.class in this.entitiesByClass))
+            this.entitiesByClass[e.class] = [];
+        this.entitiesByClass[e.class].push(e);
         e.added();
     }
 
@@ -125,6 +129,7 @@ World.prototype.updateAll = function()
         if(ind > -1)
         {
             this.entities.splice(ind, 1);
+            this.entitiesByClass[e.class].removeThis(e);
             e.removed();
             e.destroyed = true;
         }
@@ -185,6 +190,13 @@ World.prototype.destroyAll = function()
 {
     for(let i = 0; i < this.entities.length; i++)
         this.entities[i].destroy();
+};
+
+World.prototype.getEntitiesOfClass = function(_class)
+{
+    if(_class in this.entitiesByClass)
+        return this.entitiesByClass[_class];
+    return [];
 };
 
 World.prototype._sortByUpdateOrder = function()
