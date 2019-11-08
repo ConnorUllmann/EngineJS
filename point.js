@@ -110,6 +110,11 @@ Point.prototype.closestPointOnLine = function(a, b)
     return this.subtract(a).proj(b.subtract(a)).add(a);
 };
 
+Point.prototype.isWithinRadiusOf = function(point, radius)
+{
+    return this.distanceSqTo(point) <= radius * radius;
+};
+
 Point.linesIntersection = function(firstLineA, firstLineB, secondLineA, secondLineB, asSegments = true)
 {
     const yFirstLineDiff = firstLineB.y - firstLineA.y;

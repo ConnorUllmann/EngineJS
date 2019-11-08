@@ -19,6 +19,23 @@ function Actor(x, y, world, width, height)
     this.xVelocityMax = null;
     this.yVelocityMin = null;
     this.yVelocityMax = null;
+
+    Object.defineProperty(this, 'xLeft', {
+        get: () => this.x - this.width/2,
+        set: (x) => this.x = x + this.width/2
+    });
+    Object.defineProperty(this, 'xRight', {
+        get: () => this.x + this.width/2,
+        set: (x) => this.x = x - this.width/2
+    });
+    Object.defineProperty(this, 'yTop', {
+        get: () => this.y - this.height/2,
+        set: (y) => this.y = y + this.height/2
+    });
+    Object.defineProperty(this, 'yBottom', {
+        get: () => this.y + this.height/2,
+        set: (y) => this.y = y - this.height/2
+    });
 }
 Entity.parents(Actor);
 
@@ -47,7 +64,7 @@ Actor.prototype.postUpdate = function()
 Actor.prototype.render = function()
 {
     if(this.world.debug)
-        Draw.rectangleOutline(this.world, this.xLeft(), this.yTop(), this.width, this.height, "#f00");
+        Draw.rectangleOutline(this.world, this.xLeft, this.yTop, this.width, this.height, "#f00");
 };
 
 Actor.prototype.updateMouseDrag = function()
@@ -75,11 +92,11 @@ Actor.prototype.xLeft = function() { return this.x - this.width/2; };
 Actor.prototype.xRight = function() { return this.x + this.width/2; };
 Actor.prototype.yTop = function() { return this.y - this.height/2; };
 Actor.prototype.yBottom = function() { return this.y + this.height/2; };
-Actor.prototype.isMouseHovering = function() { return this.world.mouse.x >= this.xLeft() && this.world.mouse.y >= this.yTop() && this.world.mouse.x < this.xRight() && this.world.mouse.y < this.yBottom() };
+Actor.prototype.isMouseHovering = function() { return this.world.mouse.x >= this.xLeft && this.world.mouse.y >= this.yTop && this.world.mouse.x < this.xRight && this.world.mouse.y < this.yBottom; };
 Actor.prototype.distanceSqToMouse = function() { return this.world.mouse.distanceSqTo(this); };
 Actor.prototype.collides = function(actor)
 {
     return this.active &&
         actor.active &&
-        Rectangle.collide(this.xLeft(), this.yTop(), this.width, this.height, actor.xLeft(), actor.yTop(), actor.width, actor.height);
+        Rectangle.collide(this.xLeft, this.yTop, this.width, this.height, actor.xLeft, actor.yTop, actor.width, actor.height);
 };

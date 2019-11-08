@@ -214,6 +214,26 @@ Draw.rectangle = function(world, x, y, w, h, fillStyle=null)
     context.fillRect(x - world.camera.x, y - world.camera.y, w, h);
 };
 
+Draw.rectangleRotated = function(world, xCenter, yCenter, w, h, fillStyle=null, angleRadians=0)
+{
+    if(angleRadians === 0)
+    {
+        Draw.rectangle(world, xCenter - w/2, yCenter - h/2, w, h, fillStyle);
+        return;
+    }
+
+    const context = world.context;
+    if(fillStyle)
+        context.fillStyle = fillStyle;
+    xCenter = xCenter - world.camera.x;
+    yCenter = yCenter - world.camera.y;
+    context.translate(xCenter, yCenter);
+    context.rotate(angleRadians);
+    context.fillRect(-w/2, -h/2, w, h);
+    context.rotate(-angleRadians);
+    context.translate(-xCenter, -yCenter);
+};
+
 Draw.rectangleOutline = function(world, x, y, w, h, strokeStyle, lineWidth=1)
 {
     // TODO: should use .closePath() instead of re-appending [x, y]
