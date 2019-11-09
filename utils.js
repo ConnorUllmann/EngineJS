@@ -496,7 +496,7 @@ Array.prototype.last = function(boolCheck=null)
 //
 // Problem: I need the object that is facing most upward
 // [{direction: new Point(2, 6)}, {direction: new Point(-4, -3)}]
-//  .bestOf((a, b) => a.direction.normalized().dot(new Point(0, -1)) > b.direction.normalized().dot(new Point(0, -1)))
+//  .bestOf((a, b) => a.direction.towardness(new Point(0, -1)) > b.direction.towardness(new Point(0, -1)))
 //      = {direction: new Point(-4, -3)}
 //
 Array.prototype.bestOf = function(AisBetterThanB)
