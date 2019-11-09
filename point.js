@@ -115,6 +115,23 @@ Point.prototype.isWithinRadiusOf = function(point, radius)
     return this.distanceSqTo(point) <= radius * radius;
 };
 
+// Returns how much this point (as a vector) faces in the direction of the given point (as a vector)
+// -1 = this point faces opposite the direction of argument "point"
+// 0 = this point faces perpendicular to the direction of argument "point"
+// 1 = this point faces the exact same direction as argument "point"
+Point.prototype.towardness = function(point)
+{
+    return this.normalized().dot(point.normalized());
+};
+
+// t = 0 = this point
+// t = 0.5 = midpoint between this point and the argument "point:
+// t = 1 = the argument "point"
+Point.prototype.lerp = function(point, t)
+{
+    return new Point((point.x - this.x) * t + this.x, (point.y - this.y) * t + this.y);
+};
+
 Point.linesIntersection = function(firstLineA, firstLineB, secondLineA, secondLineB, asSegments = true)
 {
     const yFirstLineDiff = firstLineB.y - firstLineA.y;
