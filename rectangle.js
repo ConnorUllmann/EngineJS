@@ -28,6 +28,10 @@ function Rectangle(x=0, y=0, w=0, h=0)
         get: function() { return this.y + this.h/2; },
         set: function(y) { this.y = y - this.h/2; }
     });
+    Object.defineProperty(this, 'center', {
+        get: () => new Point(this.xCenter, this.yCenter),
+        set: (point) => { this.x = point.x - this.w/2; this.y = point.y - this.h/2; }
+    });
 }
 Point.parents(Rectangle);
 
@@ -53,10 +57,16 @@ Rectangle.prototype.collidesRectangle = function(rectangle)
 };
 
 //https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
-Rectangle.prototype.collidesCircle = function(xCircle, yCircle, radius)
+// The rectangle's (x, y) position is its top-left corner if it were not rotated,
+// however the rectangle still rotates about its center (by "rectangleAngleRadians" radians)
+Rectangle.prototype.collidesCircle = function(xCircle, yCircle, radius, rectangleAngleRadians=0)
 {
-    let xCircleDistance = Math.abs(xCircle - (this.x + this.w/2));
-    let yCircleDistance = Math.abs(yCircle - (this.y + this.h/2));
+    const circlePosition = rectangleAngleRadians === 0
+        ? new Point(xCircle, yCircle)
+        : new Point(xCircle, yCircle).rotate(-rectangleAngleRadians, this.center);
+
+    let xCircleDistance = Math.abs(circlePosition.x - this.xCenter);
+    let yCircleDistance = Math.abs(circlePosition.y - this.yCenter);
 
     if (xCircleDistance > (this.w/2 + radius)) { return false; }
     if (yCircleDistance > (this.h/2 + radius)) { return false; }
