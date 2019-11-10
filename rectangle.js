@@ -51,6 +51,15 @@ Rectangle.collide = function(ax, ay, aw, ah, bx, by, bw, bh)
            ay < by + bh;
 };
 
+Rectangle.boundingPoints = function(points)
+{
+    const xMin = points.min(o => o.x);
+    const yMin = points.min(o => o.y);
+    const xMax = points.max(o => o.x);
+    const yMax = points.max(o => o.y);
+    return new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
+};
+
 Rectangle.prototype.collidesRectangle = function(rectangle)
 {
     return Rectangle.collide(this.x, this.y, this.w, this.h, rectangle.x, rectangle.y, rectangle.w, rectangle.h);
