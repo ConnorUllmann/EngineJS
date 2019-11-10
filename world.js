@@ -21,12 +21,13 @@ function World(transparentBackground=false)
 
     // milliseconds since the last frame
     this.delta = 0;
-
+    this._delta = 0;
     this.firstUpdate = null;
     this.lastUpdate = null;
 
     this.fps = 60;
     this.fpsVisible = true;
+    this.fixedFrameRate = false;
 
     this.debug = false;
     this.debugFpsTrackListMaxSize = 10;
@@ -97,7 +98,8 @@ World.prototype.updateAll = function()
 
     // Update delta
     let now = Date.now();
-    this.delta = now - this.lastUpdate;
+    this._delta = now - this.lastUpdate;
+    this.delta = this.fixedFrameRate ? this.millisecondsPerFrame : this._delta;
     this.lastUpdate = now;
 
     // Add the new entities that are queued to be created.
@@ -156,7 +158,7 @@ World.prototype.renderAll = function()
         const xMarginBetweenDebugDisplayText = 10;
         const yMarginBetweenDebugDisplayText = 8;
 
-        this.debugFpsTrackList.unshift(Math.floor(1000/this.delta));
+        this.debugFpsTrackList.unshift(Math.floor(1000/this._delta));
         if(this.debugFpsTrackList.length >= this.debugFpsTrackListMaxSize)
         {
             this.debugFpsCurrent = this.debugFpsTrackList.reduce((totalFps, fps) => totalFps + fps) / this.debugFpsTrackList.length;
