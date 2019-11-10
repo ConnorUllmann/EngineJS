@@ -71,14 +71,14 @@ Actor.prototype.updateMouseDrag = function()
 {
     if(this.isMouseHovering() && this.world.mouse.leftPressed)
     {
-        this.mouseOffset.x = this.x - this.world.mouse.x;
-        this.mouseOffset.y = this.y - this.world.mouse.y;
+        this.mouseOffset.x = this.x - (this.world.camera.x + this.world.mouse.x);
+        this.mouseOffset.y = this.y - (this.world.camera.y + this.world.mouse.y);
     }
 
     if(this.mouseOffset.lengthSq() > 0)
     {
-        this.x = this.world.mouse.x + this.mouseOffset.x;
-        this.y = this.world.mouse.y + this.mouseOffset.y;
+        this.x = this.world.camera.x + this.world.mouse.x + this.mouseOffset.x;
+        this.y = this.world.camera.y + this.world.mouse.y + this.mouseOffset.y;
     }
 
     if(this.world.mouse.leftReleased)
@@ -88,12 +88,14 @@ Actor.prototype.updateMouseDrag = function()
     }
 };
 
-Actor.prototype.xLeft = function() { return this.x - this.width/2; };
-Actor.prototype.xRight = function() { return this.x + this.width/2; };
-Actor.prototype.yTop = function() { return this.y - this.height/2; };
-Actor.prototype.yBottom = function() { return this.y + this.height/2; };
-Actor.prototype.isMouseHovering = function() { return this.world.mouse.x >= this.xLeft && this.world.mouse.y >= this.yTop && this.world.mouse.x < this.xRight && this.world.mouse.y < this.yBottom; };
-Actor.prototype.distanceSqToMouse = function() { return this.world.mouse.distanceSqTo(this); };
+Actor.prototype.isMouseHovering = function()
+{
+    return this.world.camera.x + this.world.mouse.x >= this.xLeft &&
+        this.world.camera.y + this.world.mouse.y >= this.yTop &&
+        this.world.camera.x + this.world.mouse.x < this.xRight &&
+        this.world.camera.y + this.world.mouse.y < this.yBottom;
+};
+Actor.prototype.distanceSqToMouse = function() { return this.world.camera.add(this.world.mouse).distanceSqTo(this); };
 Actor.prototype.collides = function(actor)
 {
     return this.active &&
