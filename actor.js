@@ -1,8 +1,15 @@
 function Actor(x, y, world, width, height)
 {
     Entity.call(this, x, y, world);
-    this.width = width;
-    this.height = height;
+    this.boundingBox = new Rectangle(-width/2, -height/2, width, height);
+    Object.defineProperty(this, 'width', {
+        get: () => this.boundingBox.w,
+        set: (w) => this.boundingBox.w = w
+    });
+    Object.defineProperty(this, 'height', {
+        get: () => this.boundingBox.h,
+        set: (h) => this.boundingBox.h = h
+    });
 
     this.canMove = true;
     this.draggable = true;
@@ -21,20 +28,20 @@ function Actor(x, y, world, width, height)
     this.yVelocityMax = null;
 
     Object.defineProperty(this, 'xLeft', {
-        get: () => this.x - this.width/2,
-        set: (x) => this.x = x + this.width/2
+        get: () => this.x + this.boundingBox.xLeft,
+        set: (x) => this.x = x - this.boundingBox.xLeft
     });
     Object.defineProperty(this, 'xRight', {
-        get: () => this.x + this.width/2,
-        set: (x) => this.x = x - this.width/2
+        get: () => this.x + this.boundingBox.xRight,
+        set: (x) => this.x = x - this.boundingBox.xRight
     });
     Object.defineProperty(this, 'yTop', {
-        get: () => this.y - this.height/2,
-        set: (y) => this.y = y + this.height/2
+        get: () => this.y + this.boundingBox.yTop,
+        set: (y) => this.y = y - this.boundingBox.yTop
     });
     Object.defineProperty(this, 'yBottom', {
-        get: () => this.y + this.height/2,
-        set: (y) => this.y = y - this.height/2
+        get: () => this.y + this.boundingBox.yBottom,
+        set: (y) => this.y = y - this.boundingBox.yBottom
     });
 }
 Entity.parents(Actor);
@@ -95,10 +102,18 @@ Actor.prototype.isMouseHovering = function()
         this.world.camera.x + this.world.mouse.x < this.xRight &&
         this.world.camera.y + this.world.mouse.y < this.yBottom;
 };
+
 Actor.prototype.distanceSqToMouse = function() { return this.world.camera.add(this.world.mouse).distanceSqTo(this); };
+
 Actor.prototype.collides = function(actor)
 {
     return this.active &&
         actor.active &&
         Rectangle.collide(this.xLeft, this.yTop, this.width, this.height, actor.xLeft, actor.yTop, actor.width, actor.height);
+};
+
+// Returns true if the bounding box of this actor is visible on the screen
+Actor.prototype.isVisibleOnScreen = function()
+{
+    return this.world.camera.collidesRectangle(this.boundingBox, this.x, this.y);
 };

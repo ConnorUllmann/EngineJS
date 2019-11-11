@@ -158,7 +158,7 @@ Point.linesIntersection = function(firstLineA, firstLineB, secondLineA, secondLi
 
 Point.prototype.closest = function(points)
 {
-	return points.minOf(o => this.subtract(o).lengthSq());
+	return points.minOf(o => this.distanceSqTo(o));
 };
 
 Point.prototype.leftOfLine = function(a, b)

@@ -73,6 +73,13 @@ Utils.equilateralAltitude = function(equilateralTriangleSideLength)
     return Utils.EquilateralAltitudeCoefficient * equilateralTriangleSideLength;
 };
 
+// Returns true if the circle formed by <ax, ay> with radius "aradius"
+// is completely within the circle formed by <bx, by> with radius "bradius"
+Utils.isCircleInsideCircle = function(ax, ay, aradius, bx, by, bradius)
+{
+    return Utils.distance(ax, ay, bx, by) + aradius <= bradius;
+};
+
 Utils.dateStringToDate = function(string)
 {
     let date = new Date();

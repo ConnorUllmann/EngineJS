@@ -53,6 +53,8 @@ Rectangle.collide = function(ax, ay, aw, ah, bx, by, bw, bh)
 
 Rectangle.boundingPoints = function(points)
 {
+    if(points == null || points.length <= 0)
+        return new Rectangle();
     const xMin = points.min(o => o.x);
     const yMin = points.min(o => o.y);
     const xMax = points.max(o => o.x);
@@ -60,9 +62,25 @@ Rectangle.boundingPoints = function(points)
     return new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
 };
 
-Rectangle.prototype.collidesRectangle = function(rectangle)
+Rectangle.boundingRectangles = function(rectangles)
 {
-    return Rectangle.collide(this.x, this.y, this.w, this.h, rectangle.x, rectangle.y, rectangle.w, rectangle.h);
+    if(rectangles == null || rectangles.length <= 0)
+        return new Rectangle();
+    const xMin = rectangles.min(o => o.x);
+    const yMin = rectangles.min(o => o.y);
+    const xMax = rectangles.max(o => o.x + o.w);
+    const yMax = rectangles.max(o => o.y + o.h);
+    return new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
+};
+
+Rectangle.boundingCircle = function(xCircle, yCircle, radiusCircle)
+{
+    return new Rectangle(xCircle - radiusCircle, yCircle - radiusCircle, radiusCircle * 2, radiusCircle * 2);
+};
+
+Rectangle.prototype.collidesRectangle = function(rectangle, xOffset=0, yOffset=0)
+{
+    return Rectangle.collide(this.x, this.y, this.w, this.h, rectangle.x + xOffset, rectangle.y + yOffset, rectangle.w, rectangle.h);
 };
 
 //https://stackoverflow.com/questions/401847/circle-rectangle-collision-detection-intersection
