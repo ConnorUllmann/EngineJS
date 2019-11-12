@@ -40,6 +40,11 @@ Rectangle.prototype.clone = function()
     return new Rectangle(this.x, this.y, this.w, this.h);
 };
 
+Rectangle.prototype.add = function(point)
+{
+    return new Rectangle(this.x + point.x, this.y + point.y, this.w, this.h);
+};
+
 Rectangle.prototype.collidesPoint = function(x, y)
 {
     return x >= this.x &&

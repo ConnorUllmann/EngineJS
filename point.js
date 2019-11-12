@@ -110,9 +110,9 @@ Point.prototype.closestPointOnLine = function(a, b)
     return this.subtract(a).proj(b.subtract(a)).add(a);
 };
 
-Point.prototype.isWithinRadiusOf = function(point, radius)
+Point.prototype.isInCircle = function(circlePosition, circleRadius)
 {
-    return this.distanceSqTo(point) <= radius * radius;
+    return this.distanceSqTo(circlePosition) <= circleRadius * circleRadius;
 };
 
 // Returns how much this point (as a vector) faces in the direction of the given point (as a vector)

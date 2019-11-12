@@ -80,6 +80,11 @@ Utils.isCircleInsideCircle = function(ax, ay, aradius, bx, by, bradius)
     return Utils.distance(ax, ay, bx, by) + aradius <= bradius;
 };
 
+Utils.circlesCollide = function(ax, ay, aradius, bx, by, bradius)
+{
+    return Utils.distanceSq(ax, ay, bx, by) < (aradius + bradius) * (aradius + bradius);
+};
+
 Utils.dateStringToDate = function(string)
 {
     let date = new Date();
