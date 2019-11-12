@@ -35,6 +35,11 @@ function Rectangle(x=0, y=0, w=0, h=0)
 }
 Point.parents(Rectangle);
 
+Rectangle.prototype.clone = function()
+{
+    return new Rectangle(this.x, this.y, this.w, this.h);
+};
+
 Rectangle.prototype.collidesPoint = function(x, y)
 {
     return x >= this.x &&
@@ -156,4 +161,13 @@ Rectangle.prototype.corners = function()
         new Point(this.x + this.w, this.y + this.h),
         new Point(this.x + this.w, this.y)
     ];
+};
+
+// Expands the rectangle by the given amount on each side
+Rectangle.prototype.expandFromCenter = function(amount)
+{
+    this.x -= amount;
+    this.w += 2 * amount;
+    this.y -= amount;
+    this.h += 2 * amount;
 };
