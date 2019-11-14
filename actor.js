@@ -12,7 +12,7 @@ function Actor(x, y, world, width, height)
     });
 
     this.canMove = true;
-    this.draggable = true;
+    this.draggable = false;
     this.mouseOffset = new Point();
 
     this.gravity = 0;
