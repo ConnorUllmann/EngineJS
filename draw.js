@@ -136,7 +136,7 @@ Draw.triangleOutline = function(world, x1, y1, x2, y2, x3, y3, strokeStyle=null,
     context.stroke();
 };
 
-Draw.polygon = function(world, points, fillStyle)
+Draw.polygon = function(world, points, fillStyle=null)
 {
     if(points == null || points.length <= 0)
         return null;
@@ -147,11 +147,29 @@ Draw.polygon = function(world, points, fillStyle)
     for(let i = 1; i < points.length; i++)
         context.lineTo(points[i].x - world.camera.x, points[i].y - world.camera.y);
     context.closePath();
-    context.fillStyle = fillStyle;
+    if(fillStyle)
+        context.fillStyle = fillStyle;
     context.fill();
 };
 
-Draw.regularPolygon = function(world, x, y, radius, sides, fillStyle, angleRadians=0)
+Draw.polygonOutline = function(world, points, strokeStyle=null, lineWidth=1)
+{
+    if(points == null || points.length <= 0)
+        return null;
+
+    const context = world.context;
+    context.beginPath();
+    context.moveTo(points.first().x - world.camera.x, points.first().y - world.camera.y);
+    for(let i = 1; i < points.length; i++)
+        context.lineTo(points[i].x - world.camera.x, points[i].y - world.camera.y);
+    context.closePath();
+    context.lineWidth = lineWidth;
+    if(strokeStyle)
+        context.strokeStyle = strokeStyle;
+    context.stroke();
+};
+
+Draw.regularPolygon = function(world, x, y, radius, sides, fillStyle=null, angleRadians=0)
 {
     const context = world.context;
     const points = Draw._getRegularPolygonPoints(x, y, radius, sides, angleRadians);
@@ -166,11 +184,12 @@ Draw.regularPolygon = function(world, x, y, radius, sides, fillStyle, angleRadia
         else
             context.lineTo(point.x, point.y);
     }
-    context.fillStyle = fillStyle;
+    if(fillStyle)
+        context.fillStyle = fillStyle;
     context.fill();
 };
 
-Draw.regularPolygonOutline = function(world, x, y, radius, sides, strokeStyle, angleRadians=0, lineWidth=1)
+Draw.regularPolygonOutline = function(world, x, y, radius, sides, strokeStyle=null, angleRadians=0, lineWidth=1)
 {
     const context = world.context;
     const points = Draw._getRegularPolygonPoints(x, y, radius, sides, angleRadians);
@@ -187,7 +206,8 @@ Draw.regularPolygonOutline = function(world, x, y, radius, sides, strokeStyle, a
             context.lineTo(point.x, point.y);
     }
     context.lineWidth = lineWidth;
-    context.strokeStyle = strokeStyle;
+    if(strokeStyle)
+        context.strokeStyle = strokeStyle;
     context.stroke();
 };
 
@@ -234,7 +254,7 @@ Draw.rectangleRotated = function(world, xCenter, yCenter, w, h, fillStyle=null, 
     context.translate(-xCenter, -yCenter);
 };
 
-Draw.rectangleOutline = function(world, x, y, w, h, strokeStyle, lineWidth=1)
+Draw.rectangleOutline = function(world, x, y, w, h, strokeStyle=null, lineWidth=1)
 {
     // TODO: should use .closePath() instead of re-appending [x, y]
     let points = [
@@ -269,30 +289,30 @@ Draw.rectangleGradientHorizontal = function(world, x, y, w, h, colorStopArray)
 
 Draw.line = function(world, x1, y1, x2, y2, strokeStyle=null, lineWidth=1)
 {
+    if(lineWidth < 0)
+        return;
     const context = world.context;
     context.beginPath();
     context.moveTo(x1 - world.camera.x, y1 - world.camera.y);
     context.lineTo(x2 - world.camera.x, y2 - world.camera.y);
     if(strokeStyle)
         context.strokeStyle = strokeStyle;
-    if(lineWidth < 0)
-        return;
     context.lineWidth = lineWidth;
     context.stroke();
 };
 
 Draw.lines = function(world, points, strokeStyle=null, lineWidth=1)
 {
+    if(lineWidth < 0 || points == null || points.length <= 0)
+        return;
+
     const context = world.context;
-    if(points.length <= 0) return;
     context.beginPath();
-    context.moveTo(points[0][0] - world.camera.x, points[0][1] - world.camera.y);
+    context.moveTo(points[0].x - world.camera.x, points[0].y - world.camera.y);
     for(let i = 1; i < points.length; i++)
-        context.lineTo(points[i][0] - world.camera.x, points[i][1] - world.camera.y);
+        context.lineTo(points[i].x - world.camera.x, points[i].y - world.camera.y);
     if(strokeStyle)
         context.strokeStyle = strokeStyle;
-    if(lineWidth < 0)
-        return;
     context.lineWidth = lineWidth;
     context.stroke();
 };
