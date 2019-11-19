@@ -165,7 +165,7 @@ World.prototype.renderAll = function()
             this.debugFpsTrackList.length = 0;
         }
 
-        const debugDisplay = { fps: Math.floor(this.debugFpsCurrent), ...this.debugDisplay };
+        const debugDisplay = { fps: Math.floor(this.debugFpsCurrent), entities: this.entities.length, ...this.debugDisplay };
         for(let name in debugDisplay)
         {
             const value = debugDisplay[name];
