@@ -123,12 +123,19 @@ Utils.digits = function(n)
 	return count;
 };
 
+Utils.flipAngleOverVerticalAxis = function(angle)
+{
+    return Math.PI - angle;
+};
+
+Utils.flipAngleOverHorizontalAxis = function(angle)
+{
+    return Utils.TAU - angle;
+};
+
 Utils.angleDiffRadians = function(from, to)
 {
-    let diff = to - from;
-    while (diff > Math.PI) { diff -= 2 * Math.PI; }
-    while (diff <= -Math.PI) { diff += 2 * Math.PI; }
-    return diff;
+    return Utils.moduloSafe(to - from - Math.PI, Utils.TAU) - Math.PI;
 };
 
 Utils.TAU = 2 * Math.PI;

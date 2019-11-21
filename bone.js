@@ -1,47 +1,51 @@
-function Bone(parent, positionLocal)
+function Bone(parent, length, angle)
 {
     this.parent = parent;
-    this.positionLocal = positionLocal;
+    this.length = length;
+
+    if(this.parentPosition === undefined)
+    {
+        Object.defineProperty(this, 'parentPosition', {
+            get: () => this.parent && this.parent.position ? this.parent.position : new Point()
+        });
+    }
+    if(this.parentAngle === undefined)
+    {
+        Object.defineProperty(this, 'parentAngle', {
+            get: () => this.parent && this.parent.angle != null ? this.parent.angle : 0
+        });
+    }
+
     Object.defineProperty(this, 'position',
     {
-        get: () => this.positionLocal
-            .rotate(this.parent && this.parent.angleLocal != null ? this.parent.angleLocal : 0)
-            .add(this.parent && this.parent.position ? this.parent.position : new Point()),
-        configurable: true
+        get: () => Point.create(this.length, this.angle)
+            .add(this.parentPosition),
+        set: (position) =>
+        {
+            const positionDiff = position.subtract(this.parentPosition);
+            this.length = Math.sqrt(positionDiff.lengthSq());
+            this.angle = positionDiff.angle() || 0;
+        }
     });
 
     this.angleLocal = 0;
     Object.defineProperty(this, 'angle',
     {
-        get: () => this.angleLocal + (this.parent && this.parent.angle != null ? this.parent.angle : 0)
+        get: () => this.angleLocal + this.parentAngle,
+        set: (angle) => this.angleLocal = angle - this.parentAngle
     });
-
-    this._angleAroundParent = 0;
-    Object.defineProperty(this, 'angleAroundParent',
-    {
-        get: () => this._angleAroundParent,
-        set: (angleRadians) =>
-        {
-            if(angleRadians === this._angleAroundParent)
-                return;
-            this.rotateAroundParent(angleRadians - this._angleAroundParent);
-            this._angleAroundParent = angleRadians;
-        }
-    });
+    this.angle = angle;
 }
 
-Bone.prototype.rotateAroundParent = function(angleRadians)
+function Skeleton(parentEntity=null)
 {
-    this.positionLocal = this.positionLocal.rotate(angleRadians);
-};
-
-function Skeleton(parentEntity)
-{
-    Bone.call(this, null, new Point());
-
-    Object.defineProperty(this, 'position',
-    {
-        get: () => new Point(parentEntity.x, parentEntity.y),
+    Object.defineProperty(this, 'parentPosition', {
+        get: () => parentEntity != null ? new Point(parentEntity.x, parentEntity.y) : new Point()
     });
+    Object.defineProperty(this, 'parentAngle', {
+        get: () => 0
+    });
+
+    Bone.call(this, null, 0, 0);
 }
 Bone.parents(Skeleton);
