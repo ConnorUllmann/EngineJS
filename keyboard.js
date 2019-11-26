@@ -11,31 +11,50 @@ Keyboard.prototype.start = function()
     let keyboard = this;
     document.addEventListener("keydown", function(e)
     {
-        if(e.repeat)
-            return;
-
-        let keys = Keyboard.keysForKeyEvent(e);
-        for(let i = 0; i < keys.length; i++)
-        {
-            let key = keys[i];
-            keyboard.pressed[key] = true;
-            keyboard.down[key] = true;
-        }
+        if(!e.repeat)
+            keyboard.setKeyDown(e.keyCode, e.code);
     }, false);
     document.addEventListener("keyup", function(e)
     {
-        if(e.repeat)
-            return;
-
-        let keys = Keyboard.keysForKeyEvent(e);
-        for(let i = 0; i < keys.length; i++)
-        {
-            let key = keys[i];
-            keyboard.released[key] = true;
-            if(keyboard.down.hasOwnProperty(key))
-                delete keyboard.down[key];
-        }
+        if(!e.repeat)
+            keyboard.setKeyUp(e.keyCode, e.code);
     }, false);
+
+    // Allows keyboard events to be passed into the game when it is inside an <iframe/>
+    // e.g. document.getElementById('gameIframe').contentWindow.postMessage('down|16|ShiftLeft', '*')
+    window.addEventListener('message', function(e)
+    {
+        const commands = e.data.split('|');
+        const keyCode = !commands[1] || commands[1] === '' ? null : commands[1];
+        const code = !commands[2] || commands[2] === '' ? null : commands[2];
+        if(commands[0] === 'down')
+            keyboard.setKeyDown(keyCode, code);
+        if(commands[0] === 'up')
+            keyboard.setKeyUp(keyCode, code);
+    }, false);
+};
+
+Keyboard.prototype.setKeyDown = function(keyCode, code=null)
+{
+    let keys = Keyboard.keysForKeyEvent(keyCode, code);
+    for(let i = 0; i < keys.length; i++)
+    {
+        let key = keys[i];
+        this.pressed[key] = true;
+        this.down[key] = true;
+    }
+};
+
+Keyboard.prototype.setKeyUp = function(keyCode, code=null)
+{
+    let keys = Keyboard.keysForKeyEvent(keyCode, code);
+    for(let i = 0; i < keys.length; i++)
+    {
+        let key = keys[i];
+        this.released[key] = true;
+        if(this.down.hasOwnProperty(key))
+            delete this.down[key];
+    }
 };
 
 Keyboard.prototype.update = function()
@@ -49,8 +68,7 @@ Keyboard.prototype.update = function()
             delete this.released[property];
 };
 
-Keyboard.keysForKeyEvent = function(event) {
-    const keyCode = event.keyCode;
+Keyboard.keysForKeyEvent = function(keyCode, code=null) {
     let key = String.fromCharCode(keyCode);
     let result = [keyCode, key.toLowerCase()];
 
@@ -60,33 +78,33 @@ Keyboard.keysForKeyEvent = function(event) {
     switch(keyCode)
     {
         case 13:
-            if(event.code === 'Enter')
+            if(code === 'Enter')
                 result.push(Key.ENTER, Key.RETURN);
-            if(event.code === 'NumpadEnter')
+            if(code === 'NumpadEnter')
                 result.push(Key.NUMPAD_ENTER);
             break;
         case 16:
-            if (event.code === 'ShiftLeft')
+            if (code === 'ShiftLeft')
                 result.push(Key.LSHIFT);
-            else if (event.code === 'ShiftRight')
+            else if (code === 'ShiftRight')
                 result.push(Key.RSHIFT);
             break;
         case 17:
-            if (event.code === 'ControlLeft')
+            if (code === 'ControlLeft')
                 result.push(Key.LCTRL);
-            else if (event.code === 'ControlRight')
+            else if (code === 'ControlRight')
                 result.push(Key.RCTRL);
             break;
         case 18:
-            if (event.code === 'AltLeft')
+            if (code === 'AltLeft')
                 result.push(Key.LALT);
-            else if (event.code === 'AltRight')
+            else if (code === 'AltRight')
                 result.push(Key.RALT);
             break;
         case 46:
-            if (event.code === 'NumpadDecimal')
+            if (code === 'NumpadDecimal')
                 result.push(Key.NUMPAD_DECIMAL);
-            else if (event.code === 'Delete')
+            else if (code === 'Delete')
                 result.push(Key.DELETE);
             break;
     }

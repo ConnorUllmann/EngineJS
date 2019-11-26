@@ -42,7 +42,9 @@ Gamepads.prototype.update = function()
     if(!this.isAvailable())
         return;
 
-    const gamepads = Object.values(navigator.getGamepads())
+    const gamepadsRaw = navigator.getGamepads();
+    // since navigator.getGamepads() doesn't seem to return an actual array, access the controllers individually
+    const gamepads = [gamepadsRaw[0], gamepadsRaw[1], gamepadsRaw[2], gamepadsRaw[3]]
         .filter(o => o != null && o.connected)
         .mappedBy(o => o.index);
 
