@@ -176,3 +176,30 @@ Rectangle.prototype.expandFromCenter = function(amount)
     this.y -= amount;
     this.h += 2 * amount;
 };
+
+Rectangle.prototype.closestPoint = function(point)
+{
+    const corners = this.corners();
+    const points = [];
+    for(let i = 0; i < corners.length; i++)
+    {
+        const j = Utils.moduloSafe(i-1, corners.length);
+        const pt = point.closestPointOnLine(corners[i], corners[j]);
+        points.push(pt);
+    }
+    return points.minOf(o => o.distanceSqTo(point));
+};
+
+Rectangle.prototype.lineSegmentIntersections = function(segmentPointA, segmentPointB)
+{
+    const corners = this.corners();
+    const points = [];
+    for(let i = 0; i < corners.length; i++)
+    {
+        const j = Utils.moduloSafe(i-1, corners.length);
+        const point = Point.linesIntersection(corners[i], corners[j], segmentPointA, segmentPointB);
+        if(point != null)
+            points.push(point);
+    }
+    return points;
+};

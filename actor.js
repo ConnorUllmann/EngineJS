@@ -51,21 +51,32 @@ Actor.prototype.postUpdate = function()
     if(!this.canMove)
         return;
 
-    this.velocity = this.velocity.add(this.acceleration.scale(this.world.delta))
-        .scale(this.friction);
-
-    this.velocity.x = Utils.clamp(this.velocity.x, this.xVelocityMin, this.xVelocityMax);
-    this.velocity.y = Utils.clamp(this.velocity.y, this.yVelocityMin, this.yVelocityMax);
-
-    const position = this.add(this.velocity.scale(this.world.delta));
-    this.x = position.x;
-    this.y = position.y;
+    const velocityAndPosition = this.getNextVelocityAndPosition();
+    this.velocity.x = velocityAndPosition.velocity.x;
+    this.velocity.y = velocityAndPosition.velocity.y;
+    this.x = velocityAndPosition.position.x;
+    this.y = velocityAndPosition.position.y;
 
     if (this.draggable)
         this.updateMouseDrag();
 
     this.acceleration.x = 0;
     this.acceleration.y = this.gravity;
+};
+
+Actor.prototype.getNextVelocityAndPosition = function()
+{
+    const velocity = this.velocity.add(this.acceleration.scale(this.world.delta))
+        .scale(this.friction);
+
+    velocity.x = Utils.clamp(velocity.x, this.xVelocityMin, this.xVelocityMax);
+    velocity.y = Utils.clamp(velocity.y, this.yVelocityMin, this.yVelocityMax);
+
+    const position = this.add(velocity.scale(this.world.delta));
+    return {
+        velocity: velocity,
+        position: position
+    };
 };
 
 Actor.prototype.render = function()

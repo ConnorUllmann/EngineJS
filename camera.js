@@ -11,3 +11,13 @@ function Camera(_world, _x=0, _y=0)
     });
 }
 Rectangle.parents(Camera);
+
+Camera.prototype.rectangleIsVisible = function(rectangle)
+{
+    return this.collidesRectangle(rectangle);
+};
+
+Camera.prototype.pointIsVisible = function(point)
+{
+    return this.collidesPoint(point.x, point.y);
+};

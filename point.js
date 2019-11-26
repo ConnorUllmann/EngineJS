@@ -41,10 +41,7 @@ Point.prototype.subtract = function(b)
 };
 Point.prototype.proj = function(b)
 {
-	let dot = this.dot(b);
-	let blen2 = b.lengthSq();
-	let d = dot / Math.max(blen2, 0.000001);
-	return new Point(d * b.x, d * b.y);
+	return b.scale(this.dot(b) / Math.max(b.lengthSq(), 0.000001));
 };
 Point.prototype.normalized = function(length=1)
 {
