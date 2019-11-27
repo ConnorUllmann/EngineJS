@@ -85,6 +85,13 @@ Utils.circlesCollide = function(ax, ay, aradius, bx, by, bradius)
     return Utils.distanceSq(ax, ay, bx, by) < (aradius + bradius) * (aradius + bradius);
 };
 
+Utils.segmentCollidesCircle = function(segmentPointA, segmentPointB, circlePosition, circleRadius)
+{
+    return circlePosition
+        .closestPointOnLineSegment(segmentPointA, segmentPointB)
+        .isInCircle(circlePosition, circleRadius);
+};
+
 Utils.dateStringToDate = function(string)
 {
     let date = new Date();
