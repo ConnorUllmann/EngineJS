@@ -25,11 +25,20 @@ function Entity(_x, _y, _world=null)
 
     this.id = null;
     this.world = null;
-
-	if(_world != null)
-        _world._addEntity(this);
+	this.addToWorld(_world);
 }
 Point.parents(Entity);
+
+Entity.prototype.addToWorld = function(world)
+{
+    if(this.world)
+    {
+        console.error("Cannot add entity to world! It is already a part of another world.");
+        return;
+    }
+    if(world)
+        world._addEntity(this);
+};
 
 Entity.prototype.toString = function()
 {

@@ -215,6 +215,9 @@ World.prototype._compareUpdateOrders = function(a, b)
 
 World.prototype._addEntity = function(entity)
 {
+    if(this.entitiesToAdd.includes(entity))
+        return;
+
     this.entitiesToAdd.push(entity);
     entity.id = this.entityID++;
     entity.world = this;
@@ -222,6 +225,9 @@ World.prototype._addEntity = function(entity)
 
 World.prototype._destroyEntity = function(entity)
 {
+    if(this.entitiesToRemove.includes(entity))
+        return;
+
     this.entitiesToRemove.push(entity);
 };
 
