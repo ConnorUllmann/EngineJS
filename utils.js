@@ -75,16 +75,19 @@ Utils.equilateralAltitude = function(equilateralTriangleSideLength)
 
 // Returns true if the circle formed by <ax, ay> with radius "aradius"
 // is completely within the circle formed by <bx, by> with radius "bradius"
+// TODO: delete in favor of Circle.isInCircle
 Utils.isCircleInsideCircle = function(ax, ay, aradius, bx, by, bradius)
 {
     return Utils.distance(ax, ay, bx, by) + aradius <= bradius;
 };
 
+// TODO: delete in favor of Circle.collidesCircle
 Utils.circlesCollide = function(ax, ay, aradius, bx, by, bradius)
 {
     return Utils.distanceSq(ax, ay, bx, by) < (aradius + bradius) * (aradius + bradius);
 };
 
+// TODO: delete in favor of Circle.collidesSegment
 Utils.segmentCollidesCircle = function(segmentPointA, segmentPointB, circlePosition, circleRadius)
 {
     return circlePosition
