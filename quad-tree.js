@@ -1,5 +1,8 @@
-function QuadTree(world, maxEntitiesPerNode, minNodeSideLength, x, y, w, h)
-//, x=-Number.MAX_SAFE_INTEGER/2, y=-Number.MAX_SAFE_INTEGER/2, w=Number.MAX_SAFE_INTEGER, h=Number.MAX_SAFE_INTEGER/2)
+function QuadTree(world, maxEntitiesPerNode, minNodeSideLength,
+  x=-450000000,
+  y=-450000000,
+  w=900000000,
+  h=900000000) // for some reason not all leaf rectangles seem to appear at larger scales, so I wouldn't recommend going larger
 {
     this.world = world;
     this.root = new QuadNode(this, x, y, w, h);
@@ -62,18 +65,33 @@ QuadTree.prototype.getLeafRectangles = function()
         if(node.hasChildren)
             node.children.forEach(o => gatherRectangles(o));
         else
-            rectangles.push(node.clone());
+            rectangles.push(new Rectangle(node.x, node.y, node.w, node.h));
     };
     gatherRectangles(this.root);
     return rectangles;
 };
 
-function QuadNode(tree, x, y, w, h)
+QuadTree.prototype.getDepth = function()
+{
+    let depth = 0;
+    const applyNodeDepth = (node, depthTemp) =>
+    {
+        depth = Math.max(depth, depthTemp);
+        node.children.forEach(o => applyNodeDepth(o, depthTemp + 1));
+    };
+    applyNodeDepth(this.root, 0);
+    return depth;
+};
+
+
+// Intended to only be used by QuadTree internally
+function QuadNode(tree, x, y, w, h, splitUsingMidpoint=true)
 {
     Rectangle.call(this, x, y, w, h);
     this.tree = tree;
     this.children = []; // list of QuadNodes
     this.entityIds = new Set();
+    this.splitUsingMidpoint = splitUsingMidpoint;
 
     Object.defineProperty(this, 'hasChildren', {
         get: () => this.children && this.children.length > 0
@@ -95,7 +113,7 @@ QuadNode.prototype.destroy = function()
     // TODO: enqueue into pool
 };
 
-QuadNode.prototype.split = function()
+QuadNode.prototype.splitCenter = function()
 {
     const wHalf = this.w/2;
     const hHalf = this.h/2;
@@ -105,14 +123,40 @@ QuadNode.prototype.split = function()
         new QuadNode(this.tree, this.x, this.y + hHalf, wHalf, hHalf),
         new QuadNode(this.tree, this.x + wHalf, this.y + hHalf, wHalf, hHalf),
     ];
+    this.passEntitiesToChildren();
+};
+
+QuadNode.prototype.splitMidpoint = function()
+{
+    const midpoint = Point.midpoint(this.entityIds.map(id => this.tree.world.entitiesById[id]));
+    const xMin = this.x + this.tree.minNodeSideLength;
+    const xMax = this.x + this.w - this.tree.minNodeSideLength;
+    const yMin = this.y + this.tree.minNodeSideLength;
+    const yMax = this.y + this.h - this.tree.minNodeSideLength;
+    midpoint.x = xMin >= xMax ? (xMin + xMax) / 2 : Utils.clamp(midpoint.x, xMin, xMax);
+    midpoint.y = yMin >= yMax ? (yMin + yMax) / 2 : Utils.clamp(midpoint.y, yMin, yMax);
+
+    const wLeft = midpoint.x - this.x;
+    const wRight = this.w - wLeft;
+    const hTop = midpoint.y - this.y;
+    const hBottom = this.h - hTop;
+    this.children = [
+        new QuadNode(this.tree, this.x, this.y, wLeft, hTop),
+        new QuadNode(this.tree, midpoint.x, this.y, wRight, hTop),
+        new QuadNode(this.tree, this.x, midpoint.y, wLeft, hBottom),
+        new QuadNode(this.tree, midpoint.x, midpoint.y, wRight, hBottom),
+    ];
+    this.passEntitiesToChildren();
+};
+
+QuadNode.prototype.passEntitiesToChildren = function()
+{
     for(let entityId of this.entityIds)
     {
         const entity = this.tree.world.entitiesById[entityId];
         const rectangle = this.tree.rectangles[entityId];
         for(let child of this.children)
-        {
             child.insert(entity, rectangle);
-        }
     }
     this.entityIds = null;
 };
@@ -128,8 +172,16 @@ QuadNode.prototype.insert = function(entity, rectangle)
     {
         this.tree.rectangles[entity.id] = rectangle;
         this.entityIds.add(entity.id);
-        if(this.entityIds.size > this.tree.maxEntitiesPerNode && this.w / 2 >= this.tree.minNodeSideLength)
-            this.split();
+        const canSplit = this.entityIds.size > this.tree.maxEntitiesPerNode
+            && this.w / 2 >= this.tree.minNodeSideLength
+            && this.h / 2 >= this.tree.minNodeSideLength;
+        if(canSplit)
+        {
+            if(this.splitUsingMidpoint)
+                this.splitMidpoint();
+            else
+                this.splitCenter();
+        }
     }
 };
 

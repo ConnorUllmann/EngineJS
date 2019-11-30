@@ -81,9 +81,9 @@ World.prototype.clearCanvas = function(color)
 
 World.prototype.render = function()
 {
-    this.updateAll();
+    this.debugDisplay["update"] = `${Utils.elapsedMilliseconds(() => this.updateAll())}ms`;
     this.clearCanvas(this.backgroundColor);
-    this.renderAll();
+    this.debugDisplay["render"] = `${Utils.elapsedMilliseconds(() => this.renderAll())}ms`;
     this.mouse.update();
     this.keyboard.update();
     this.gamepads.update();
@@ -169,7 +169,14 @@ World.prototype.renderAll = function()
         }
 
         const debugDisplay = { fps: Math.floor(this.debugFpsCurrent), entities: this.entities.length, ...this.debugDisplay };
-        for(let name in debugDisplay)
+        const debugDisplayKeys = [
+            'fps',
+            'update',
+            'render',
+            'entities'
+        ];
+        debugDisplayKeys.push(...Object.keys(debugDisplay).filter(key => !debugDisplayKeys.includes(key)));
+        for(let name of debugDisplayKeys)
         {
             const value = debugDisplay[name];
             const text = `${name}: ${value}`;

@@ -54,11 +54,17 @@ Point.prototype.scale = function(scale)
 {
 	return this.normalized(scale * Math.sqrt(this.lengthSq()));
 };
-Point.prototype.midpoint = function(...points)
+Point.prototype.midpoint = function(b)
 {
-    const sum = this.clone();
+    return new Point((this.x + b.x) / 2, (this.y + b.y) / 2);
+};
+Point.midpoint = function(points)
+{
+    if(points == null || points.length <= 0)
+        return null;
+    const sum = new Point();
     points.forEach(point => { sum.x += point.x; sum.y += point.y; });
-    return sum.scale(1/(points.length+1));
+    return sum.scale(1/points.length);
 };
 Point.prototype.distanceSqTo = function(b)
 {
