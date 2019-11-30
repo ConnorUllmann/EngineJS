@@ -19,6 +19,11 @@ function Circle(x=0, y=0, radius=0)
 }
 Point.parents(Circle);
 
+Circle.prototype.clone = function()
+{
+    return new Circle(this.x, this.y, this.radius);
+};
+
 Circle.prototype.isInCircle = function(circle)
 {
     return Utils.distance(this.x, this.y, circle.x, circle.y) + this.radius <= circle.radius;

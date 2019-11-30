@@ -14,6 +14,7 @@ function World(transparentBackground=false)
 
     this.entities = [];
     this.entitiesByClass = {};
+    this.entitiesById = {};
     this.entitiesToAdd = [];
     this.entitiesToRemove = [];
     this.singleFrameRenderCallsByDepth = {};
@@ -107,6 +108,7 @@ World.prototype.updateAll = function()
     {
         let e = this.entitiesToAdd.shift();
         this.entities.push(e);
+        this.entitiesById[e.id] = e;
         if(!(e.class in this.entitiesByClass))
             this.entitiesByClass[e.class] = [];
         this.entitiesByClass[e.class].push(e);
@@ -131,6 +133,7 @@ World.prototype.updateAll = function()
         if(ind > -1)
         {
             this.entities.splice(ind, 1);
+            delete this.entitiesById[e.id];
             this.entitiesByClass[e.class].removeThis(e);
             e.removed();
             e.destroyed = true;

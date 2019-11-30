@@ -256,15 +256,13 @@ Draw.rectangleRotated = function(world, xCenter, yCenter, w, h, fillStyle=null, 
 
 Draw.rectangleOutline = function(world, x, y, w, h, strokeStyle=null, lineWidth=1)
 {
-    // TODO: should use .closePath() instead of re-appending [x, y]
     let points = [
-        [x, y],
-        [x + w, y],
-        [x + w, y + h],
-        [x, y + h],
-        [x, y]
+        { x, y },
+        { x: x + w, y },
+        { x: x + w, y: y + h },
+        { x, y: y + h }
     ];
-    Draw.lines(world, points, strokeStyle, lineWidth);
+    Draw.lines(world, points, strokeStyle, lineWidth, true);
 };
 
 Draw.rectangleGradientVertical = function(world, x, y, w, h, colorStopArray)
@@ -301,7 +299,7 @@ Draw.line = function(world, x1, y1, x2, y2, strokeStyle=null, lineWidth=1)
     context.stroke();
 };
 
-Draw.lines = function(world, points, strokeStyle=null, lineWidth=1)
+Draw.lines = function(world, points, strokeStyle=null, lineWidth=1, closePath=false)
 {
     if(lineWidth < 0 || points == null || points.length <= 0)
         return;
@@ -311,6 +309,8 @@ Draw.lines = function(world, points, strokeStyle=null, lineWidth=1)
     context.moveTo(points[0].x - world.camera.x, points[0].y - world.camera.y);
     for(let i = 1; i < points.length; i++)
         context.lineTo(points[i].x - world.camera.x, points[i].y - world.camera.y);
+    if(closePath)
+        context.closePath();
     if(strokeStyle)
         context.strokeStyle = strokeStyle;
     context.lineWidth = lineWidth;

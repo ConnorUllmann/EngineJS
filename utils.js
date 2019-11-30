@@ -186,6 +186,14 @@ Utils.log = function(text, level = "info")
     console.log("[" + level + "][" + dateString + "] " + text);
 };
 
+Utils.elapsedMilliseconds = function(call)
+{
+    const start = Date.now();
+    call();
+    const end = Date.now();
+    return end - start;
+};
+
 //https://stackoverflow.com/questions/979975/how-to-get-the-value-from-the-get-parameters
 Utils.getUrlProperties = function()
 {
@@ -401,6 +409,23 @@ Utils.createCanvas = function(width, height)
     canvas.width = width;
     canvas.height = height;
     return canvas;
+};
+
+Set.prototype.map = function(valueGetter)
+{
+    const result = [];
+    for(let item of this)
+        result.push(valueGetter(item));
+    return result;
+};
+
+Set.prototype.filter = function(boolCheck)
+{
+    const result = [];
+    for(let item of this)
+        if(boolCheck(item))
+            result.push(item);
+    return result;
 };
 
 //https://stackoverflow.com/a/34116242
