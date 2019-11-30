@@ -124,7 +124,7 @@ Actor.prototype.collides = function(actor)
 };
 
 // Returns true if the bounding box of this actor is visible on the screen
-Actor.prototype.isVisibleOnScreen = function()
+Actor.prototype.isVisibleOnScreen = function(margin=0)
 {
-    return this.world.camera.collidesRectangle(this.boundingBox, this.x, this.y);
+    return this.world.camera.expandedFromCenter(margin).collidesRectangle(this.boundingBox, this.x, this.y);
 };

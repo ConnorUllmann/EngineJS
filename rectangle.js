@@ -177,6 +177,14 @@ Rectangle.prototype.expandFromCenter = function(amount)
     this.h += 2 * amount;
 };
 
+// Returns a copy of this rectangle expanded by the given amount on each side
+Rectangle.prototype.expandedFromCenter = function(amount)
+{
+    const result = this.clone();
+    result.expandFromCenter(amount);
+    return result;
+};
+
 Rectangle.prototype.closestPoint = function(point)
 {
     const corners = this.corners();

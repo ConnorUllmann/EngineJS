@@ -41,6 +41,11 @@ QuadTree.prototype.queryRectangle = function(x, y, w, h)
         .filter(entity => entity); // some entities may not be found because they were destroyed this frame, so don't include them
 };
 
+QuadTree.prototype.queryCircle = function(x, y, radius)
+{
+    return this.queryRectangle(x - radius, y - radius, radius * 2, radius * 2);
+};
+
 QuadTree.prototype.insertEntity = function(entity, rectangle)
 {
     this.root.insert(entity, rectangle);

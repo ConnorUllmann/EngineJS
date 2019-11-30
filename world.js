@@ -41,11 +41,14 @@ function World(transparentBackground=false)
     this.debugDisplayTextColor = new Color(255, 255, 255);
 
     Object.defineProperty(this, 'millisecondsSinceStart', {
-        get: function() { return Date.now() - this.firstUpdate; }
+        get: () => Date.now() - this.firstUpdate
     });
     Object.defineProperty(this, 'millisecondsPerFrame', {
-        get: function() { return 1000 / this.fps; },
-        set: function(x) { this.fps = 1000 / x; }
+        get: () => 1000 / this.fps,
+        set: (x) => this.fps = 1000 / x
+    });
+    Object.defineProperty(this, 'deltaNormal', {
+        get: () => this.delta / this.millisecondsPerFrame
     });
 }
 
