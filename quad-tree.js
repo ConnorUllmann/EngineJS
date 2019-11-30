@@ -5,22 +5,16 @@ function QuadTree(world, maxEntitiesPerNode, minNodeSideLength,
   h=900000000) // for some reason not all leaf rectangles seem to appear at larger scales, so I wouldn't recommend going larger
 {
     this.world = world;
-    this.root = new QuadNode(this, x, y, w, h);
+    this.pool = new Pool(
+        () => new QuadNode(this, 0, 0, 0, 0),
+        (quadNode, x, y, w, h) => quadNode.reset(x, y, w, h)
+    );
+    this.pool.capacity = 10000;
+    this.root = this.pool.get(x, y, w, h);
     this.maxEntitiesPerNode = maxEntitiesPerNode;
     this.minNodeSideLength = minNodeSideLength;
     
     this.rectangles = {};
-    
-    // this.pool = new Pool(
-    //     () => new QuadNode(0, 0, 0, 0, this),
-    //     (quadNode, x, y, w, h) =>
-    //     {
-    //         quadNode.x = x;
-    //         quadNode.y = y;
-    //         quadNode.w = w;
-    //         quadNode.h = h;
-    //     }
-    // );
 }
 
 QuadTree.prototype.reset = function()
@@ -83,13 +77,25 @@ QuadTree.prototype.getDepth = function()
     return depth;
 };
 
+QuadTree.prototype.getNodeCount = function()
+{
+    let nodeCount = 0;
+    const addToNodeCount = (node) =>
+    {
+        nodeCount++;
+        node.children.forEach(o => addToNodeCount(o));
+    };
+    addToNodeCount(this.root);
+    return nodeCount;
+};
+
 
 // Intended to only be used by QuadTree internally
 function QuadNode(tree, x, y, w, h, splitUsingMidpoint=true)
 {
     Rectangle.call(this, x, y, w, h);
     this.tree = tree;
-    this.children = []; // list of QuadNodes
+    this.children = [];
     this.entityIds = new Set();
     this.splitUsingMidpoint = splitUsingMidpoint;
 
@@ -99,18 +105,27 @@ function QuadNode(tree, x, y, w, h, splitUsingMidpoint=true)
 }
 Rectangle.parents(QuadNode);
 
+QuadNode.prototype.reset = function(x, y, w, h)
+{
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = h;
+    this.children = [];
+    this.entityIds = new Set();
+};
+
 QuadNode.prototype.clone = function()
 {
-    return new QuadNode(this.tree, this.x, this.y, this.w, this.h);
+    return this.tree.pool.get(this.x, this.y, this.w, this.h);
 };
 
 QuadNode.prototype.destroy = function()
 {
-    this.tree = null;
     this.children.forEach(o => o.destroy());
     this.children.clear();
     this.entityIds = null;
-    // TODO: enqueue into pool
+    this.tree.pool.add(this);
 };
 
 QuadNode.prototype.splitCenter = function()
@@ -118,10 +133,10 @@ QuadNode.prototype.splitCenter = function()
     const wHalf = this.w/2;
     const hHalf = this.h/2;
     this.children = [
-        new QuadNode(this.tree, this.x, this.y, wHalf, hHalf),
-        new QuadNode(this.tree, this.x + wHalf, this.y, wHalf, hHalf),
-        new QuadNode(this.tree, this.x, this.y + hHalf, wHalf, hHalf),
-        new QuadNode(this.tree, this.x + wHalf, this.y + hHalf, wHalf, hHalf),
+        this.tree.pool.get(this.x, this.y, wHalf, hHalf),
+        this.tree.pool.get(this.x + wHalf, this.y, wHalf, hHalf),
+        this.tree.pool.get(this.x, this.y + hHalf, wHalf, hHalf),
+        this.tree.pool.get(this.x + wHalf, this.y + hHalf, wHalf, hHalf),
     ];
     this.passEntitiesToChildren();
 };
@@ -133,18 +148,18 @@ QuadNode.prototype.splitMidpoint = function()
     const xMax = this.x + this.w - this.tree.minNodeSideLength;
     const yMin = this.y + this.tree.minNodeSideLength;
     const yMax = this.y + this.h - this.tree.minNodeSideLength;
-    midpoint.x = xMin >= xMax ? (xMin + xMax) / 2 : Utils.clamp(midpoint.x, xMin, xMax);
-    midpoint.y = yMin >= yMax ? (yMin + yMax) / 2 : Utils.clamp(midpoint.y, yMin, yMax);
+    midpoint.x = Math.floor(xMin >= xMax ? (xMin + xMax) / 2 : Utils.clamp(midpoint.x, xMin, xMax));
+    midpoint.y = Math.floor(yMin >= yMax ? (yMin + yMax) / 2 : Utils.clamp(midpoint.y, yMin, yMax));
 
-    const wLeft = midpoint.x - this.x;
+    const wLeft = Math.floor(midpoint.x - this.x);
     const wRight = this.w - wLeft;
-    const hTop = midpoint.y - this.y;
+    const hTop = Math.floor(midpoint.y - this.y);
     const hBottom = this.h - hTop;
     this.children = [
-        new QuadNode(this.tree, this.x, this.y, wLeft, hTop),
-        new QuadNode(this.tree, midpoint.x, this.y, wRight, hTop),
-        new QuadNode(this.tree, this.x, midpoint.y, wLeft, hBottom),
-        new QuadNode(this.tree, midpoint.x, midpoint.y, wRight, hBottom),
+        this.tree.pool.get(this.x, this.y, wLeft, hTop),
+        this.tree.pool.get(midpoint.x, this.y, wRight, hTop),
+        this.tree.pool.get(this.x, midpoint.y, wLeft, hBottom),
+        this.tree.pool.get(midpoint.x, midpoint.y, wRight, hBottom),
     ];
     this.passEntitiesToChildren();
 };
