@@ -123,8 +123,8 @@ Rectangle.prototype.collidesCircle = function(xCircle, yCircle, radius, rectangl
 //     const angle = this.world.millisecondsSinceStart / 5000 * Utils.TAU;
 //     const rectangle = new Rectangle(600, 450, 150, 100);
 //     const rectanglePosition = this.world.camera.add(rectangle);
-//     Draw.rectangle(this.world, rectanglePosition.x, rectanglePosition.y, rectangle.w, rectangle.h, new Color(255, 0, 0));
-//     Draw.rectangleRotated(this.world, rectanglePosition.x + rectangle.w/2, rectanglePosition.y + rectangle.h/2, rectangle.w, rectangle.h, new Color(0, 255, 0), angle);
+//     Draw.rectangle(this.world, rectanglePosition.x, rectanglePosition.y, rectangle.w, rectangle.h, Color.red);
+//     Draw.rectangleRotated(this.world, rectanglePosition.x + rectangle.w/2, rectanglePosition.y + rectangle.h/2, rectangle.w, rectangle.h, Color.green, angle);
 //
 //     const circlePosition = this.world.camera.add(this.world.mouse);
 //     const circleRadius = 50;
@@ -134,7 +134,7 @@ Rectangle.prototype.collidesCircle = function(xCircle, yCircle, radius, rectangl
 //
 //     const circleLocal = circlePosition.subtract(this.world.camera);
 //     const collides = rectangle.collidesCircle(circleLocal.x, circleLocal.y, circleRadius, angle, false);
-//     Draw.circle(this.world, circlePosition.x, circlePosition.y, circleRadius, collides ? new Color(255, 255, 255) : new Color(0, 0, 255));
+//     Draw.circle(this.world, circlePosition.x, circlePosition.y, circleRadius, collides ? Color.white : Color.blue);
 //     Draw.circle(this.world, circleTranslatedPosition.x, circleTranslatedPosition.y, circleRadius, collides ? new Color(255, 200, 255) : new Color(255, 0, 255));
 // };
 //
@@ -143,8 +143,8 @@ Rectangle.prototype.collidesCircle = function(xCircle, yCircle, radius, rectangl
 //     const angle = this.world.millisecondsSinceStart / 5000 * Utils.TAU;
 //     const rectangle = new Rectangle(600, 450, 150, 100);
 //     const rectanglePosition = this.world.camera.add(rectangle);
-//     Draw.rectangle(this.world, rectanglePosition.x - rectangle.w/2, rectanglePosition.y - rectangle.h/2, rectangle.w, rectangle.h, new Color(255, 0, 0));
-//     Draw.rectangleRotated(this.world, rectanglePosition.x, rectanglePosition.y, rectangle.w, rectangle.h, new Color(0, 255, 0), angle);
+//     Draw.rectangle(this.world, rectanglePosition.x - rectangle.w/2, rectanglePosition.y - rectangle.h/2, rectangle.w, rectangle.h, Color.red);
+//     Draw.rectangleRotated(this.world, rectanglePosition.x, rectanglePosition.y, rectangle.w, rectangle.h, Color.green, angle);
 //
 //     const circlePosition = this.world.camera.add(this.world.mouse);
 //     const circleRadius = 50;
@@ -154,7 +154,7 @@ Rectangle.prototype.collidesCircle = function(xCircle, yCircle, radius, rectangl
 //
 //     const circleLocal = circlePosition.subtract(this.world.camera);
 //     const collides = rectangle.collidesCircle(circleLocal.x, circleLocal.y, circleRadius, angle, true);
-//     Draw.circle(this.world, circlePosition.x, circlePosition.y, circleRadius, collides ? new Color(255, 255, 255) : new Color(0, 0, 255));
+//     Draw.circle(this.world, circlePosition.x, circlePosition.y, circleRadius, collides ? Color.white : Color.blue);
 //     Draw.circle(this.world, circleTranslatedPosition.x, circleTranslatedPosition.y, circleRadius, collides ? new Color(255, 200, 255) : new Color(255, 0, 255));
 // };
 

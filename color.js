@@ -1,9 +1,9 @@
 function Color(_red, _green, _blue, _alpha=1)
 {
-	this.red = Math.min(Math.max(Math.floor(_red), 0), 255);
-	this.green = Math.min(Math.max(Math.floor(_green), 0), 255);
-	this.blue = Math.min(Math.max(Math.floor(_blue), 0), 255);
-	this.alpha = Math.min(Math.max(_alpha, 0), 1);
+	this.red = Color.cleanColorPart(_red);
+	this.green = Color.cleanColorPart(_green);
+	this.blue = Color.cleanColorPart(_blue);
+	this.alpha = Color.cleanAlphaPart(_alpha);
 }
 Color.prototype.clone = function(alpha = null)
 {
@@ -12,6 +12,16 @@ Color.prototype.clone = function(alpha = null)
 Color.prototype.toString = function()
 {
 	return "rgba(" + this.red.toString() + "," + this.green.toString() + "," + this.blue.toString() + "," + this.alpha.toString() + ")";
+};
+
+Color.cleanColorPart = function(rgb)
+{
+    return Utils.clamp(Math.floor(rgb), 0, 255);
+};
+
+Color.cleanAlphaPart = function(alpha)
+{
+    return Utils.clamp(alpha, 0, 1);
 };
 
 Color.prototype.lerp = function(color, t)
@@ -107,3 +117,22 @@ Color.hsvToColor = function(h, s, v)
     }
     return new Color(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
 };
+
+function ConstColor(_red, _green, _blue, _alpha=1)
+{
+    Color.call(this, _red, _green, _blue, _alpha);
+    Object.defineProperty(this, 'red', { get: () => Color.cleanColorPart(_red) });
+    Object.defineProperty(this, 'green', { get: () => Color.cleanColorPart(_green) });
+    Object.defineProperty(this, 'blue', { get: () => Color.cleanColorPart(_blue) });
+    Object.defineProperty(this, 'alpha', { get: () => Color.cleanAlphaPart(_alpha) });
+}
+Color.parents(ConstColor);
+
+Color.red = new ConstColor(255, 0, 0);
+Color.green = new ConstColor(0, 255, 0);
+Color.blue = new ConstColor(0, 0, 255);
+Color.cyan = new ConstColor(0, 255, 255);
+Color.yellow = new ConstColor(255, 255, 0);
+Color.magenta = new ConstColor(255, 0, 255);
+Color.black = new ConstColor(0, 0, 0);
+Color.white = new ConstColor(255, 255, 255);

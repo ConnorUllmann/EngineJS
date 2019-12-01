@@ -159,7 +159,7 @@ Contains several different functions which can be executed within Entity render 
 ```javascript
 Player.prototype.render = function()
 {
-    Draw.circle(this.world, this.x, this.y, 20, new Color(255, 0, 0));
+    Draw.circle(this.world, this.x, this.y, 20, Color.red);
 }
 ```
 

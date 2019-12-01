@@ -3,7 +3,7 @@ function Draw(){}
 // Example:
 // Draw.applyBlendMode(world, BlendMode.Overlay, () =>
 // {
-//     Draw.circle(world, 50, 50, 10, new Color(255, 0, 0));
+//     Draw.circle(world, 50, 50, 10, Color.red);
 // });
 Draw.applyBlendMode = function(world, blendMode, drawCall)
 {
@@ -385,9 +385,9 @@ ColorStopArray.prototype.applyToGradient = function(gradient)
 //
 // Example:
 // ColorStopArray.createEvenlySpaced(
-//      new Color(255, 0, 0),
-//      new Color(0, 255, 0),
-//      new Color(0, 0, 255))
+//      Color.red,
+//      Color.green,
+//      Color.blue)
 //  .sample(0.25) === new Color(127, 127, 0)
 ColorStopArray.prototype.sample = function(normal)
 {
@@ -410,9 +410,9 @@ ColorStopArray.prototype.sample = function(normal)
 // Example: creates a ColorStopArray which will go from red to green to blue,
 //  where the red to green transition is faster than the green to blue.
 // ColorStopArray.create(
-//      new ColorStop(new Color(255, 0, 0), 0),
-//      new ColorStop(new Color(0, 255, 0), 0.4),
-//      new ColorStop(new Color(0, 0, 255), 1));
+//      new ColorStop(Color.red, 0),
+//      new ColorStop(Color.green, 0.4),
+//      new ColorStop(Color.blue, 1));
 ColorStopArray.create = function(...colorStops)
 {
     return new ColorStopArray(colorStops);
@@ -420,9 +420,9 @@ ColorStopArray.create = function(...colorStops)
 
 // Example: creates a ColorStopArray which will go from red to green to blue
 // ColorStopArray.createEvenlySpaced(
-//      new Color(255, 0, 0),
-//      new Color(0, 255, 0),
-//      new Color(0, 0, 255));
+//      Color.red,
+//      Color.green,
+//      Color.blue);
 ColorStopArray.createEvenlySpaced = function(...colors)
 {
     if(colors.length < 2)

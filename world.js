@@ -37,8 +37,8 @@ function World(transparentBackground=false)
     this.debugDisplay = {};
     this.debugDisplayTextHeight = 20;
     this.debugDisplayFont = `${this.debugDisplayTextHeight}px Helvetica`;
-    this.debugDisplayBackgroundColor = new Color(0, 0, 0);
-    this.debugDisplayTextColor = new Color(255, 255, 255);
+    this.debugDisplayBackgroundColor = Color.black;
+    this.debugDisplayTextColor = Color.white;
 
     Object.defineProperty(this, 'millisecondsSinceStart', {
         get: () => Date.now() - this.firstUpdate
