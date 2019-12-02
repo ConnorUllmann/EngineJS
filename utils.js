@@ -40,7 +40,9 @@ Utils.bezierPoint = function(t, points)
         const point = points[i];
         const binomial = Utils.binomialCoefficient(n, i);
         const scalar = binomial * Math.pow(1 - t, n - i) * Math.pow(t, i);
-        sum = sum.add(point.scale(scalar));
+        const pointToAdd = point.scale(scalar);
+        sum.x += pointToAdd.x;
+        sum.y += pointToAdd.y;
     }
     return sum;
 };
@@ -550,7 +552,7 @@ Array.prototype.last = function(boolCheck=null)
 //
 // Problem: I need the object that is facing most upward
 // [{direction: new Point(2, 6)}, {direction: new Point(-4, -3)}]
-//  .bestOf((a, b) => a.direction.towardness(new Point(0, -1)) > b.direction.towardness(new Point(0, -1)))
+//  .bestOf((a, b) => a.direction.towardness(Point.up) > b.direction.towardness(Point.up))
 //      = {direction: new Point(-4, -3)}
 //
 Array.prototype.bestOf = function(AisBetterThanB)

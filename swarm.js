@@ -78,7 +78,7 @@ SwarmInstinct.prototype.updateAngle = function(swarmInstincts, predators)
     const visiblePredators = predators.filter(o => Utils.distanceSq(o.x, o.y, this.swarmer.x, this.swarmer.y) <= radiusSq);
     const predatorDirection = visiblePredators
         .map(o => new Point(this.swarmer.x, this.swarmer.y).subtract(new Point(o.x, o.y)).normalized(this.RepulsionMultiplier))
-        .reduce((sum, point) => sum.add(point), new Point());
+        .reduce((sum, point) => { sum.x += point.x; sum.y += point.y; return sum; }, new Point());
     if(predatorDirection.lengthSq() > 0.01)
     {
         this.isAvoidingPredator = true;

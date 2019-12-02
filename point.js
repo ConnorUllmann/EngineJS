@@ -52,7 +52,7 @@ Point.prototype.proj = function(b)
 Point.prototype.normalized = function(length=1)
 {
 	if((this.x === 0 && this.y === 0) || length === 0)
-		return new Point(0, 0);
+		return new Point();
 	let temp = length / Math.sqrt(this.lengthSq());
 	return new Point(this.x * temp, this.y * temp);
 };
@@ -90,7 +90,7 @@ Point.prototype.reflect = function(normal, origin=null)
 {
 	if(origin == null)
     {
-        const reflectionPoint = this.closestPointOnLine(new Point(), normal);
+        const reflectionPoint = this.closestPointOnLine(Point.zero, normal);
         return reflectionPoint.subtract(this).scale(2).add(this);
     }
 
@@ -207,3 +207,22 @@ Point.prototype.wiggle = function(angleRangeMax)
 {
     return this.rotate(angleRangeMax * (Math.random() - 0.5));
 };
+
+function ConstPoint(x, y)
+{
+    Point.call(this, x, y);
+    Object.defineProperty(this, 'x', { get: () => x });
+    Object.defineProperty(this, 'y', { get: () => y });
+}
+Point.parents(ConstPoint);
+
+Point.zero = new ConstPoint(0, 0);
+Point.one = new ConstPoint(1, 1);
+Point.north = Point.up = new ConstPoint(0, -1);
+Point.northWest = Point.upLeft = new ConstPoint(-1, -1);
+Point.northEast = Point.upRight = new ConstPoint(1, -1);
+Point.south = Point.down = new ConstPoint(0, 1);
+Point.southWest = Point.downLeft = new ConstPoint(-1, 1);
+Point.southEast = Point.downRight = new ConstPoint(1, 1);
+Point.west = Point.left = new ConstPoint(-1, 0);
+Point.east = Point.right = new ConstPoint(1, 0);

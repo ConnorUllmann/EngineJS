@@ -6,7 +6,7 @@ function Bone(parent, length, angle)
     if(this.parentPosition === undefined)
     {
         Object.defineProperty(this, 'parentPosition', {
-            get: () => this.parent && this.parent.position ? this.parent.position : new Point()
+            get: () => this.parent && this.parent.position ? this.parent.position : Point.zero
         });
     }
     if(this.parentAngle === undefined)
@@ -40,7 +40,7 @@ function Bone(parent, length, angle)
 function Skeleton(parentEntity=null)
 {
     Object.defineProperty(this, 'parentPosition', {
-        get: () => parentEntity != null ? new Point(parentEntity.x, parentEntity.y) : new Point()
+        get: () => parentEntity != null ? new Point(parentEntity.x, parentEntity.y) : Point.zero
     });
     Object.defineProperty(this, 'parentAngle', {
         get: () => 0

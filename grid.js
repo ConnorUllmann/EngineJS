@@ -26,10 +26,10 @@ Grid.prototype.get = function(i, j)
 };
 
 Grid.CardinalNeighborsRelativeIndexMap = [
-    new Point(0, -1),
-    new Point(1, 0),
-    new Point(0, 1),
-    new Point(-1, 0),
+    Point.up,
+    Point.right,
+    Point.down,
+    Point.left,
 ];
 Grid.prototype.getCardinalNeighbors = function(i, j)
 {
