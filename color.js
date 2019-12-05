@@ -1,3 +1,4 @@
+// TODO: consider using a Uint8ClampedArray instead
 function Color(_red, _green, _blue, _alpha=1)
 {
 	this.red = Color.cleanColorPart(_red);

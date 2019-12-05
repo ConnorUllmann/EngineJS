@@ -1,10 +1,15 @@
 /* tiles is a 2-dimensional array of objects */
 function Grid(tiles)
 {
+    this.reset(tiles);
+}
+
+Grid.prototype.reset = function(tiles)
+{
     this.tiles = tiles;
     this.rows = this.tiles.length;
     this.columns = Math.max.apply(null, this.tiles.map(o => o.length));
-}
+};
 
 Grid.prototype.indicesInside = function(i, j)
 {
@@ -13,12 +18,22 @@ Grid.prototype.indicesInside = function(i, j)
 
 Grid.prototype.set = function(i, j, tile)
 {
+    return this.setInternal(i, j, tile);
+};
+
+Grid.prototype.setInternal = function(i, j, tile)
+{
     if(!this.indicesInside(i, j))
         return;
     this.tiles[i][j] = tile;
 };
 
 Grid.prototype.get = function(i, j)
+{
+    return this.getInternal(i, j);
+};
+
+Grid.prototype.getInternal = function(i, j)
 {
     if(!this.indicesInside(i, j))
         return null;
@@ -34,7 +49,7 @@ Grid.CardinalNeighborsRelativeIndexMap = [
 Grid.prototype.getCardinalNeighbors = function(i, j)
 {
     return Grid.CardinalNeighborsRelativeIndexMap
-        .map(o => this.get(i + o.x, j + o.y))
+        .map(o => this.getInternal(i + o.x, j + o.y))
         .filter(o => o !== null);
 };
 
@@ -47,7 +62,7 @@ Grid.prototype.getSquareNeighbors = function(i, j)
         {
             if(ti === 0 && tj === 0)
                 continue;
-            let neighbor = this.get(i + ti, j + tj);
+            let neighbor = this.getInternal(i + ti, j + tj);
             if(neighbor != null)
                 neighbors.push(neighbor);
         }
@@ -59,7 +74,7 @@ Grid.prototype.getRaytraceTiles = function(iStart, jStart, iFinish, jFinish, isS
 {
     let tiles = [];
     this.raytrace(iStart, jStart, iFinish, jFinish, (i, j) => {
-        let tile = this.get(i, j);
+        let tile = this.getInternal(i, j);
         if(isSolidCheck !== null && isSolidCheck(tile))
             return true;
         tiles.push(tile);
@@ -72,7 +87,7 @@ Grid.prototype.isPathObstructed = function(iStart, jStart, iFinish, jFinish, isS
 {
     let canSee = true;
     this.raytrace(iStart, jStart, iFinish, jFinish, (i, j) => {
-        let tile = this.get(i, j);
+        let tile = this.getInternal(i, j);
         if(isSolidCheck(tile))
         {
             canSee = false;
@@ -153,45 +168,48 @@ Grid.prototype.raytrace = function(iStart, jStart, iFinish, jFinish, breakCheck=
 };
 
 /* Executes the given function (which takes in the coordinates of the tile to set) on each tile in the Grid */
-Grid.prototype.setEach = function(tileAction)
+Grid.prototype.setEach = function(tileCall)
 {
-    for(let i = 0; i < this.tiles.length; i++)
-    {
-        for(let j = 0; j < this.tiles[i].length; j++)
-        {
-            this.tiles[i][j] = tileAction(i, j);
-        }
-    }
+    for(let i = 0; i < this.rows; i++)
+        for(let j = 0; j < this.columns; j++)
+            this.setInternal(i, j, tileCall(i, j));
 };
 
 
-/* Executes the given function (which takes in a single tile object) on each tile in the Grid */
-Grid.prototype.forEach = function(tileAction)
+/* Executes the given function (which takes in a single tile object and its indices) on each tile in the Grid */
+Grid.prototype.forEach = function(tileCall)
 {
-    for(let i = 0; i < this.tiles.length; i++)
+    for(let i = 0; i < this.rows; i++)
     {
-        let tileRow = this.tiles[i];
-        for(let j = 0; j < tileRow.length; j++)
+        for(let j = 0; j < this.columns; j++)
         {
-            let tile = tileRow[j];
+            const tile = this.getInternal(i, j);
             if(tile !== null)
-                tileAction(tile);
+                tileCall(tile, i, j);
         }
     }
 };
 
-/* Executes the given function (which takes in a single tile object) on each tile in the Grid
+Grid.prototype.map = function(valueGetter)
+{
+    const results = [];
+    for(let i = 0; i < this.rows; i++)
+        for(let j = 0; j < this.columns; j++)
+            results.push(valueGetter(this.getInternal(i, j), i, j));
+    return results;
+};
+
+/* Executes the given function (which takes in a single tile object and its indices) on each tile in the Grid
    and returns the first where it returns true */
-Grid.prototype.firstWhere = function(tileEval)
+Grid.prototype.firstWhere = function(tileCheck)
 {
-    for(let i = 0; i < this.tiles.length; i++)
+    for(let i = 0; i < this.rows; i++)
     {
-        let tileRow = this.tiles[i];
-        for(let j = 0; j < tileRow.length; j++)
+        for(let j = 0; j < this.columns; j++)
         {
-            let tile = tileRow[j];
+            const tile = this.getInternal(i, j);
             if(tile !== null)
-                if(tileEval(tile))
+                if(tileCheck(tile, i, j))
                     return tile;
         }
     }
@@ -201,7 +219,7 @@ Grid.prototype.firstWhere = function(tileEval)
 //https://lodev.org/cgtutor/floodfill.html
 Grid.prototype.getRegion = function(i, j, getValue)
 {
-    let oldValue = getValue(this.get(i, j));
+    let oldValue = getValue(this.getInternal(i, j));
     let region = [];
 
     let i1 = 0;
@@ -219,33 +237,33 @@ Grid.prototype.getRegion = function(i, j, getValue)
         j = pt.y;
 
         i1 = i;
-        while(i1 >= 0 && getValue(this.get(i1, j)) === oldValue)
+        while(i1 >= 0 && getValue(this.getInternal(i1, j)) === oldValue)
             i1--;
         i1++;
 
         spanAbove = false;
         spanBelow = false;
-        while(i1 < this.rows && getValue(this.get(i1, j)) === oldValue)
+        while(i1 < this.rows && getValue(this.getInternal(i1, j)) === oldValue)
         {
-            let tile = this.get(i1, j);
+            let tile = this.getInternal(i1, j);
             if(tile == null || region.includes(tile))
                 break;
             region.push(tile);
-            if(!spanAbove && j > 0 && getValue(this.get(i1, j - 1)) === oldValue)
+            if(!spanAbove && j > 0 && getValue(this.getInternal(i1, j - 1)) === oldValue)
             {
                 stack.push(new Point(i1, j - 1));
                 spanAbove = true;
             }
-            else if(spanAbove && j > 0 && getValue(this.get(i1, j - 1)) !== oldValue)
+            else if(spanAbove && j > 0 && getValue(this.getInternal(i1, j - 1)) !== oldValue)
             {
                 spanAbove = false;
             }
-            if(!spanBelow && j < this.columns - 1 && getValue(this.get(i1, j + 1)) === oldValue)
+            if(!spanBelow && j < this.columns - 1 && getValue(this.getInternal(i1, j + 1)) === oldValue)
             {
                 stack.push(new Point(i1, j + 1));
                 spanBelow = true;
             }
-            else if(spanBelow && j < this.columns - 1 && getValue(this.get(i1, j + 1)) !== oldValue)
+            else if(spanBelow && j < this.columns - 1 && getValue(this.getInternal(i1, j + 1)) !== oldValue)
             {
                 spanBelow = false;
             }

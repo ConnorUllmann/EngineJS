@@ -574,6 +574,35 @@ Array.prototype.min = function(valueGetter=null)
         : this);
 };
 
+// Array.prototype.min = function(valueGetter=null)
+// {
+//     if(this.length <= 0)
+//         return null;
+//
+//     if(valueGetter)
+//     {
+//         let minValue = valueGetter(this[0]);
+//         for(let i = 1; i < this.length; i++)
+//         {
+//             const value = valueGetter(this[i]);
+//             if(value < minValue)
+//                 minValue = value;
+//         }
+//         return minValue;
+//     }
+//     else
+//     {
+//         let minValue = this[0];
+//         for(let i = 1; i < this.length; i++)
+//         {
+//             const value = this[i];
+//             if(value < minValue)
+//                 minValue = value;
+//         }
+//         return minValue;
+//     }
+// };
+
 // Returns the element of the array with the lowest valueGetter(element) value
 // Note: the first match is returned if there is a tie
 Array.prototype.minOf = function(valueGetter)
@@ -602,6 +631,28 @@ Array.prototype.maxOf = function(valueGetter)
 Array.prototype.sum = function()
 {
     return this.reduce((total, increment) => total + increment);
+};
+
+Uint8ClampedArray.prototype.batchify = function(batchSize)
+{
+    const result = new Array(Math.ceil(this.length / batchSize));
+    for(let i = 0; i < result.length; i++)
+        result[i] = new Uint8ClampedArray(batchSize);
+    return this.reduce((result, item, index) => {
+        result[Math.floor(index / batchSize)][index % batchSize] = item;
+        return result;
+    }, result);
+};
+
+// Opposite of flattening an array; takes a one-dimensional array and cuts it into count-sized chunks, returning an array of arrays
+Array.prototype.batchify = function(batchSize)
+{
+    return this.reduce((batchList, item) => {
+        if(batchList.last().length >= batchSize)
+            batchList.push(new Array(batchSize));
+        batchList.last().push(item);
+        return batchList;
+    }, [[]]);
 };
 
 // Example:
