@@ -65,6 +65,29 @@ Perlin.prototype.normalizePerlinNoise = function()
     this.perlinPixelGrid.applyFilter(filter);
 };
 
+Perlin.prototype.blurPerlinNoise = function(range=1)
+{
+    const filter = (x, y) =>
+    {
+        let neighborSum = 0;
+        let neighborCount = 0;
+        for (let i = -range; i <= range; i++)
+        {
+            for (let j = -range; j <= range; j++)
+            {
+                const neighbor = this.perlinPixelGrid.get(x + i, y + j);
+                if (neighbor) {
+                    neighborSum += neighbor.red;
+                    neighborCount++;
+                }
+            }
+        }
+        const neighborMean = Math.floor(neighborSum / neighborCount);
+        return new Color(neighborMean, neighborMean, neighborMean, 1);
+    };
+    this.perlinPixelGrid.applyFilterWithBuffer(filter);
+};
+
 Perlin.prototype.renderToContext = function(context, x=0, y=0)
 {
     this.perlinPixelGrid.renderToContext(context, x, y);
