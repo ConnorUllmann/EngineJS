@@ -27,6 +27,8 @@ Color.cleanAlphaPart = function(alpha)
 
 Color.prototype.lerp = function(color, t)
 {
+    if(color == null)
+        return this.clone();
     if(t <= 0)
         return this.clone();
     if(t >= 1)
