@@ -8,6 +8,10 @@ function PixelGrid(canvas)
         get: () => this.tiles,
         set: (pixels) => this.tiles = pixels
     });
+    Object.defineProperty(this, 'w', { get: () => this.columns });
+    Object.defineProperty(this, 'width', { get: () => this.columns });
+    Object.defineProperty(this, 'h', { get: () => this.rows });
+    Object.defineProperty(this, 'height', { get: () => this.rows });
 
     Grid.call(this, this.imageData.data);
 

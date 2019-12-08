@@ -27,6 +27,11 @@ Perlin.prototype.getPixelColor = function(x, y)
     return this.perlinPixelGrid.get(x, y);
 };
 
+Perlin.prototype.setPixelColor = function(x, y, color)
+{
+    return this.perlinPixelGrid.set(x, y, color);
+};
+
 // https://gist.github.com/donpark/1796361
 Perlin.prototype.refreshPerlinNoise = function()
 {
