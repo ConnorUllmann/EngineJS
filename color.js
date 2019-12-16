@@ -138,4 +138,7 @@ Color.cyan = new ConstColor(0, 255, 255);
 Color.yellow = new ConstColor(255, 255, 0);
 Color.magenta = new ConstColor(255, 0, 255);
 Color.black = new ConstColor(0, 0, 0);
+Color.lightGrey = new ConstColor(192, 192, 192);
+Color.grey = new ConstColor(128, 128, 128);
+Color.darkGrey = new ConstColor(64, 64, 64);
 Color.white = new ConstColor(255, 255, 255);
