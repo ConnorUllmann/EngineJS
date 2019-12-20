@@ -56,16 +56,16 @@ PixelGrid.prototype.applyFilterWithBuffer = function(filter)
 };
 
 
-PixelGrid.prototype.renderToContext = function(context, x=0, y=0)
+PixelGrid.prototype.renderToContext = function(context, x=0, y=0, xScale=1, yScale=1)
 {
     context.drawImage(this.canvas,
         0, 0, this.canvas.width, this.canvas.height,
-        x, y, this.canvas.width, this.canvas.height);
+        x, y, this.canvas.width * xScale, this.canvas.height * yScale);
 };
 
-PixelGrid.prototype.render = function(world, x=0, y=0)
+PixelGrid.prototype.render = function(world, x=0, y=0, xScale=1, yScale=1)
 {
-    this.renderToContext(world.context, x - world.camera.x, y - world.camera.y);
+    this.renderToContext(world.context, x - world.camera.x, y - world.camera.y, xScale, yScale);
 };
 
 
